@@ -1,0 +1,28 @@
+<GlowPanel>:
+    canvas:
+        Color:
+            rgba: self._active_color if self.mode == 'badge' else (0, 0, 0, 0)
+        RoundedRectangle:
+            pos: self._active_pos if self._active_pos else (0, 0)
+            size: self._active_size if self._active_size else (0, 0)
+            radius: [dp(10), ]
+        Color:
+            rgba: self._active_color if self.mode == 'underline' else (0, 0, 0, 0)
+        SmoothLine:
+            width: dp(2)
+            points:
+                [ \
+                self._active_pos[0] if self._active_pos else 0, \
+                self.y, \
+                (self._active_pos[0] + self._active_size[0]) if self._active_pos else 0, \
+                self.y \
+                ]
+
+    size_hint_y: None
+    height: self.minimum_height
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    padding: ['10dp', ] if self.mode == 'badge' else [0, ]
+    spacing: '10dp'
+    border_radius: ['10dp', ] if self.mode == 'badge' else [0, ]
+    border_width: [0, 0, 0, 1] if self.mode in ('underline', 'text') else [0, ]
+    border_color: self.theme_cls.divider_color

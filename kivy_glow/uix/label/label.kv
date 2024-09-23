@@ -1,0 +1,37 @@
+<GlowLabel>:
+    canvas.before:
+        Color:
+            rgba: self._bg_color
+        SmoothRoundedRectangle:
+            size: self.width - 2, self.height - 2
+            pos: self.x + 1, self.y + 1
+            radius: self._border_radius if self._border_radius else (0, 0, 0, 0)
+            source: self.background_image
+
+    disabled_color: self.theme_cls.disabled_color
+    text_size: 
+        ((self.width if not self.adaptive_width else None,
+        self.height if not self.adaptive_height else None)
+        if not self.adaptive_size else (None, None))
+    valign: 'center'
+
+<Selector>:
+    color: app.theme_cls.primary_color
+
+
+<GlowLabelSelectCopy>:
+    content: content.__self__
+    but_copy: copy.__self__
+    but_selectall: selectall.__self__
+    size_hint: None, None
+    size: '200sp', '50sp'
+    BubbleContent:
+        id: content
+        BubbleButton:
+            id: copy
+            text: 'Copy'
+            on_release: root.do('copy')
+        BubbleButton:
+            id: selectall
+            text: 'Select All'
+            on_release: root.do('selectall')

@@ -1,0 +1,46 @@
+<GlowSlider>:
+    canvas:
+        Clear
+        Color:
+            rgba: (self._track_inactive_color if self.value_track else self._bg_color) if self.orientation == 'horizontal' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.value_pos[0], self.center_y, self.right - self.padding , self.center_y
+        Color:
+            rgba: (self._track_inactive_color if self.value_track else self._bg_color) if self.orientation == 'vertical' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.center_x, self.value_pos[1], self.center_x, self.top - self.padding
+        Color:
+            rgba: (self._track_active_color if self.value_track else self._bg_color) if self.orientation == 'horizontal' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.x + self.padding, self.center_y, self.value_pos[0], self.center_y
+        Color:
+            rgba: (self._track_active_color if self.value_track else self._bg_color) if self.orientation == 'vertical' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.center_x, self.y + self.padding, self.center_x, self.value_pos[1]
+    size_hint_y: None
+    height: self.thumb_size
+    GlowIcon:
+        id: glow_slider_thumb
+        icon: 'blank'
+        shadow: 'outside'
+        shadow_color: 0, 0, 0, 1
+        adaptive_size: False
+        bg_color: root._thumb_color
+        border_radius: [self.width, ]
+        shadow_blur_radius: dp(10)
+        size: root.thumb_size, root.thumb_size
+        pos: (root.value_pos[0] - self.width / 2, root.center_y - self.height / 2) if root.orientation == 'horizontal' else (root.center_x - self.width / 2, root.value_pos[1] - self.height / 2)
+    GlowLabel:
+        id: glow_slider_hint
+        adaptive_size: True
+        padding: dp(5)
+        text: root._hint_text
+        bg_color: root._hint_bg_color
+        color: root._hint_text_color
+        border_radius: root.hint_border_radius
+        hidden: root.hint and not root.active
+        pos: (root.value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.value_pos[1] - self.height / 2)

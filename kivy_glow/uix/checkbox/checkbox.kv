@@ -1,0 +1,9 @@
+<GlowCheckbox>:
+    size_hint: None, None
+    size: glow_checkbox_icon.size
+    GlowIcon:
+        id: glow_checkbox_icon
+        adaptive_size: True
+        pos: root.pos
+        icon: root._icon
+        color: root._color if not root.disabled else self.theme_cls.disabled_color

@@ -1,0 +1,45 @@
+<GlowMapMarker>:
+    size_hint: None, None
+    source: root.source
+    size: list(map(dp, self.texture_size))
+
+<GlowMap>:
+    canvas.before:
+        StencilPush
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        StencilUse
+        Color:
+            rgba: self.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas.after:
+        StencilUnUse
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        StencilPop
+
+    AttributionLabel:
+        text: root.map_source.attribution if hasattr(root.map_source, 'attribution') else ''
+        bg_color: self.theme_cls.background_darkest_color
+        pos: root.size[0] - self.size[0], dp(15)
+        font_style: 'LabelS'
+        adaptive_size: True
+        padding: ['3dp', ]
+        markup: True
+
+<GlowMapViewScatter>:
+    auto_bring_to_front: False
+    do_rotation: False
+    scale_min: .2
+    scale_max: 2.8
+
+<GlowMapMarkerPopup>:
+    RelativeLayout:
+        id: placeholder
+        y: root.top
+        center_x: root.center_x
+        size: root.popup_size

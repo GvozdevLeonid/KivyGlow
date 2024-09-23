@@ -1,0 +1,37 @@
+<GlowProgressBar>:
+    canvas:
+        Clear
+        Color:
+            rgba: self._inactive_color if self.mode == 'line' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.x + self.padding, self.center_y, self.right - self.padding , self.center_y
+        Color:
+            rgba: self._active_color if self.mode == 'line' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            points: self.x + self.padding, self.center_y, self.value_pos, self.center_y
+        Color:
+            rgba: self._inactive_color if self.mode == 'circle' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            ellipse: 
+                [ \
+                self.x + self.padding, \
+                self.y + self.padding, \
+                self.width - 2 * self.padding, \
+                self.height - 2 * self.padding, \
+                ]
+        Color:
+            rgba: self._active_color if self.mode == 'circle' else (0, 0, 0, 0)
+        SmoothLine:
+            width: self.line_width
+            ellipse: 
+                [ \
+                self.x + self.padding, \
+                self.y + self.padding, \
+                self.width - 2 * self.padding, \
+                self.height - 2 * self.padding, \
+                0, \
+                self.value_angle, \
+                ]

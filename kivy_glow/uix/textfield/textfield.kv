@@ -1,0 +1,94 @@
+<Selector>
+    color: app.theme_cls.primary_color
+
+<GlowTextField>:
+    canvas:
+        Color:
+            rgba: self._bg_color if self.mode == 'overlap' else (0, 0, 0, 0)
+        Rectangle:
+            size: self._label.texture_size if not self.hidden and self.label else (0, 0)
+            pos:
+                ( \
+                self.x + self.border_radius[0] \
+                if self.label_position == 'left' else \
+                (self.right - self.border_radius[0] - self._label.texture_size[0] \
+                if self.label_position == 'right' else \
+                self.x + self.width / 2 - self._label.texture_size[0] / 2 \
+                )
+                ),\
+                self.top - self._label.texture_size[1] / 2
+        Color:
+            rgba: self._label_color
+        Rectangle:
+            texture: self._label.texture
+            size: self._label.texture_size if not self.hidden else (0, 0)
+            pos: 
+                (\
+                (self.x + (self.border_radius[0] if self.mode in ('overlap', 'inside') else 0)) \
+                if self.label_position == 'left' else \
+                ( \
+                (self.right - self._label.texture_size[0] - (self.border_radius[0] if self.mode in ('overlap', 'inside') else 0))
+                if self.label_position == 'right' else \
+                (self.x + self.width / 2 - self._label.texture_size[0] / 2) \
+                ) \
+                ),\
+                ( \
+                self.top - self._label.texture_size[1] / 2 \
+                if self.mode == 'overlap' else \
+                (self.top + self.spacing \
+                if self.mode == 'outside' else \
+                self.top - self.padding[1] + self.spacing
+                ))
+        Color:
+            rgba: self._help_text_color if self.help_text_mode == 'persistent' or (self.focus and self.help_text_mode == 'on_focus') or (self.error and self.help_text_mode == 'on_error') else (0, 0, 0, 0)
+        Rectangle:
+            texture: self._help_text.texture
+            size: self._help_text.texture_size if not self.hidden else (0, 0)
+            pos: 
+                (\
+                (self.x + (self.border_radius[0]) \
+                if self.help_text_position == 'left' else \
+                ( \
+                (self.right - self._help_text.texture_size[0])
+                if self.help_text_position == 'right' else \
+                (self.x + self.width / 2 - self._help_text.texture_size[0] / 2) \
+                ) \
+                ),\
+                self.y - self._help_text.texture_size[1])
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: self.minimum_height
+    border_width: ['1dp', ] if self.border_style == 'full' else [0, 0, 0, '1dp']
+    border_radius: ['5dp', ] if self.border_style == 'full' else [0, ]
+    spacing: dp(5)
+    padding: ['10dp', dp(10) + self.spacing + self._label.texture_size[1], '10dp', '10dp',] if self.mode == 'inside' else ['10dp', ]
+    TextInput:
+        canvas.before:
+            Clear
+            Color:
+                rgba:
+                    (root._cursor_color
+                    if self.focus and not self._cursor_blink
+                    and int(self.x + self.padding[0]) <= self._cursor_visual_pos[0] <= int(self.x + self.width - self.padding[2])
+                    else (0, 0, 0, 0))
+            Rectangle:
+                pos: self._cursor_visual_pos
+                size: self.cursor_width, -self._cursor_visual_height
+            Color:
+                rgba: root._disabled_text_color if root.disabled else (root._placeholder_color if not self.text else root._text_color)
+
+        id: textfield
+        pos_hint: {'center_y': 0.5}
+        font_size: root.font_size
+        multiline: root.multiline
+        readonly: root.readonly
+        password: root.password
+        use_handles: root.use_handles if root.use_handles is not None else root.widget_style == 'mobile'
+        use_bubble: root.use_bubble if root.use_bubble is not None else root.widget_style == 'mobile'
+        size_hint_y: None
+        height: self.minimum_height
+        selection_color: root._selection_color
+        font_name: 'Montserrat'
+        text: root.text
+        halign: root.text_align

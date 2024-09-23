@@ -1,0 +1,37 @@
+<GlowTable>:
+    border_radius: ['10dp', ]
+    padding: ['10dp', ]
+    GlowScrollView:
+        id: glow_table_header
+        size_hint_y: None
+        do_scroll: False
+        border_width: [0, 0, 0, 1]
+        border_color: app.theme_cls.divider_color
+    RecycleView:
+        id: glow_table_view
+        viewclass: root._viewclass
+        data: root._display_table_data
+        always_overscroll: False
+        effect_cls: root.effect_cls
+        SelectableRecycleBoxLayout:
+            id: glow_table_layout
+            orientation: 'vertical'
+            default_height: '56dp'
+            default_size_hint: 1, None
+
+            size_hint_min: self.minimum_width, None
+            size_hint: 1, None
+            height: self.minimum_height
+            multiselect: True
+            touch_multiselect: True
+    GlowBoxLayout:
+        id: glow_table_paginator_container
+        adaptive_height: True
+        padding: ['10dp', ]
+        orientation: 'vertical'
+
+<GlowTableRow>:
+    border_width: [0, 0, 0, 1]
+    border_color: app.theme_cls.divider_color
+    padding: ['10dp', ]
+    spacing: dp(5)

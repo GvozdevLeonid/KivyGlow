@@ -1,0 +1,63 @@
+#: import GlowButton kivy_glow.uix.button.GlowButton
+
+<SelectableFileManagerItem@GlowSelectableListItem>:
+    obj_in_folder: ''
+    display_name: ''
+    icon: 'blank'
+    GlowIcon:
+        badge_bg_color: self.theme_cls.primary_light_color
+        badge_color: self.theme_cls.opposite_text_color
+        color: self.theme_cls.primary_color
+        badge_content: root.obj_in_folder
+        badge_border_radius: ['8dp']
+        pos_hint: {'center_y': 0.5}
+        icon: root.icon
+        icon_size: '32dp'
+    GlowLabel:
+        pos_hint: {'center_y': 0.5}
+        text: root.display_name
+        adaptive_height: True
+
+<FileManagerItem@GlowListItem>:
+    obj_in_folder: ''
+    display_name: ''
+    icon: 'blank'
+    GlowIcon:
+        badge_bg_color: self.theme_cls.primary_light_color
+        badge_color: self.theme_cls.opposite_text_color
+        color: self.theme_cls.primary_color
+        badge_content: root.obj_in_folder
+        badge_border_radius: ['8dp']
+        pos_hint: {'center_y': 0.5}
+        icon: root.icon
+        icon_size: '32dp'
+    GlowLabel:
+        text: root.display_name
+        pos_hint: {'center_y': 0.5}
+        adaptive_height: True
+
+<GlowFileManager>:
+    size_hint: 1, 1
+    GlowBoxLayout:
+        orientation: 'vertical'
+        GlowToolBar:
+            id: glow_filemanager_toolbar
+            right_buttons:[GlowButton(mode='text', icon='close-box', adaptive_size=True, icon_color=self.theme_cls.primary_light_color, on_release=lambda _: root.dismiss())]
+            left_buttons:[GlowButton(mode='text', icon='chevron-left', adaptive_size=True, icon_color=self.theme_cls.text_color, on_release=root._back)]
+            title: root.current_path
+            title_halign: 'center'
+        GlowList:
+            id: glow_filemanager_list
+            viewclass: 'SelectableFileManagerItem' if root.selector == 'files' else 'FileManagerItem'
+            on_item_selected: root.on_filemanager_item_selected(*args)
+            on_item_press: root.on_filemanager_item_press(*args)
+            list_data: root._content
+    GlowFloatLayout:
+        GlowButton:
+            id: glow_filemanager_button_select
+            pos: root.right - self.width - dp(15), dp(15)
+            border_radius: ['16dp', ]
+            adaptive_size: True
+            icon_size: dp(42)
+            icon: 'check'
+            on_release: root._select()

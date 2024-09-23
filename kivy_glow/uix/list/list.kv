@@ -1,0 +1,37 @@
+<GlowList>:
+    border_radius: ['10dp', ]
+    padding: ['10dp', ]
+    GlowRecycleView:
+        id: glow_list_view
+        viewclass: root.viewclass
+        data: root._formatted_list_data
+        always_overscroll: False
+        effect_cls: root.effect_cls
+        SelectableRecycleBoxLayout:
+            id: glow_list_layout
+            orientation: 'vertical'
+            default_height: '56dp'
+            default_size_hint: 1, None
+
+            size_hint_min: self.minimum_width, None
+            size_hint: 1, None
+            height: self.minimum_height
+            multiselect: True
+            touch_multiselect: True
+
+<GlowListItem>:
+    border_width: [0, 0, 0, 1]
+    border_color: app.theme_cls.divider_color
+    padding: ['10dp', ]
+    spacing: dp(10)
+
+<GlowSelectableListItem>:
+    border_width: [0, 0, 0, 1]
+    border_color: app.theme_cls.divider_color
+    padding: ['10dp', ]
+    spacing: dp(10)
+    checkbox_disabled: False
+    GlowCheckbox:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        id: item_checkbox
+        disabled: root.checkbox_disabled

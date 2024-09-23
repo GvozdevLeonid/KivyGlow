@@ -1,0 +1,16 @@
+<GlowButton>:
+    border_radius: ['5dp', ]
+    padding: ['5dp', ]
+    border_width: ['1dp', ]
+    GlowBoxLayout:
+        id: glow_button_container
+        adaptive_size: True
+        orientation: 'horizontal'
+        spacing: root.spacing
+        GlowLabel:
+            id: glow_button_text
+            pos_hint: {'center_y': 0.5}
+            adaptive_size: True
+            font_style: root.font_style
+            color: root._text_color
+            text: root.text if root.text else ''

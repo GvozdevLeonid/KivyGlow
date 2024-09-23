@@ -1,0 +1,16 @@
+#:import Window kivy.core.window.Window
+<GlowSidePanel>:
+    orientation: 'vertical'
+    size_hint_x: None
+    padding: ['10dp', ]
+    width: Window.width - dp(56) if Window.width <= dp(376) else dp(320)
+    x:
+        (self.width * (self.open_progress - 1)) \
+        if self.anchor == 'left' \
+        else (Window.width - self.width * self.open_progress)
+
+
+<GlowSidePanelButton>:
+    font_style: 'TitleM'
+    padding: ['15dp', ]
+    icon_size: '26dp'

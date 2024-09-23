@@ -1,0 +1,25 @@
+<GlowSwitch>:
+    canvas.before:
+        Color:
+            rgba: self._color if not root.disabled else self.theme_cls.disabled_color
+        SmoothRoundedRectangle:
+            pos: (self.x, self.y) if self.mode in ('normal', 'normal-icon') else (self.x, self.y + root.thumb_size / 8)
+            size: (self.width, self.height) if self.mode in ('normal', 'normal-icon') else (self.width, self.height - root.thumb_size / 4)
+            radius: [root.thumb_size / 2, ] if self.mode in ('normal', 'normal-icon') else [root.thumb_size / 2 - root.thumb_size / 8, ]
+
+    size_hint: None, None
+    height: self.thumb_size
+    width: 2 * self.thumb_size
+    GlowIcon:
+        id: glow_switch_thumb
+        adaptive_size: True if root.mode in ('normal-icon', 'short-icon') else False
+        padding: [root.thumb_size / 4]
+        size: root.thumb_size, root.thumb_size
+        pos: root.x, root.y
+        bg_color: root.thumb_color if root.thumb_color else (0, 0, 0, 0)
+        border_color: root._color if not root.disabled else self.theme_cls.disabled_color
+        color: root._color if not root.disabled else self.theme_cls.disabled_color
+        icon: root._icon if root.mode in ('normal-icon', 'short-icon') else 'blank'
+        border_width: 2
+        border_radius: [root.thumb_size / 2, ]
+        icon_size: root.thumb_size / 2

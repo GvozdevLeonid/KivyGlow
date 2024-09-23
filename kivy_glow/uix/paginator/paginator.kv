@@ -1,0 +1,20 @@
+<GlowPaginator>:
+    spacing: '20dp'
+    adaptive_size: True
+    GlowLabel:
+        adaptive_size: True
+        id: glow_paginator_info
+    GlowButton:
+        adaptive_size: True
+        id: glow_paginator_button_previous
+        mode: 'outline'
+        icon: 'chevron-left'
+        on_release:
+            root._previous_page()
+    GlowButton:
+        adaptive_size: True
+        id: glow_paginator_button_next
+        mode: 'outline'
+        icon: 'chevron-right'
+        on_release:
+            root._next_page()

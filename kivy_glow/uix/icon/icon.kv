@@ -1,0 +1,25 @@
+#:import icons kivy_glow.icons.icons
+<GlowIcon>:
+    adaptive_size: True
+    text: u'{}'.format(icons[self.icon]) if self.icon in icons else 'blank'
+    font_name: 'Icons'
+    font_size: self.icon_size
+    font_style: ''
+    GlowLabel:
+        id: glow_icon_badge
+        adaptive_size: True
+        text: (u'{}'.format(icons[root.badge_content]) if root.badge_content in icons else 'blank') if root.badge_font_name == 'Icons' else (root.badge_content if root.badge_content != '' else ' ')
+        hidden: True if root.badge_content == '' else False
+        border_radius: root.badge_border_radius
+        border_width: root.badge_border_width
+        border_color: root.badge_border_color
+        font_name: root.badge_font_name
+        font_size: root.icon_size / 3
+        bg_color: root.badge_bg_color
+        padding: root.badge_padding
+        color: root.badge_color
+        font_style: ''
+        bold: True
+        pos:
+            root.right - self.width, \
+            root.top - self.height

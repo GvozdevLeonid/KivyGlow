@@ -1,0 +1,32 @@
+[project]
+name = "KivyGlow"
+version = "1.0.0"
+authors = [
+  {name="Leonid Gvozdev", email="leo.gvozdev.dev@gmail.com"},
+]
+description = "Kivy widget set"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Android",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/GvozdevLeonid/KivyGlow"
+"Bug Tracker" = "https://github.com/GvozdevLeonid/KivyGlow/issues"
+
+[build-system]
+requires = [
+    "kivy>=2.3.0",
+    "setuptools",
+    "requests",
+    "pillow",
+    "wheel",
+]
+
+[project.scripts]
+python_hackrf= "python_hackrf.__main__:main"

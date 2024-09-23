@@ -1,0 +1,19 @@
+<GlowToolBar>:
+    adaptive_height: True
+    padding: ['5dp', '10dp']
+    spacing: '5dp'
+    GlowBoxLayout:
+        id: glow_toolbar_left_buttons_container
+        adaptive_size: True
+        spacing: '5dp'
+    GlowLabel:
+        id: glow_toolbar_title
+        text: root.title if root.title else ''
+        font_style: root.title_font_style
+        halign: root.title_halign
+        adaptive_height: True
+        shorten: True
+    GlowBoxLayout:
+        id: glow_toolbar_right_buttons_container
+        adaptive_size: True
+        spacing: '5dp'
