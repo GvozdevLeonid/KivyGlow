@@ -339,7 +339,7 @@ class GlowTable(GlowBoxLayout):
         if self.selectable:
             rows = self.rows_per_page if self.use_pagination else len(self._formatted_table_data)
 
-            for idx in range(rows):
+            for idx in range(rows) and len(self._display_table_data):
                 if is_selected:
                     self.ids.glow_table_layout.select_node(idx)
                 else:
