@@ -1,5 +1,5 @@
 [project]
-name = "KivyGlow"
+name = "kivy_glow"
 version = "1.0.0"
 authors = [
   {name="Leonid Gvozdev", email="leo.gvozdev.dev@gmail.com"},
