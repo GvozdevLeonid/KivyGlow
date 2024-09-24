@@ -38,6 +38,7 @@ if __name__ == '__main__':
                 'assets/images/map/*.png',
                 'assets/fonts/*.ttf',
                 *glob_paths('.kv'),
+                *glob_paths('.py'),
             ]
         },
     )
