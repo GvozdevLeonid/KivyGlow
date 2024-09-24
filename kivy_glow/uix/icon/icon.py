@@ -48,13 +48,13 @@ class GlowIcon(GlowLabel):
     and defaults to `empty`.
     '''
 
-    badge_font_name = StringProperty('Montserrat')
+    badge_font_name = StringProperty('MontserratLight')
     '''Icon badge font name.
 
     For icon in badge set `'Icons'`
 
     :attr:`badge_font_name` is an :class:`~kivy.properties.StringProperty`
-    and defaults to `MontserratThin`.
+    and defaults to `MontserratLight`.
     '''
 
     badge_border_radius = VariableListProperty([0], length=4)

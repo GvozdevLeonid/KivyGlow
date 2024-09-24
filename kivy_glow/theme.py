@@ -282,15 +282,15 @@ class ThemeManager(EventDispatcher):
     font_styles = DictProperty(
         {
             'DisplayL': {
-                'font_name': 'MontserratBlack',
+                'font_name': 'MontserratBold',
                 'font_size': 34,
                 'letter_spacing': 0.5,
                 'line_height': 48,
-                'bold': False,
+                'bold': True,
                 'italic': False,
             },
             'DisplayM': {
-                'font_name': 'MontserratExtraBold',
+                'font_name': 'MontserratBold',
                 'font_size': 30,
                 'letter_spacing': 0.5,
                 'line_height': 42,
@@ -298,11 +298,11 @@ class ThemeManager(EventDispatcher):
                 'italic': False,
             },
             'DisplayS': {
-                'font_name': 'MontserratSemiBold',
+                'font_name': 'MontserratMedium',
                 'font_size': 26,
                 'letter_spacing': 0.5,
                 'line_height': 36,
-                'bold': False,
+                'bold': True,
                 'italic': False,
             },
             'HeadlineL': {
@@ -314,7 +314,7 @@ class ThemeManager(EventDispatcher):
                 'italic': False,
             },
             'HeadlineM': {
-                'font_name': 'MontserratSemiBold',
+                'font_name': 'MontserratMedium',
                 'font_size': 20,
                 'letter_spacing': 0.5,
                 'line_height': 28,
@@ -326,15 +326,15 @@ class ThemeManager(EventDispatcher):
                 'font_size': 18,
                 'letter_spacing': 0.5,
                 'line_height': 26,
-                'bold': True,
+                'bold': False,
                 'italic': False,
             },
             'TitleL': {
-                'font_name': 'MontserratSemiBold',
+                'font_name': 'MontserratMedium',
                 'font_size': 18,
                 'letter_spacing': 0.5,
                 'line_height': 24,
-                'bold': False,
+                'bold': True,
                 'italic': False,
             },
             'TitleM': {
