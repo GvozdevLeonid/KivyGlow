@@ -140,3 +140,4 @@ bin/
 map_cache/
 assets/*.ini
 .flake8
+test.py

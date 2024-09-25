@@ -1,8 +1,8 @@
 #:import icons kivy_glow.icons.icons
 <GlowIcon>:
     adaptive_size: True
-    text: u'{}'.format(icons[self.icon]) if self.icon in icons else 'blank'
-    font_name: 'Icons'
+    font_name: self._icon_font_name
+    text: self._formatted_icon
     font_size: self.icon_size
     font_style: ''
     GlowLabel:

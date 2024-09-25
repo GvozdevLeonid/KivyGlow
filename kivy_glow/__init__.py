@@ -3,7 +3,7 @@ import os
 import kivy
 from kivy.logger import Logger
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 """KivyGlow version."""
 kivy.require('2.3.0')
 

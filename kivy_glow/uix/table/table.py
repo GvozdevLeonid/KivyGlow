@@ -95,7 +95,7 @@ class GlowTableRow(GlowBoxLayout,
         if not self.collide_point(touch.x, touch.y):
             return False
 
-        if self.table.selectable and self.ids.row_checkbox.collide_point(*touch.pos):
+        if self.table.selectable and self.ids.row_checkbox.collide_point(*touch.pos) and not self.ids.row_checkbox.disabled:
             self._clicked = True
             self.ids.row_checkbox.on_touch_down(touch)
             self.parent.select_with_touch(self.index, touch)
@@ -443,8 +443,10 @@ class GlowTable(GlowBoxLayout):
         view_properties = ''
 
         if self.selectable:
+            view_body += ' ' * 4 + 'checkbox_disabled: False\n'
             view_body += ' ' * 4 + 'GlowCheckbox:\n'
             view_body += ' ' * 8 + 'id: row_checkbox\n'
+            view_body += ' ' * 8 + 'disabled: root.checkbox_disabled\n'
             view_body += ' ' * 8 + 'pos_hint: {"center_y": .5}\n'
 
             self.table_checkbox = GlowCheckbox(

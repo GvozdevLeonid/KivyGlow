@@ -130,7 +130,7 @@ class GlowSelectableListItem(GlowBoxLayout,
         if not self.collide_point(touch.x, touch.y):
             return False
 
-        if self.ids.item_checkbox.collide_point(*touch.pos):
+        if self.ids.item_checkbox.collide_point(*touch.pos) and not self.ids.item_checkbox.disabled:
             self._clicked = True
             self.ids.item_checkbox.on_touch_down(touch)
             self.parent.select_with_touch(self._index, touch)
@@ -420,7 +420,7 @@ class GlowList(GlowBoxLayout):
         for item_idx, item_data in enumerate(self.list_data):
             formated_item_data = {}
             if isinstance(item_data, dict):
-                formated_item_data = item_data
+                formated_item_data = item_data.copy()
             else:
                 if self.item_properties is not None:
                     for item_property, value in (zip(self.item_properties, item_data)):
