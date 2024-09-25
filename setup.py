@@ -37,6 +37,9 @@ if __name__ == '__main__':
                 'assets/images/logo/*.png',
                 'assets/images/map/*.png',
                 'assets/fonts/*.ttf',
+                'assets/fonts/MaterialIcons/Outlined/*.ttf',
+                'assets/fonts/MaterialIcons/Rounded/*.ttf',
+                'assets/fonts/MaterialIcons/Sharp/*.ttf',
                 *glob_paths('.kv'),
                 *glob_paths('.py'),
             ]
