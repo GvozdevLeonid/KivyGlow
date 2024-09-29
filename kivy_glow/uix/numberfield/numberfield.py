@@ -12,6 +12,7 @@ from kivy.properties import (
     OptionProperty,
     StringProperty,
     AliasProperty,
+    ColorProperty,
 )
 
 
@@ -67,6 +68,20 @@ class GlowNumberField(GlowTextField):
 
     :attr:`single_step` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `1`.
+    '''
+
+    button_icon_color = ColorProperty(None, allownonw=True)
+    '''Button icon color
+
+    :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    button_border_color = ColorProperty(None, allownonw=True)
+    '''Button border color
+
+    :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
     '''
 
     _value = NumericProperty(1)
@@ -215,8 +230,8 @@ class GlowNumberField(GlowTextField):
 
         if self.widget_style == 'mobile':
             self.text_align = 'center'
-            self.button_up = GlowButton(adaptive_size=True, icon=self.icon_up, icon_size=dp(16), mode='outline', on_release=self._up, disabled=True if self._value == self.maximum else False, hidden=self.hidden)
-            self.button_down = GlowButton(adaptive_size=True, icon=self.icon_down, icon_size=dp(16), mode='outline', on_release=self._down, disabled=True if self._value == self.minimum else False, hidden=self.hidden)
+            self.button_up = GlowButton(adaptive_size=True, icon=self.icon_up, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._up, disabled=True if self._value == self.maximum else False, hidden=self.hidden)
+            self.button_down = GlowButton(adaptive_size=True, icon=self.icon_down, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._down, disabled=True if self._value == self.minimum else False, hidden=self.hidden)
 
             self.left_content = self.button_down
             self.right_content = self.button_up
@@ -227,6 +242,8 @@ class GlowNumberField(GlowTextField):
                                         size_hint_x=None,
                                         width=dp(20),
                                         icon=self.icon_up,
+                                        icon_color=self.button_icon_color,
+                                        border_color=self.button_border_color,
                                         mode='outline',
                                         padding=[0, ],
                                         icon_size=dp(12),
@@ -240,6 +257,8 @@ class GlowNumberField(GlowTextField):
                                           size_hint_x=None,
                                           width=dp(20),
                                           icon=self.icon_down,
+                                          icon_color=self.button_icon_color,
+                                          border_color=self.button_border_color,
                                           mode='outline',
                                           padding=[0, ],
                                           icon_size=dp(12),
@@ -257,3 +276,8 @@ class GlowNumberField(GlowTextField):
                 padding=[0, ],
                 spacing=0,
             )
+
+        self.bind(button_icon_color=self.button_up.setter('icon_color'))
+        self.bind(button_icon_color=self.button_down.setter('icon_color'))
+        self.bind(button_border_color=self.button_up.setter('border_color'))
+        self.bind(button_border_color=self.button_down.setter('border_color'))

@@ -28,6 +28,8 @@ class GlowIcon(GlowLabel):
 
     For more information, see in the :class:`~kivy_glow.uix.label.GlowLabel` class documentation.
     '''
+    allowed_icon_styles = ('outlined', 'rounded', 'sharp')
+    allowed_icon_weights = ('100', '200', '300', '400', '500', '600', '700')
 
     allow_selection = False
     '''Do not allow select the icon'''
@@ -35,39 +37,16 @@ class GlowIcon(GlowLabel):
     icon = StringProperty('blank')
     '''Icon name.
 
+    For variable icons use:
+        `{icon_name}:{icon_style}:{icon_weight}`
+        or
+        `{icon_name}:{icon_style}:{icon_weight}:filled`
+
+        icon_style = 'outlined', 'rounded', 'sharp'
+        icon_weight = '100', '200', '300', '400', '500', '600', '700'
+
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
-    '''
-
-    icon_font = OptionProperty('fixed', options=('fixed', 'variable'))
-    '''Icon font.
-
-    :attr:`icon_font` is an :class:`~kivy.properties.OptionProperty`
-    and defaults to `fixed`.
-    '''
-
-    icon_style = OptionProperty('outlined', options=('outlined', 'rounded', 'sharp'))
-    '''Icon style.
-    Supported only with :attr:`icon_font` is `variable`
-
-    :attr:`icon_style` is an :class:`~kivy.properties.OptionProperty`
-    and defaults to `outlined`.
-    '''
-
-    icon_weight = OptionProperty('400', options=('100', '200', '300', '400', '500', '600', '700'))
-    '''Icon weight.
-    Supported only with :attr:`icon_font` is `variable`
-
-    :attr:`icon_weight` is an :class:`~kivy.properties.OptionProperty`
-    and defaults to `400`.
-    '''
-
-    filled = BooleanProperty(False)
-    '''If icon is filled.
-    Supported only with :attr:`icon_font` is `variable`
-
-    :attr:`filled` is an :class:`~kivy.properties.BooleanProperty`
-    and defaults to `False`.
     '''
 
     icon_size = NumericProperty('24dp')
@@ -138,22 +117,54 @@ class GlowIcon(GlowLabel):
     '''
 
     def _get_icon_font_name(self):
-        if self.icon_font == 'variable':
-            return f'MaterialIcons_{self.icon_style}_{self.icon_weight}{"_filled" if self.filled else ""}'
+        if len(self.icon.split(':')) == 3:
+            icon_name, icon_style, icon_weight = self.icon.split(':')
+            if (
+                icon_style in self.allowed_icon_styles
+                and icon_weight in self.allowed_icon_weights
+            ):
+                return f'MaterialIcons_{icon_style}_{icon_weight}'
+        elif len(self.icon.split(':')) == 4:
+            icon_name, icon_style, icon_weight, filled = self.icon.split(':')
+            if (
+                icon_style in self.allowed_icon_styles
+                and icon_weight in self.allowed_icon_weights
+            ):
+                return f'MaterialIcons_{icon_style}_{icon_weight}_{filled}'
         else:
             return 'Icons'
 
     _icon_font_name = AliasProperty(
-        _get_icon_font_name, bind=('icon', 'icon_font', 'icon_style', 'icon_weight', 'filled')
+        _get_icon_font_name, bind=('icon', )
     )
 
     def _get_formated_icon(self):
-        if self.icon_font == 'fixed' and self.icon in icons.keys():
+        if (
+            len(self.icon.split(':')) == 1
+            and self.icon in icons.keys()
+        ):
             return u'{}'.format(icons[self.icon])
-        elif self.icon_font == 'variable' and self.icon in material_icons.keys():
-            return u'{}'.format(material_icons[self.icon])
+
+        elif len(self.icon.split(':')) == 3:
+            icon_name, icon_style, icon_weight = self.icon.split(':')
+            if (
+                icon_style in self.allowed_icon_styles
+                and icon_weight in self.allowed_icon_weights
+                and icon_name in material_icons.keys()
+            ):
+                return u'{}'.format(material_icons[icon_name])
+
+        elif len(self.icon.split(':')) == 4:
+            icon_name, icon_style, icon_weight, filled = self.icon.split(':')
+            if (
+                icon_style in self.allowed_icon_styles
+                and icon_weight in self.allowed_icon_weights
+                and icon_name in material_icons.keys()
+            ):
+                return u'{}'.format(material_icons[icon_name])
+
         return 'blank'
 
     _formatted_icon = AliasProperty(
-        _get_formated_icon, bind=('icon', 'icon_font')
+        _get_formated_icon, bind=('icon', )
     )

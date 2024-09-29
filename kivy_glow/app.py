@@ -17,7 +17,7 @@ from kivy.properties import (
 
 class GlowApp(App, ThemeBehavior):
 
-    icon = StringProperty(f'kivy_glow/assets/images/logo/kivy_glow-icon-{512 if platform == "macosx" else (64 if platform == "win" else 32)}.png')
+    icon = StringProperty(os.path.dirname(__file__) + f'/assets/images/logo/kivy_glow-icon-{512 if platform == "macosx" else (64 if platform == "win" else 32)}.png')
     config = ConfigParser(name='app')
     theme_cls = ObjectProperty()
 

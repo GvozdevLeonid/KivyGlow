@@ -7,6 +7,7 @@ from kivy.clock import Clock
 from kivy.metrics import dp
 from typing import Self
 from kivy.properties import (
+    BooleanProperty,
     NumericProperty,
     StringProperty,
     OptionProperty,
@@ -43,6 +44,13 @@ class GlowComboBox(GlowTextField):
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
+    '''
+
+    use_separator = BooleanProperty(True)
+    '''Whether to add a separator between elements
+
+    :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`.
+    and default to `True`.
     '''
 
     icon = StringProperty('unfold-more-horizontal')
@@ -115,6 +123,27 @@ class GlowComboBox(GlowTextField):
     and defaults to `.2`.
     '''
 
+    button_icon_color = ColorProperty(None, allownonw=True)
+    '''Button icon color
+
+    :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    button_border_color = ColorProperty(None, allownonw=True)
+    '''Button border color
+
+    :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    dropdown_bg_color = ColorProperty(None, allownonw=True)
+    '''Dropdown bg color
+
+    :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     _item_text_color = ColorProperty((0, 0, 0, 0))
     _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
     _selected_item_text_color = ColorProperty((0, 0, 0, 0))
@@ -128,6 +157,9 @@ class GlowComboBox(GlowTextField):
         super().__init__(*args, **kwargs)
 
         self.readonly = True
+        self.text_align = 'right'
+
+        self.register_event_type('on_pre_open')
 
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_combobox, -1)
@@ -160,25 +192,27 @@ class GlowComboBox(GlowTextField):
 
     def _open(self, *args) -> None:
         '''Open Combobox.'''
-        self.dropdown_container.items = [
-            GlowButton(adaptive_height=True,
-                       mode='text',
-                       text=item,
-                       text_color=self._item_text_color,
-                       icon_color=self._selected_item_icon_color,
-                       on_release=lambda _, item=item: self._select_item(item))
-            if item != self.selected_item else
-            GlowButton(adaptive_height=True,
-                       mode='text',
-                       text=item,
-                       text_color=self._selected_item_text_color,
-                       icon_color=self._selected_item_icon_color,
-                       icon=self.selected_item_icon,
-                       icon_size=dp(16),
-                       on_release=lambda _, item=item: self._select_item(item))
-            for item in self.items
-        ]
-        self.dropdown_container.open(self)
+        if self.dropdown_container._state == 'closed' and not self.dropdown_container._anim_playing:
+            self.dispatch('on_pre_open')
+            self.dropdown_container.items = [
+                GlowButton(adaptive_height=True,
+                           mode='text',
+                           text=item,
+                           text_color=self._item_text_color,
+                           icon_color=self._selected_item_icon_color,
+                           on_release=lambda _, item=item: self._select_item(item))
+                if item != self.selected_item else
+                GlowButton(adaptive_height=True,
+                           mode='text',
+                           text=item,
+                           text_color=self._selected_item_text_color,
+                           icon_color=self._selected_item_icon_color,
+                           icon=self.selected_item_icon,
+                           icon_size=dp(16),
+                           on_release=lambda _, item=item: self._select_item(item))
+                for item in self.items
+            ]
+            self.dropdown_container.open(self)
 
     def _select_item(self, item: str) -> None:
         '''Fired at the Combobox item on_release event.'''
@@ -187,10 +221,12 @@ class GlowComboBox(GlowTextField):
 
     def initialize_combobox(self, *args) -> None:
         '''Initializing the Combobox.'''
-        self.button_open = GlowButton(adaptive_size=True, icon=self.icon, icon_size=dp(16), mode='outline', on_release=self._open)
+        self.button_open = GlowButton(adaptive_size=True, icon=self.icon, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._open)
         self.dropdown_container = GlowDropDownContainer(
             opening_transition=self.opening_transition,
             closing_transition=self.closing_transition,
+            use_separator=self.use_separator,
+            bg_color=self.dropdown_bg_color,
             opening_time=self.opening_time,
             closing_time=self.closing_time,
             max_height=self.max_height,
@@ -198,9 +234,12 @@ class GlowComboBox(GlowTextField):
             min_width=self.width,
         )
         self.bind(width=self.dropdown_container.setter('min_width'))
+        self.bind(button_icon_color=self.button_open.setter('icon_color'))
+        self.bind(button_border_color=self.button_open.setter('border_color'))
+        self.bind(dropdown_bg_color=self.dropdown_container.setter('bg_color'))
+        self.bind(use_separator=self.dropdown_container.setter('use_separator'))
         self.right_content = self.button_open
         self.ids.textfield.disabled = True
-        self.text_align = 'right'
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
@@ -214,3 +253,7 @@ class GlowComboBox(GlowTextField):
 
         if self.selected_item_text_color is None:
             self.selected_item_text_color = self.theme_cls.primary_color
+
+    def on_pre_open(self):
+        '''Fires before the ComboVox is opened.'''
+        pass

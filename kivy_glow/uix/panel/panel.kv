@@ -18,11 +18,11 @@
                 self.y \
                 ]
 
-    size_hint_y: None
-    height: self.minimum_height
-    pos_hint: {'center_x': .5, 'center_y': .5}
-    padding: ['10dp', ] if self.mode == 'badge' else [0, ]
-    spacing: '10dp'
-    border_radius: ['10dp', ] if self.mode == 'badge' else [0, ]
     border_width: [0, 0, 0, 1] if self.mode in ('underline', 'text') else [0, ]
+    border_radius: ['10dp', ] if self.mode == 'badge' else [0, ]
+    padding: ['10dp', ] if self.mode == 'badge' else [0, ]
+    pos_hint: {'center_x': .5, 'center_y': .5}
     border_color: self.theme_cls.divider_color
+    height: self.minimum_height
+    size_hint_y: None
+    spacing: '10dp'
