@@ -42,5 +42,5 @@
         bg_color: root._hint_bg_color
         color: root._hint_text_color
         border_radius: root.hint_border_radius
-        hidden: root.hint and not root.active
+        hidden: not root.hint or not root.active
         pos: (root.value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.value_pos[1] - self.height / 2)

@@ -486,7 +486,7 @@ class GlowLabel(DeclarativeBehavior,
             self._selection_from = self._selection_to = None
             self._update_selection()
 
-            return True
+            # return True
 
     def _on_keyboard_down(self, window: WindowBase, key: int, scancode: int, codepoint: str, modifiers: ObservableList) -> None:
         '''Fired when a key pressed.'''
@@ -776,7 +776,6 @@ class GlowLabel(DeclarativeBehavior,
     def _handle_pressed(self, handle_instance: Selector) -> None:
         '''Fired at the handle on_touch_down event.'''
         self._hide_select_copy()
-        return True
 
     def _handle_released(self, handle_instance: Selector) -> None:
         '''Fired at the handle on_touch_release event.'''
