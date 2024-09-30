@@ -343,6 +343,9 @@ class GlowColorPicker(DeclarativeBehavior,
                 index = (ty * gradient.width + tx) * 4
                 pixel_color = gradient.texture.pixels[index:index + 4]
                 self._selected_color = [round(int(p) / 255, 2) for p in pixel_color]
+            return True
+
+        return False
 
     def on_selected_color(self, color):
         pass

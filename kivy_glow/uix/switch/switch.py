@@ -130,5 +130,4 @@ class GlowSwitch(ToggleButtonBehavior,
         self.state = 'normal' if self.state == 'down' else 'down'
 
     def on_touch_up(self, touch):
-        if self.collide_point(*touch.pos):
-            super().on_touch_up(touch)
+        return super().on_touch_up(touch)  

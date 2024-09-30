@@ -382,6 +382,9 @@ class GlowClusterMapMarker(GlowMapMarker):
     def on_cluster(self, instance, cluster):
         self.num_points = cluster.num_points
 
+    def on_touch_up(self, touch):
+        return False
+
     def on_touch_down(self, touch):
         return False
 

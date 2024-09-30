@@ -265,7 +265,7 @@ class GlowDoubleSlider(GlowWidget):
 
     def on_touch_down(self, touch):
         if self.disabled or not self.collide_point(*touch.pos):
-            return
+            return False
 
         elif self.use_center:
             if self.ids.glow_doubleslider_min_thumb.collide_point(*touch.pos):
@@ -315,6 +315,8 @@ class GlowDoubleSlider(GlowWidget):
 
             return True
 
+        return False
+
     def on_touch_up(self, touch):
         if touch.grab_current == self:
             if self._current_thumb == 'min_value':
@@ -337,6 +339,8 @@ class GlowDoubleSlider(GlowWidget):
             self.active = False
 
             return True
+
+        return False
 
     def on_hint(self, _, value) -> None:
         if not value:

@@ -98,10 +98,16 @@ class GlowSlider(DeclarativeBehavior,
     def on_touch_down(self, touch):
         if super().on_touch_down(touch):
             self.active = True
+            return True
+
+        return False
 
     def on_touch_up(self, touch):
         if super().on_touch_up(touch):
             self.active = False
+            return True
+
+        return False
 
     def set_default_colors(self, *args):
         if self.thumb_active_color is None:

@@ -164,18 +164,24 @@ class GlowSplitterWidget(DeclarativeBehavior,
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
             self.scheduled_update = Clock.schedule_once(lambda _: self._recalculate_child_with_strip_pos(instance, touch))
+            return True
+        return False
 
     def on_strip_up(self, instance, touch):
         if touch.grab_current == instance:
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
             self.scheduled_update = Clock.schedule_once(lambda _: self._recalculate_child_with_strip_pos(instance, touch))
+            return True
+        return False
 
     def on_strip_move(self, instance, touch):
         if touch.grab_current == instance:
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
             self.scheduled_update = Clock.schedule_once(lambda _: self._recalculate_child_with_strip_pos(instance, touch))
+            return True
+        return False
 
     def _recalculate_child_with_strip_pos(self, instance, touch):
         self.allow_recalculate = False

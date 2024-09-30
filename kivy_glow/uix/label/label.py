@@ -486,6 +486,8 @@ class GlowLabel(DeclarativeBehavior,
             self._selection_from = self._selection_to = None
             self._update_selection()
 
+            return True
+
     def _on_keyboard_down(self, window: WindowBase, key: int, scancode: int, codepoint: str, modifiers: ObservableList) -> None:
         '''Fired when a key pressed.'''
         if self.allow_selection and self._focus and ('ctrl' in modifiers or 'meta' in modifiers):
@@ -774,11 +776,14 @@ class GlowLabel(DeclarativeBehavior,
     def _handle_pressed(self, handle_instance: Selector) -> None:
         '''Fired at the handle on_touch_down event.'''
         self._hide_select_copy()
+        return True
 
     def _handle_released(self, handle_instance: Selector) -> None:
         '''Fired at the handle on_touch_release event.'''
+
         if self._selection_from == self._selection_to:
-            return
+            return False
+
         x, y = self.to_window(self.x, self.y)
         self._show_select_copy(
             (
@@ -789,11 +794,12 @@ class GlowLabel(DeclarativeBehavior,
             ),
             EventLoop.window
         )
+        return True
 
     def _handle_move(self, handle_instance: Selector, touch: MotionEvent) -> None:
         '''Fired at the handle on_touch_move event.'''
         if touch.grab_current != handle_instance:
-            return
+            return False
 
         x, y = self.to_local(*touch.pos)
         if handle_instance == self._handle_left:
@@ -803,12 +809,13 @@ class GlowLabel(DeclarativeBehavior,
 
         self._update_selection()
         self._position_handles()
+        return True
 
     def _hide_select_copy(self, win: WindowBase = None) -> None:
         '''Hide bubble with select_all and copy actions.'''
         bubble = self._bubble
         if not bubble:
-            return
+            return False
 
         bubble.hide()
 
