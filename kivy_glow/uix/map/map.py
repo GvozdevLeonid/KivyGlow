@@ -136,7 +136,6 @@ class GlowMapMarker(ButtonBehavior, GlowWidget, Image):
 class GlowMapMarkerPopup(GlowMapMarker):
     is_open = BooleanProperty(False)
     placeholder = ObjectProperty(None)
-    popup_size = ListProperty([100, 100])
 
     def add_widget(self, widget):
         if not self.placeholder:
@@ -428,6 +427,12 @@ class GlowMap(GlowWidget):
         self.set_zoom_at(zoom, x, y)
         self.center_on(self.lat, self.lon)
 
+        if zoom == self.map_source.min_zoom:
+            self.trigger_update(True)
+            self._scatter.scale = 1
+            self.center_on(0, 0)
+            self._scale = 1
+
     def get_latlon_at(self, x, y, zoom=None):
         '''Return the current :class:`Coordinate` within the (x, y) widget
         coordinate.
@@ -684,8 +689,8 @@ class GlowMap(GlowWidget):
             self.set_zoom_at(zoom, scatter.x, scatter.y, scale=scale)
             self.trigger_update(True)
         else:
-            if zoom == map_source.min_zoom and scatter.scale < 2:
-                scatter.scale = 2
+            if zoom == map_source.min_zoom and scatter.scale < 1:
+                scatter.scale = 1
                 self.center_on(0, 0)
                 self.trigger_update(True)
             else:
