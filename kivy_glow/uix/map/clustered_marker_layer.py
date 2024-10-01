@@ -3,10 +3,11 @@
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import (
-    ListProperty,
+    BooleanProperty,
     NumericProperty,
     ObjectProperty,
     StringProperty,
+    ListProperty,
 )
 from .map import (
     GlowMapMarker,
@@ -383,9 +384,32 @@ class GlowClusterMapMarker(GlowMapMarker):
         self.num_points = cluster.num_points
 
     def on_touch_up(self, touch):
-        return False
+        if touch.grab_current is not self:
+            return False
+
+        if self.collide_point(*touch.pos) and self.parent.cluster_zoom_on_click:
+            map_widget = self.parent.parent
+            current_zoom = map_widget.zoom
+            trees = self.parent.cluster.trees
+            new_zoom = current_zoom
+            for zoom, clusters in trees.items():
+                if zoom <= current_zoom:
+                    continue
+                if len(trees[current_zoom].ids) < len(clusters.ids):
+                    new_zoom = zoom
+
+            map_widget.zoom = new_zoom
+            map_widget.center_on(self.cluster.lat, self.cluster.lon)
+
+        touch.ungrab(self)
+
+        return True
 
     def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            touch.grab(self)
+            return True
+
         return False
 
 
@@ -396,6 +420,7 @@ class GlowClusteredMarkerLayer(GlowMapLayer):
     cluster_radius = NumericProperty('40dp')
     cluster_extent = NumericProperty(512)
     cluster_node_size = NumericProperty(64)
+    cluster_zoom_on_click = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         self.cluster = None

@@ -337,7 +337,7 @@ class GlowTable(GlowBoxLayout):
               and when the page is refreshed all checkboxes will be returned back.
         '''
         if self.selectable and len(self._display_table_data):
-            rows = self.rows_per_page if self.use_pagination else len(self._formatted_table_data)
+            rows = min(self.rows_per_page, len(self._formatted_table_data)) if self.use_pagination else len(self._formatted_table_data)
 
             for idx in range(rows):
                 if is_selected:
