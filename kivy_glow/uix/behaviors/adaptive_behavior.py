@@ -214,7 +214,8 @@ class AdaptiveBehavior(EventDispatcher):
             if issubclass(self.__class__, Label):
                 self.bind(texture_size=self._update_width_by_texture_size)
                 self.bind(texture_size=self._update_height_by_texture_size)
-                self._update_size_by_texture_size()
+                self._update_width_by_texture_size()
+                self._update_height_by_texture_size()
             else:
                 if not isinstance(self.__class__, FloatLayout):
                     self.bind(minimum_width=self._update_width_by_min_width)
@@ -222,7 +223,8 @@ class AdaptiveBehavior(EventDispatcher):
                     if not len(self.children):
                         self.size = (2, 2)
                     else:
-                        self._update_size_by_min_size()
+                        self._update_width_by_min_width()
+                        self._update_height_by_min_height()
         else:
 
             self.size_hint = (1, 1)
