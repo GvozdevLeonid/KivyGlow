@@ -88,8 +88,6 @@ class ThemeManager(EventDispatcher):
     # Background color
     theme_style = OptionProperty('Light', options=('Light', 'Dark'))
     background_palette = OptionProperty('Neutral', options=available_palette)
-    theme_switch_animation = BooleanProperty(False)
-    theme_switch_animation_duration = NumericProperty(0.2)
 
     def _get_opposite_theme_style(self):
         if self.theme_style == 'Dark':
@@ -136,7 +134,7 @@ class ThemeManager(EventDispatcher):
             )
 
     background_dark_color = AliasProperty(
-        _get_background_dark_color, bind=('background_palette',)
+        _get_background_dark_color, bind=('background_palette', 'theme_style')
     )
 
     def _get_background_darkest_color(self) -> list:

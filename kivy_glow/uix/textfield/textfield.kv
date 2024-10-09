@@ -6,7 +6,7 @@
         Color:
             rgba: self._bg_color if self.mode == 'overlap' else (0, 0, 0, 0)
         Rectangle:
-            size: self._label.texture_size if not self.hidden and self.label else (0, 0)
+            size: self._label.texture_size if not self.hidden and self.label else (1, 1)
             pos:
                 ( \
                 self.x + self.border_radius[0] \
@@ -21,7 +21,7 @@
             rgba: self._label_color
         Rectangle:
             texture: self._label.texture
-            size: self._label.texture_size if not self.hidden else (0, 0)
+            size: self._label.texture_size if not self.hidden else (1, 1)
             pos: 
                 (\
                 (self.x + (self.border_radius[0] if self.mode in ('overlap', 'inside') else 0)) \
@@ -43,7 +43,7 @@
             rgba: self._help_text_color if self.help_text_mode == 'persistent' or (self.focus and self.help_text_mode == 'on_focus') or (self.error and self.help_text_mode == 'on_error') else (0, 0, 0, 0)
         Rectangle:
             texture: self._help_text.texture
-            size: self._help_text.texture_size if not self.hidden else (0, 0)
+            size: self._help_text.texture_size if not self.hidden else (1, 1)
             pos: 
                 (\
                 (self.x + (self.border_radius[0]) \

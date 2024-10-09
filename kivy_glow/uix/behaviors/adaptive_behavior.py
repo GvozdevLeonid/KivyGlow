@@ -168,7 +168,7 @@ class AdaptiveBehavior(EventDispatcher):
                 if not issubclass(self.__class__, FloatLayout):
                     self.bind(minimum_height=self._update_height_by_min_height)
                     if not self.children:
-                        self.height = 0
+                        self.height = dp(1)
                     else:
                         self._update_height_by_min_height()
         else:
@@ -190,7 +190,7 @@ class AdaptiveBehavior(EventDispatcher):
                 if not issubclass(self.__class__, FloatLayout):
                     self.bind(minimum_width=self._update_width_by_min_width)
                     if not self.children:
-                        self.width = 0
+                        self.width = dp(1)
                     else:
                         self._update_width_by_min_width()
         else:
@@ -215,7 +215,7 @@ class AdaptiveBehavior(EventDispatcher):
                     self.bind(minimum_width=self._update_width_by_min_width)
                     self.bind(minimum_height=self._update_height_by_min_height)
                     if not self.children:
-                        self.size = (0, 0)
+                        self.size = (dp(1), dp(1))
                     else:
                         self._update_width_by_min_width()
                         self._update_height_by_min_height()
