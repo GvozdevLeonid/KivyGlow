@@ -101,9 +101,8 @@ class AdaptiveBehavior(EventDispatcher):
     This function will save the previous state and return it when hidden is restored
     '''
     _binded = {
-        'adaptive_height': False,
-        'adaptive_width': False,
-        'adaptive_size': False,
+        'height': False,
+        'width': False,
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -165,87 +164,113 @@ class AdaptiveBehavior(EventDispatcher):
 
     def on_adaptive_height(self, instance: Self, adaptive_height: bool) -> None:
         '''Fired when the :attr:`adaptive_height` value changes.'''
-        if adaptive_height and not self._binded['adaptive_height']:
-            self._binded['adaptive_height'] = True
+        if adaptive_height:
 
             self.size_hint_y = None
             if issubclass(self.__class__, Label):
-                self.bind(texture_size=self._update_height_by_texture_size)
+                if not self._binded['height']:
+                    self._binded['height'] = True
+                    self.bind(texture_size=self._update_height_by_texture_size)
                 self._update_height_by_texture_size()
             else:
                 if not issubclass(self.__class__, FloatLayout):
-                    self.bind(minimum_height=self._update_height_by_min_height)
+                    if not self._binded['height']:
+                        self._binded['height'] = True
+                        self.bind(minimum_height=self._update_height_by_min_height)
                     if not self.children:
                         self.height = dp(1)
                     else:
                         self._update_height_by_min_height()
-        elif self._binded['adaptive_height']:
-            self._binded['adaptive_height'] = False
+        else:
 
             self.size_hint_y = 1
             if issubclass(self.__class__, Label):
-                self.unbind(texture_size=self._update_height_by_texture_size)
+                if self._binded['height']:
+                    self._binded['height'] = False
+                    self.unbind(texture_size=self._update_height_by_texture_size)
             else:
                 if not issubclass(self.__class__, FloatLayout):
-                    self.unbind(minimum_height=self._update_height_by_min_height)
+                    if self._binded['height']:
+                        self._binded['height'] = False
+                        self.unbind(minimum_height=self._update_height_by_min_height)
 
     def on_adaptive_width(self, instance: Self, adaptive_width: bool) -> None:
         '''Fired when the :attr:`adaptive_width` value changes.'''
-        if adaptive_width and not self._binded['adaptive_width']:
-            self._binded['adaptive_width'] = True
+        if adaptive_width:
 
             self.size_hint_x = None
             if issubclass(self.__class__, Label):
-                self.bind(texture_size=self._update_width_by_texture_size)
+                if not self._binded['width']:
+                    self._binded['width'] = True
+                    self.bind(texture_size=self._update_width_by_texture_size)
                 self._update_width_by_texture_size()
             else:
                 if not issubclass(self.__class__, FloatLayout):
-                    self.bind(minimum_width=self._update_width_by_min_width)
+                    if not self._binded['width']:
+                        self._binded['width'] = True
+                        self.bind(minimum_width=self._update_width_by_min_width)
                     if not self.children:
                         self.width = dp(1)
                     else:
                         self._update_width_by_min_width()
-        elif self._binded['adaptive_width']:
-            self._binded['adaptive_width'] = False
+        else:
 
             self.size_hint_x = 1
             if issubclass(self.__class__, Label):
-                self.unbind(texture_size=self._update_width_by_texture_size)
+                if self._binded['width']:
+                    self._binded['width'] = False
+                    self.unbind(texture_size=self._update_width_by_texture_size)
             else:
                 if not issubclass(self.__class__, FloatLayout):
-                    self.unbind(minimum_width=self._update_width_by_min_width)
+                    if self._binded['width']:
+                        self._binded['width'] = False
+                        self.unbind(minimum_width=self._update_width_by_min_width)
 
     def on_adaptive_size(self, instance: Self, adaptive_size: bool) -> None:
         '''Fired when the :attr:`adaptive_size` value changes.'''
-        if adaptive_size and not self._binded['adaptive_size']:
-            self._binded['adaptive_size'] = True
+        if adaptive_size:
 
             self.size_hint = (None, None)
             if issubclass(self.__class__, Label):
-                self.bind(texture_size=self._update_width_by_texture_size)
-                self.bind(texture_size=self._update_height_by_texture_size)
+                if not self._binded['width']:
+                    self._binded['width'] = True
+                    self.bind(texture_size=self._update_width_by_texture_size)
+                if not self._binded['height']:
+                    self._binded['height'] = True
+                    self.bind(texture_size=self._update_height_by_texture_size)
                 self._update_width_by_texture_size()
                 self._update_height_by_texture_size()
             else:
                 if not isinstance(self.__class__, FloatLayout):
-                    self.bind(minimum_width=self._update_width_by_min_width)
-                    self.bind(minimum_height=self._update_height_by_min_height)
+                    if not self._binded['width']:
+                        self._binded['width'] = True
+                        self.bind(minimum_width=self._update_width_by_min_width)
+                    if not self._binded['height']:
+                        self._binded['height'] = True
+                        self.bind(minimum_height=self._update_height_by_min_height)
                     if not self.children:
                         self.size = (dp(1), dp(1))
                     else:
                         self._update_width_by_min_width()
                         self._update_height_by_min_height()
-        elif self._binded['adaptive_size']:
-            self._binded['adaptive_size'] = False
+        else:
 
             self.size_hint = (1, 1)
             if issubclass(self.__class__, Label):
-                self.unbind(texture_size=self._update_width_by_texture_size)
-                self.unbind(texture_size=self._update_height_by_texture_size)
+                if self._binded['width']:
+                    self._binded['width'] = False
+                    self.unbind(texture_size=self._update_width_by_texture_size)
+                if self._binded['height']:
+                    self._binded['height'] = False
+                    self.unbind(texture_size=self._update_height_by_texture_size)
             else:
                 if not isinstance(self.__class__, FloatLayout):
-                    self.unbind(minimum_width=self._update_width_by_min_width)
-                    self.unbind(minimum_height=self._update_height_by_min_height)
+                    if self._binded['width']:
+                        self._binded['width'] = False
+                        self.unbind(minimum_width=self._update_width_by_min_width)
+                    if self._binded['height']:
+                        self._binded['height'] = False
+                        self.unbind(minimum_height=self._update_height_by_min_height)
 
     def on_hidden(self, instance: Self, hidden: bool) -> None:
         '''Fired when the :attr:`hidden` value changes.'''
