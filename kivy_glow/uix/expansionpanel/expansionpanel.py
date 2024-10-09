@@ -248,8 +248,10 @@ class GlowExpansionPanel(GlowTableLayout):
                                  icon=self.icon_closed,
                                  mode='outline',
                                  pos_hint={'right': 1, 'center_y': 0.5},
-                                 on_release=self._change_state
+                                 on_release=self._change_state,
+                                 hidden=self.hidden,
                                  )
+        self.bind(hidden=self.button.setter('hidden'))
         self.container = GlowBoxLayout(size_hint=(1, None), opacity=0, height=0)
 
         self.add_widget(self.header_content, row=0, col=0, colspan=9)
