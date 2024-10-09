@@ -100,6 +100,11 @@ class AdaptiveBehavior(EventDispatcher):
 
     This function will save the previous state and return it when hidden is restored
     '''
+    _binded = {
+        'adaptive_height': False,
+        'adaptive_width': False,
+        'adaptive_size': False,
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         self.register_event_type('on_breakpoint')
@@ -115,6 +120,7 @@ class AdaptiveBehavior(EventDispatcher):
         super().__init__(**kwargs)
 
         self._update_breakpoint_trigger = Clock.create_trigger(self._update_breakpoint)
+        self._hidden_trigger = Clock.create_trigger(self._on_hidden)
         self._update_breakpoint_trigger()
 
     def on_parent(self, instance: Self, parent) -> None:
@@ -159,7 +165,9 @@ class AdaptiveBehavior(EventDispatcher):
 
     def on_adaptive_height(self, instance: Self, adaptive_height: bool) -> None:
         '''Fired when the :attr:`adaptive_height` value changes.'''
-        if adaptive_height:
+        if adaptive_height and not self._binded['adaptive_height']:
+            self._binded['adaptive_height'] = True
+
             self.size_hint_y = None
             if issubclass(self.__class__, Label):
                 self.bind(texture_size=self._update_height_by_texture_size)
@@ -171,7 +179,9 @@ class AdaptiveBehavior(EventDispatcher):
                         self.height = dp(1)
                     else:
                         self._update_height_by_min_height()
-        else:
+        elif self._binded['adaptive_height']:
+            self._binded['adaptive_height'] = False
+
             self.size_hint_y = 1
             if issubclass(self.__class__, Label):
                 self.unbind(texture_size=self._update_height_by_texture_size)
@@ -181,7 +191,9 @@ class AdaptiveBehavior(EventDispatcher):
 
     def on_adaptive_width(self, instance: Self, adaptive_width: bool) -> None:
         '''Fired when the :attr:`adaptive_width` value changes.'''
-        if adaptive_width:
+        if adaptive_width and not self._binded['adaptive_width']:
+            self._binded['adaptive_width'] = True
+
             self.size_hint_x = None
             if issubclass(self.__class__, Label):
                 self.bind(texture_size=self._update_width_by_texture_size)
@@ -193,7 +205,9 @@ class AdaptiveBehavior(EventDispatcher):
                         self.width = dp(1)
                     else:
                         self._update_width_by_min_width()
-        else:
+        elif self._binded['adaptive_width']:
+            self._binded['adaptive_width'] = False
+
             self.size_hint_x = 1
             if issubclass(self.__class__, Label):
                 self.unbind(texture_size=self._update_width_by_texture_size)
@@ -203,7 +217,9 @@ class AdaptiveBehavior(EventDispatcher):
 
     def on_adaptive_size(self, instance: Self, adaptive_size: bool) -> None:
         '''Fired when the :attr:`adaptive_size` value changes.'''
-        if adaptive_size:
+        if adaptive_size and not self._binded['adaptive_size']:
+            self._binded['adaptive_size'] = True
+
             self.size_hint = (None, None)
             if issubclass(self.__class__, Label):
                 self.bind(texture_size=self._update_width_by_texture_size)
@@ -219,7 +235,9 @@ class AdaptiveBehavior(EventDispatcher):
                     else:
                         self._update_width_by_min_width()
                         self._update_height_by_min_height()
-        else:
+        elif self._binded['adaptive_size']:
+            self._binded['adaptive_size'] = False
+
             self.size_hint = (1, 1)
             if issubclass(self.__class__, Label):
                 self.unbind(texture_size=self._update_width_by_texture_size)
@@ -231,10 +249,12 @@ class AdaptiveBehavior(EventDispatcher):
 
     def on_hidden(self, instance: Self, hidden: bool) -> None:
         '''Fired when the :attr:`hidden` value changes.'''
+        self._hidden_trigger()
         # for child in self.children:
         #     child.hidden = hidden
 
-        if hidden:
+    def _on_hidden(self, *args):
+        if self.hidden:
             self._adaptive_width = self.adaptive_width
             self._adaptive_height = self.adaptive_height
             self._adaptive_size = self.adaptive_size
