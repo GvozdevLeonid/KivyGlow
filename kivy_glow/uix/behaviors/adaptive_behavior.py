@@ -143,24 +143,16 @@ class AdaptiveBehavior(EventDispatcher):
                 break
 
     def _update_width_by_min_width(self, *args) -> None:
-        self.width = max(self.minimum_width, dp(1))
+        self.width = max(self.minimum_width, 2)
 
     def _update_height_by_min_height(self, *args) -> None:
-        self.height = max(self.minimum_height, dp(1))
+        self.height = max(self.minimum_height, 2)
 
     def _update_width_by_texture_size(self, *args) -> None:
-        self.width = max(self.texture_size[0], dp(1))
+        self.width = max(self.texture_size[0], 2)
 
     def _update_height_by_texture_size(self, *args) -> None:
-        self.height = max(self.texture_size[1], dp(1))
-
-    def _update_size_by_texture_size(self, *args) -> None:
-        self.width = max(self.texture_size[0], dp(1))
-        self.height = max(self.texture_size[1], dp(1))
-
-    def _update_size_by_min_size(self, *args) -> None:
-        self.width = max(self.minimum_width, dp(1))
-        self.height = max(self.minimum_height, dp(1))
+        self.height = max(self.texture_size[1], 2)
 
     def on_breakpoint(self, breakpoint: str) -> None:
         '''Fired when the :attr:`breakpoint` value changes.'''
@@ -178,7 +170,7 @@ class AdaptiveBehavior(EventDispatcher):
                 if not issubclass(self.__class__, FloatLayout):
                     self.bind(minimum_height=self._update_height_by_min_height)
                     if not len(self.children):
-                        self.height = dp(1)
+                        self.height = 2
                     else:
                         self._update_height_by_min_height()
         else:
@@ -202,7 +194,7 @@ class AdaptiveBehavior(EventDispatcher):
                 if not issubclass(self.__class__, FloatLayout):
                     self.bind(minimum_width=self._update_width_by_min_width)
                     if not len(self.children):
-                        self.width = dp(1)
+                        self.width = 2
                     else:
                         self._update_width_by_min_width()
         else:
@@ -220,23 +212,27 @@ class AdaptiveBehavior(EventDispatcher):
 
             self.size_hint = (None, None)
             if issubclass(self.__class__, Label):
-                self.bind(texture_size=self._update_size_by_texture_size)
+                self.bind(texture_size=self._update_width_by_texture_size)
+                self.bind(texture_size=self._update_height_by_texture_size)
                 self._update_size_by_texture_size()
             else:
                 if not isinstance(self.__class__, FloatLayout):
-                    self.bind(minimum_width=self._update_size_by_min_size)
+                    self.bind(minimum_width=self._update_width_by_min_width)
+                    self.bind(minimum_height=self._update_height_by_min_height)
                     if not len(self.children):
-                        self.size = (dp(1), dp(1))
+                        self.size = (2, 2)
                     else:
                         self._update_size_by_min_size()
         else:
 
             self.size_hint = (1, 1)
             if issubclass(self.__class__, Label):
-                self.unbind(texture_size=self._update_size_by_texture_size)
+                self.unbind(texture_size=self._update_width_by_texture_size)
+                self.unbind(texture_size=self._update_height_by_texture_size)
             else:
                 if not isinstance(self.__class__, FloatLayout):
-                    self.unbind(minimum_height=self._update_size_by_min_size)
+                    self.unbind(minimum_width=self._update_width_by_min_width)
+                    self.unbind(minimum_height=self._update_height_by_min_height)
 
     def on_hidden(self, instance: Self, hidden: bool) -> None:
         '''Fired when the :attr:`hidden` value changes.'''
@@ -258,7 +254,7 @@ class AdaptiveBehavior(EventDispatcher):
             self.adaptive_size = False
 
             self.size_hint = None, None
-            self.size = dp(1), dp(1)
+            self.size = 2, 2
 
             self.opacity = 0
         else:
