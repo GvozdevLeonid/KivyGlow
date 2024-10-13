@@ -80,10 +80,10 @@ class GlowProgressBar(DeclarativeBehavior,
 
         return x + padding + nval * (self.width - 2 * padding)
 
-    value_pos = AliasProperty(_get_value_pos, None, bind=('value_normalized', 'mode'))
+    value_pos = AliasProperty(_get_value_pos, None, bind=('value_normalized', 'mode', 'min', 'max'))
 
     def _get_value_angle(self):
         nval = self.value_normalized
         return nval * 360
 
-    value_angle = AliasProperty(_get_value_angle, None, bind=('value_normalized', 'mode'))
+    value_angle = AliasProperty(_get_value_angle, None, bind=('value_normalized', 'mode', 'min', 'max'))
