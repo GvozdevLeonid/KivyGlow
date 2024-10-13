@@ -34,6 +34,12 @@ class GlowProgressBar(DeclarativeBehavior,
                       ProgressBar,
                       ):
 
+    min = NumericProperty(0.)
+    '''Minimum value allowed for :attr:`value`.
+
+    :attr:`max` is a :class:`~kivy.properties.NumericProperty` and defaults to 0
+    '''
+
     padding = NumericProperty('16sp')
     active_color = ColorProperty(None, allownone=True)
     inactive_color = ColorProperty(None, allownone=True)
@@ -72,6 +78,24 @@ class GlowProgressBar(DeclarativeBehavior,
                 ).start(self)
             else:
                 self.inactive_color = self.theme_cls.background_dark_color
+
+    def _set_value(self, value):
+        value = max(self.min, min(self.max, value))
+        if value != self._value:
+            self._value = value
+            return True
+
+    def get_norm_value(self):
+        d = self.max - self.min
+        if d == 0:
+            return 0
+        return (self.value - self.min) / float(d)
+
+    def set_norm_value(self, value):
+        self.value = value * (self.max - self.min) + self.min
+
+    value_normalized = AliasProperty(get_norm_value, set_norm_value,
+                                     bind=('value', 'max'), cache=True)
 
     def _get_value_pos(self):
         nval = self.value_normalized
