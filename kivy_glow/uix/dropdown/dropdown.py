@@ -190,7 +190,7 @@ class GlowSelectableDropDown(GlowButton):
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
 
-    selected_item = StringProperty()
+    selected_item = StringProperty(None)
     '''Current selected item
 
     :attr:`active` is an :class:`~kivy.properties.StringProperty`
@@ -303,7 +303,8 @@ class GlowSelectableDropDown(GlowButton):
 
     def on_items(self, combobox: Self, items: list) -> None:
         '''Fired when the :attr:`items` value changes.'''
-        self.selected_item = items[0]
+        if self.selected_item not in items:
+            self.selected_item = items[0]
 
     def _open(self, *args) -> None:
         '''Open DropDown.'''

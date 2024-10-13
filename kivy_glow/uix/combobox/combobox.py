@@ -184,7 +184,7 @@ class GlowComboBox(GlowTextField):
 
     def on_items(self, combobox: Self, items: list) -> None:
         '''Fired when the :attr:`items` value changes.'''
-        if self.selected_item is None:
+        if self.selected_item not in items:
             self.selected_item = items[0]
 
     def on_selected_item(self, combobox: Self, selected_item: str) -> None:
