@@ -59,6 +59,8 @@ class GlowSidePanelButton(GlowButton):
 
     selected_color = ColorProperty(None, allownone=True)
 
+    _default_colors = []
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.adaptive_height = True
@@ -185,6 +187,8 @@ class GlowSidePanelButton(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors. Based on mode.'''
+        self._default_colors.clear()
+
         if self.bg_color != (0, 0, 0, 0):
             self.bg_color = (0, 0, 0, 0)
 
@@ -193,20 +197,21 @@ class GlowSidePanelButton(GlowButton):
 
         if self.text_color is None:
             self.text_color = self.theme_cls.text_color
+            self._default_colors.append('text_color')
 
         if self.icon_color is None:
             self.icon_color = self.theme_cls.text_color
+            self._default_colors.append('icon_color')
 
         if self.selected_color is None:
             self.selected_color = self.theme_cls.primary_color
+            self._default_colors.append('selected_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         if self.disabled:
             self.set_disabled_colors()
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'text_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     text_color=self.theme_cls.text_color,
@@ -216,7 +221,7 @@ class GlowSidePanelButton(GlowButton):
             else:
                 self.text_color = self.theme_cls.text_color
 
-        if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'icon_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     icon_color=self.theme_cls.text_color,

@@ -83,6 +83,7 @@ class GlowToolBar(GlowBoxLayout):
 
     is_overflow = BooleanProperty(False)
     _width = 0
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -198,8 +199,11 @@ class GlowToolBar(GlowBoxLayout):
 
     def set_default_colors(self, *args):
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.primary_color
+            self._default_colors.append('bg_color')
 
     def open_overflow_menu(self):
         '''Open menu with overflow buttons'''

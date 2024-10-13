@@ -207,6 +207,7 @@ class GlowDialog(DeclarativeBehavior,
 
     _size_hint_y = 0
     _icon_color = ColorProperty((0, 0, 0, 0))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(icon_color=self.setter('_icon_color'))
@@ -376,29 +377,36 @@ class GlowDialog(DeclarativeBehavior,
 
     def set_default_colors(self, *args):
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_color
+            self._default_colors.append('bg_color')
 
         if self.mode == 'warning':
             if self.icon == 'blank':
                 self.icon = 'alert-circle'
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.warning_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'error':
             if self.icon == 'blank':
                 self.icon = 'close-circle'
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.error_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'success':
             if self.icon == 'blank':
                 self.icon = 'check-circle'
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.success_color
+                self._default_colors.append('icon_color')
 
         if self.icon_color is None:
             self.icon_color = self.theme_cls.primary_color
+            self._default_colors.append('icon_color')
 
     def _add_content_ids(self):
         '''Add content ids to dialog.'''

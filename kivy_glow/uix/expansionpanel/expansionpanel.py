@@ -113,6 +113,7 @@ class GlowExpansionPanel(GlowTableLayout):
     '''
 
     _anim_playing = False
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -264,15 +265,16 @@ class GlowExpansionPanel(GlowTableLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_dark_color
+            self._default_colors.append('bg_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.bg_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     bg_color=self.theme_cls.background_dark_color,

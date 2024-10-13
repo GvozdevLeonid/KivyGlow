@@ -148,6 +148,7 @@ class GlowComboBox(GlowTextField):
     _item_text_color = ColorProperty((0, 0, 0, 0))
     _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
     _selected_item_text_color = ColorProperty((0, 0, 0, 0))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -245,15 +246,19 @@ class GlowComboBox(GlowTextField):
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
         super().set_default_colors()
+        self._default_colors.clear()
 
         if self.item_text_color is None:
             self.item_text_color = self.theme_cls.text_color
+            self._default_colors.append('item_text_color')
 
         if self.selected_item_icon_color is None:
             self.selected_item_icon_color = self.theme_cls.primary_color
+            self._default_colors.append('selected_item_icon_color')
 
         if self.selected_item_text_color is None:
             self.selected_item_text_color = self.theme_cls.primary_color
+            self._default_colors.append('selected_item_text_color')
 
     def on_pre_open(self):
         '''Fires before the ComboVox is opened.'''
@@ -262,7 +267,5 @@ class GlowComboBox(GlowTextField):
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.item_text_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'item_text_color' in self._default_colors:
             self.item_text_color = self.theme_cls.text_color

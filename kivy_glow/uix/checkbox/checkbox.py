@@ -101,6 +101,7 @@ class GlowCheckbox(ToggleButtonBehavior,
 
     _icon = StringProperty('blank')
     _color = ColorProperty((0, 0, 0, 0))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -216,17 +217,19 @@ class GlowCheckbox(ToggleButtonBehavior,
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.active_color is None:
             self.active_color = self.theme_cls.primary_color
+            self._default_colors.append('active_color')
         if self.inactive_color is None:
             self.inactive_color = self.theme_cls.divider_color
+            self._default_colors.append('inactive_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.inactive_color == self.theme_cls._get_divider_color(old_theme_style):
+        if 'inactive_color' in self._default_colors:
             self.inactive_color = self.theme_cls.divider_color
 
             if self.state == 'normal':

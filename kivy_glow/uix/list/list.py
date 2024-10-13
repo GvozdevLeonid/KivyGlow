@@ -313,6 +313,7 @@ class GlowList(GlowBoxLayout):
 
     _formatted_list_data = ListProperty()
     _selected_items = {}
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(odd_item_color=self.setter('_odd_item_color'))
@@ -449,26 +450,30 @@ class GlowList(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('bg_color')
 
         if self.odd_item_color is None:
             self.odd_item_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('odd_item_color')
 
         if self.even_item_color is None:
             self.even_item_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('even_item_color')
 
         if self.hover_item_color is None:
             self.hover_item_color = self.theme_cls.background_dark_color
+            self._default_colors.append('hover_item_color')
 
         self.__update_list_data()
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     bg_color=self.theme_cls.background_darkest_color,
@@ -478,13 +483,13 @@ class GlowList(GlowBoxLayout):
             else:
                 self.bg_color = self.theme_cls.background_darkest_color
 
-        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'odd_item_color' in self._default_colors:
             self.odd_item_color = self.theme_cls.background_darkest_color
 
-        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'odd_item_color' in self._default_colors:
             self.even_item_color = self.theme_cls.background_darkest_color
 
-        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'odd_item_color' in self._default_colors:
             self.hover_item_color = self.theme_cls.background_dark_color
 
         self.__update_list_data()

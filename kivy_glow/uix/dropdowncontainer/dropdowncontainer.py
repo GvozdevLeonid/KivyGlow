@@ -140,13 +140,13 @@ class GlowDropDownContainer(GlowBoxLayout):
     and defaults to `[10, 10, 10, 10]`.
     '''
 
-    _anim_playing = False
     _touch_started_inside = None
-    _attach_to = None
+    _anim_playing = False
     _attach_to_pos = None
+    _attach_to = None
     _state = 'closed'
-
     _height = None
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.container = GlowBoxLayout(adaptive_height=True, spacing='4dp', padding=[0, 0, '5dp', 0], orientation='vertical', opacity=0)
@@ -427,13 +427,18 @@ class GlowDropDownContainer(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('bg_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             self.bg_color = self.theme_cls.background_darkest_color
+
+        if self.use_separator:
+            for child in self.children[1::2]:
+                child.bg_color = self.theme_cls.divider_color

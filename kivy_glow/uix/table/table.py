@@ -190,6 +190,7 @@ class GlowTable(GlowBoxLayout):
     _display_table_data = ListProperty()
     _selected_rows = {}
     _original_rows = {}
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self._header = None
@@ -262,20 +263,27 @@ class GlowTable(GlowBoxLayout):
         return [self.table_data[idx] for idx in self.selected_rows]
 
     def set_default_colors(self, *args):
+        self._default_colors.clear()
+
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('bg_color')
 
         if self.header_color is None:
             self.header_color = self.theme_cls.background_light_color
+            self._default_colors.append('header_color')
 
         if self.odd_row_color is None:
             self.odd_row_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('odd_row_color')
 
         if self.even_row_color is None:
             self.even_row_color = self.theme_cls.background_darkest_color
+            self._default_colors.append('even_row_color')
 
         if self.hover_row_color is None:
             self.hover_row_color = self.theme_cls.background_dark_color
+            self._default_colors.append('hover_row_color')
 
         self.__update_table_data()
 
@@ -286,8 +294,7 @@ class GlowTable(GlowBoxLayout):
         if self.disabled:
             self.set_disabled_colors()
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     bg_color=self.theme_cls.background_darkest_color,
@@ -297,7 +304,7 @@ class GlowTable(GlowBoxLayout):
             else:
                 self.bg_color = self.theme_cls.background_darkest_color
 
-        if self.header_color == self.theme_cls._get_background_light_color(old_theme_style):
+        if 'header_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     header_color=self.theme_cls.background_light_color,
@@ -307,13 +314,13 @@ class GlowTable(GlowBoxLayout):
             else:
                 self.header_color = self.theme_cls.background_light_color
 
-        if self.odd_row_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'odd_row_color' in self._default_colors:
             self.odd_row_color = self.theme_cls.background_darkest_color
 
-        if self.even_row_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+        if 'even_row_color' in self._default_colors:
             self.even_row_color = self.theme_cls.background_darkest_color
 
-        if self.hover_row_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'hover_row_color' in self._default_colors:
             self.hover_row_color = self.theme_cls.background_dark_color
 
         self.__update_table_data()

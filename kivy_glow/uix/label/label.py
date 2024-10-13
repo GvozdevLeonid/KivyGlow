@@ -205,7 +205,7 @@ class GlowLabel(DeclarativeBehavior,
     _color = ColorProperty((1, 1, 1, 1))
     _selection_color = ColorProperty((1, 1, 1, 1))
     _focus = BooleanProperty(False)
-
+    _default_colors = []
     _font_properties = ('text', 'font_size', 'font_name', 'font_script_name',
                         'font_direction', 'bold', 'italic',
                         'underline', 'strikethrough', 'font_family', '_color',
@@ -364,6 +364,8 @@ class GlowLabel(DeclarativeBehavior,
 
     def on_theme_color(self, label_instance: Self, theme_color: str) -> None:
         '''Fired when the :attr:`theme_color` value changes.'''
+        self._default_colors.clear()
+
         if self.color is None:
             if theme_color == 'Primary':
                 self.color = self.theme_cls.text_color
@@ -380,29 +382,31 @@ class GlowLabel(DeclarativeBehavior,
             elif theme_color == 'Error':
                 self.color = self.theme_cls.error_color
 
+            self._default_colors.append('color')
+
         if self.selection_color is None:
             self.selection_color = self.theme_cls.primary_light_color[:3] + [.5]
+            self._default_colors.append('selection_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
         new_color = None
-
-        if self.theme_color == 'Primary' and self.color == self.theme_cls._get_text_color(old_theme_style):
-            new_color = self.theme_cls.text_color
-        elif self.theme_color == 'Secondary' and self.color == self.theme_cls._get_secondary_text_color(old_theme_style):
-            new_color = self.theme_cls.secondary_text_color
-        elif self.theme_color == 'PrimaryOpposite' and self.color == self.theme_cls._get_opposite_text_color(old_theme_style):
-            new_color = self.theme_cls.opposite_text_color
-        elif self.theme_color == 'SecondaryOpposite' and self.color == self.theme_cls._get_opposite_secondary_text_color(old_theme_style):
-            new_color = self.theme_cls.opposite_secondary_text_color
-        elif self.theme_color == 'Warning' and self.color == self.theme_cls._get_warning_color(old_theme_style):
-            new_color = self.theme_cls.warning_color
-        elif self.theme_color == 'Success' and self.color == self.theme_cls._get_success_color(old_theme_style):
-            new_color = self.theme_cls.success_color
-        elif self.theme_color == 'Error' and self.color == self.theme_cls._get_error_color(old_theme_style):
-            new_color = self.theme_cls.error_color
+        if 'color' in self._default_colors:
+            if self.theme_color == 'Primary':
+                new_color = self.theme_cls.text_color
+            elif self.theme_color == 'Secondary':
+                new_color = self.theme_cls.secondary_text_color
+            elif self.theme_color == 'PrimaryOpposite':
+                new_color = self.theme_cls.opposite_text_color
+            elif self.theme_color == 'SecondaryOpposite':
+                new_color = self.theme_cls.opposite_secondary_text_color
+            elif self.theme_color == 'Warning':
+                new_color = self.theme_cls.warning_color
+            elif self.theme_color == 'Success':
+                new_color = self.theme_cls.success_color
+            elif self.theme_color == 'Error':
+                new_color = self.theme_cls.error_color
 
         if new_color is not None:
             if self.theme_cls.theme_style_switch_animation:

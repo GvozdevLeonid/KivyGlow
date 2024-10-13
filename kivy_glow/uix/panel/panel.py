@@ -89,6 +89,7 @@ class GlowPanel(GlowBoxLayout):
     _active_tab = ObjectProperty(None, allownone=True)
     _active_pos = ListProperty(None, allownone=True)
     _active_size = ListProperty(None, allownone=True)
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(active_color=self.setter('_active_color'))
@@ -224,21 +225,25 @@ class GlowPanel(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
+        self._default_colors.clear()
+
         if self.active_color is None:
             self.active_color = self.theme_cls.primary_color
+            self._default_colors.append('active_color')
         if self.bg_color is None and self.mode == 'badge':
             self.bg_color = self.theme_cls.primary_dark_color
+            self._default_colors.append('bg_color')
         if self.text_color is None:
             self.text_color = self.theme_cls.text_color
+            self._default_colors.append('text_color')
         if self.icon_color is None:
             self.icon_color = self.theme_cls.text_color
+            self._default_colors.append('icon_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'text_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     text_color=self.theme_cls.text_color,
@@ -248,7 +253,7 @@ class GlowPanel(GlowBoxLayout):
             else:
                 self.text_color = self.theme_cls.text_color
 
-        if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'icon_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     icon_color=self.theme_cls.text_color,

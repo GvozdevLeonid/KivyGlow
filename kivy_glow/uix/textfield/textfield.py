@@ -119,6 +119,7 @@ class GlowTextField(HoverBehavior,
 
     left_content = ObjectProperty(None, allownone=True)
     right_content = ObjectProperty(None, allownone=True)
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self._textfield = None
@@ -224,49 +225,64 @@ class GlowTextField(HoverBehavior,
             self.bind(hidden=self.right_content.setter('hidden'))
 
     def set_default_colors(self, *args):
+        self._default_colors.clear()
         self.background_color = 0, 0, 0, 0
 
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_color
+            self._default_colors.append('bg_color')
 
         if self.border_color is None:
             self.border_color = self.theme_cls.background_dark_color
+            self._default_colors.append('border_color')
 
         if self.focus_border_color is None:
             self.focus_border_color = self.theme_cls.primary_color
+            self._default_colors.append('focus_border_color')
 
         if self.text_color is None:
             self.text_color = self.theme_cls.text_color
+            self._default_colors.append('text_color')
 
         if self.focus_text_color is None:
             self.focus_text_color = self.theme_cls.text_color
+            self._default_colors.append('focus_text_color')
 
         if self.disabled_text_color is None:
             self.disabled_text_color = self.theme_cls.disabled_color
+            self._default_colors.append('disabled_text_color')
 
         if self.label_color is None:
             self.label_color = self.theme_cls.secondary_text_color
+            self._default_colors.append('label_color')
 
         if self.focus_label_color is None:
             self.focus_label_color = self.theme_cls.primary_color
+            self._default_colors.append('focus_label_color')
 
         if self.help_text_color is None:
             self.help_text_color = self.theme_cls.secondary_text_color
+            self._default_colors.append('help_text_color')
 
         if self.focus_help_text_color is None:
             self.focus_help_text_color = self.theme_cls.secondary_text_color
+            self._default_colors.append('focus_help_text_color')
 
         if self.cursor_color is None:
             self.cursor_color = self.theme_cls.primary_light_color
+            self._default_colors.append('cursor_color')
 
         if self.placeholder_color is None:
             self.placeholder_color = self.theme_cls.secondary_text_color
+            self._default_colors.append('placeholder_color')
 
         if self.selection_color is None:
             self.selection_color = self.theme_cls.primary_light_color[:3] + [.5]
+            self._default_colors.append('selection_color')
 
         if self.error_color is None:
             self.error_color = self.theme_cls.error_color
+            self._default_colors.append('error_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         '''Fired when the app :attr:`theme_style` value changes.'''
@@ -275,8 +291,7 @@ class GlowTextField(HoverBehavior,
         if self.disabled:
             self.set_disabled_colors()
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-        if self.bg_color == self.theme_cls._get_background_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     bg_color=self.theme_cls.background_color,
@@ -286,7 +301,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.bg_color = self.theme_cls.background_color
 
-        if self.border_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'border_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     border_color=self.theme_cls.background_dark_color,
@@ -296,7 +311,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.border_color = self.theme_cls.background_dark_color
 
-        if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'text_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     text_color=self.theme_cls.text_color,
@@ -306,7 +321,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.text_color = self.theme_cls.text_color
 
-        if self.disabled_text_color == self.theme_cls._get_disabled_color(old_theme_style):
+        if 'disabled_text_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     disabled_text_color=self.theme_cls.disabled_color,
@@ -316,7 +331,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.disabled_text_color = self.theme_cls.disabled_color
 
-        if self.label_color == self.theme_cls._get_secondary_text_color(old_theme_style):
+        if 'label_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     label_color=self.theme_cls.secondary_text_color,
@@ -326,7 +341,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.label_color = self.theme_cls.secondary_text_color
 
-        if self.help_text_color == self.theme_cls._get_secondary_text_color(old_theme_style):
+        if 'help_text_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     help_text_color=self.theme_cls.secondary_text_color,
@@ -336,7 +351,7 @@ class GlowTextField(HoverBehavior,
             else:
                 self.help_text_color = self.theme_cls.secondary_text_color
 
-        if self.placeholder_color == self.theme_cls._get_secondary_text_color(old_theme_style):
+        if 'placeholder_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     placeholder_color=self.theme_cls.secondary_text_color,
@@ -346,13 +361,13 @@ class GlowTextField(HoverBehavior,
             else:
                 self.placeholder_color = self.theme_cls.secondary_text_color
 
-        if self.focus_text_color == self.theme_cls._get_text_color(old_theme_style):
+        if 'focus_text_color' in self._default_colors:
             self.focus_text_color = self.theme_cls.text_color
 
-        if self.focus_help_text_color == self.theme_cls._get_secondary_text_color(old_theme_style):
+        if 'focus_help_text_color' in self._default_colors:
             self.focus_help_text_color = self.theme_cls.secondary_text_color
 
-        if self.error_color == self.theme_cls._get_error_color(old_theme_style):
+        if 'error_color' in self._default_colors:
             self.error_color = self.theme_cls.error_color
 
     def on_focus(self, _, __):

@@ -41,6 +41,7 @@ class GlowSwitch(ToggleButtonBehavior,
 
     _icon = StringProperty('blank')
     _color = ColorProperty((0, 0, 0, 0))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,22 +64,26 @@ class GlowSwitch(ToggleButtonBehavior,
             thumb_animation.start(self.ids.glow_switch_thumb)
 
     def set_default_colors(self, *args):
+        self._default_colors.clear()
+
         if self.active_color is None:
             self.active_color = self.theme_cls.primary_color
+            self._default_colors.append('active_color')
         if self.inactive_color is None:
             self.inactive_color = self.theme_cls.background_dark_color
+            self._default_colors.append('inactive_color')
         if self.thumb_color is None:
             self.thumb_color = self.theme_cls.background_color
+            self._default_colors.append('thumb_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
 
-        if self.inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'inactive_color' in self._default_colors:
             self.inactive_color = self.theme_cls.background_dark_color
             if self.state == 'normal':
                 self._color = self.inactive_color
 
-        if self.thumb_color == self.theme_cls._get_background_color(old_theme_style):
+        if 'thumb_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     thumb_color=self.theme_cls.background_color,

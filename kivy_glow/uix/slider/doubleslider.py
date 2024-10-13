@@ -127,6 +127,7 @@ class GlowDoubleSlider(GlowWidget):
     default is True.
     '''
     _last_center_pos = None
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(track_active_color=self.setter('_track_active_color'))
@@ -382,33 +383,41 @@ class GlowDoubleSlider(GlowWidget):
             self._thumb_color = self.thumb_inactive_color
 
     def set_default_colors(self, *args):
-        if self.thumb_active_color is None:
-            self.thumb_active_color = self.theme_cls.primary_color
-
-        if self.thumb_inactive_color is None:
-            self.thumb_inactive_color = self.theme_cls.primary_color
-
-        if self.track_active_color is None:
-            self.track_active_color = self.theme_cls.primary_color
-
-        if self.track_inactive_color is None:
-            self.track_inactive_color = self.theme_cls.background_dark_color
-
-        if self.hint_text_color is None:
-            self.hint_text_color = self.theme_cls.primary_color
-
-        if self.hint_bg_color is None:
-            self.hint_bg_color = self.theme_cls.background_dark_color
+        self._default_colors.clear()
 
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_dark_color
+            self._default_colors.append('bg_color')
+
+        if self.thumb_active_color is None:
+            self.thumb_active_color = self.theme_cls.primary_color
+            self._default_colors.append('thumb_active_color')
+
+        if self.thumb_inactive_color is None:
+            self.thumb_inactive_color = self.theme_cls.primary_color
+            self._default_colors.append('thumb_inactive_color')
+
+        if self.track_active_color is None:
+            self.track_active_color = self.theme_cls.primary_color
+            self._default_colors.append('track_active_color')
+
+        if self.track_inactive_color is None:
+            self.track_inactive_color = self.theme_cls.background_dark_color
+            self._default_colors.append('track_inactive_color')
+
+        if self.hint_text_color is None:
+            self.hint_text_color = self.theme_cls.primary_color
+            self._default_colors.append('hint_text_color')
+
+        if self.hint_bg_color is None:
+            self.hint_bg_color = self.theme_cls.background_dark_color
+            self._default_colors.append('hint_bg_color')
 
         self._thumb_color = self.thumb_inactive_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
 
-        if self.track_inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'track_inactive_color' in self._default_colors:
             self._thumb_color = self.theme_cls.background_dark_color
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
@@ -419,7 +428,7 @@ class GlowDoubleSlider(GlowWidget):
             else:
                 self.track_inactive_color = self.theme_cls.background_dark_color
 
-        if self.hint_bg_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'hint_bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     hint_bg_color=self.theme_cls.background_dark_color,
@@ -429,7 +438,7 @@ class GlowDoubleSlider(GlowWidget):
             else:
                 self.hint_bg_color = self.theme_cls.background_dark_color
 
-        if self.bg_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'bg_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     bg_color=self.theme_cls.background_dark_color,

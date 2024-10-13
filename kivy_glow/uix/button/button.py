@@ -127,6 +127,7 @@ class GlowButton(HoverBehavior,
 
     _text_color = ColorProperty((0, 0, 0, 0))
     _icon_color = ColorProperty((0, 0, 0, 0))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(text_color=self.setter('_text_color'))
@@ -243,55 +244,72 @@ class GlowButton(HoverBehavior,
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors. Based on mode.'''
+        self._default_colors.clear()
+
         if self.mode == 'filled':
             if self.bg_color is None:
                 self.bg_color = self.theme_cls.primary_color
+                self._default_colors.append('bg_color')
             if self.border_color is None:
                 self.border_color = self.theme_cls.primary_color
+                self._default_colors.append('border_color')
             if self.text_color is None:
                 self.text_color = self.theme_cls.opposite_text_color
+                self._default_colors.append('text_color')
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.opposite_text_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'outline':
             if self.bg_color != (0, 0, 0, 0):
                 self.bg_color = (0, 0, 0, 0)
             if self.border_color is None:
                 self.border_color = self.theme_cls.primary_color
+                self._default_colors.append('border_color')
             if self.text_color is None:
                 self.text_color = self.theme_cls.text_color
+                self._default_colors.append('text_color')
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.text_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'soft':
             if self.bg_color is None:
                 self.bg_color = self.theme_cls.primary_color[:3] + [.3]
+                self._default_colors.append('bg_color')
             else:
                 self.bg_color = self.bg_color[:3] + [.3]
 
             if self.border_color is None:
                 self.border_color = self.theme_cls.primary_color[:3] + [0]
+                self._default_colors.append('border_color')
             else:
                 self.border_color = self.border_color[:3] + [0]
 
             if self.text_color is None:
                 self.text_color = self.theme_cls.primary_color
+                self._default_colors.append('text_color')
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.primary_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'soft-outline':
             if self.bg_color is None:
                 self.bg_color = self.theme_cls.primary_color[:3] + [.3]
+                self._default_colors.append('bg_color')
             else:
                 self.bg_color = self.bg_color[:3] + [.3]
 
             if self.border_color is None:
                 self.border_color = self.theme_cls.primary_color
+                self._default_colors.append('border_color')
 
             if self.text_color is None:
                 self.text_color = self.theme_cls.primary_color
+                self._default_colors.append('text_color')
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.primary_color
+                self._default_colors.append('icon_color')
 
         elif self.mode == 'text':
             if self.bg_color != (0, 0, 0, 0):
@@ -302,8 +320,10 @@ class GlowButton(HoverBehavior,
 
             if self.text_color is None:
                 self.text_color = self.theme_cls.primary_color
+                self._default_colors.append('text_color')
             if self.icon_color is None:
                 self.icon_color = self.theme_cls.primary_color
+                self._default_colors.append('icon_color')
 
     def set_disabled_colors(self, *args) -> None:
         '''Set disabled colors. Based on mode.'''
@@ -337,9 +357,8 @@ class GlowButton(HoverBehavior,
         if self.disabled:
             self.set_disabled_colors()
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
         if self.mode == 'filled':
-            if self.text_color == self.theme_cls._get_opposite_text_color(old_theme_style):
+            if 'text_color' in self._default_colors:
                 if self.theme_cls.theme_style_switch_animation:
                     Animation(
                         text_color=self.theme_cls.opposite_text_color,
@@ -349,7 +368,7 @@ class GlowButton(HoverBehavior,
                 else:
                     self.text_color = self.theme_cls.opposite_text_color
 
-            if self.icon_color == self.theme_cls._get_opposite_text_color(old_theme_style):
+            if 'icon_color' in self._default_colors:
                 if self.theme_cls.theme_style_switch_animation:
                     Animation(
                         icon_color=self.theme_cls.opposite_text_color,
@@ -360,7 +379,7 @@ class GlowButton(HoverBehavior,
                     self.icon_color = self.theme_cls.opposite_text_color
 
         elif self.mode == 'outline':
-            if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+            if 'text_color' in self._default_colors:
                 if self.theme_cls.theme_style_switch_animation:
                     Animation(
                         text_color=self.theme_cls.text_color,
@@ -370,7 +389,7 @@ class GlowButton(HoverBehavior,
                 else:
                     self.text_color = self.theme_cls.text_color
 
-            if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+            if 'icon_color' in self._default_colors:
                 if self.theme_cls.theme_style_switch_animation:
                     Animation(
                         icon_color=self.theme_cls.text_color,

@@ -45,10 +45,11 @@ class GlowProgressBar(DeclarativeBehavior,
     inactive_color = ColorProperty(None, allownone=True)
     line_width = NumericProperty('4dp')
 
+    mode = OptionProperty('line', options=('line', 'circle'))
+
     _active_color = ColorProperty((0, 0, 0, 0))
     _inactive_color = ColorProperty((0, 0, 0, 0))
-
-    mode = OptionProperty('line', options=('line', 'circle'))
+    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(active_color=self.setter('_active_color'))
@@ -59,17 +60,19 @@ class GlowProgressBar(DeclarativeBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
 
     def set_default_colors(self, *args):
+        self._default_colors.clear()
+
         if self.active_color is None:
             self.active_color = self.theme_cls.primary_color
+            self._default_colors.append('active_color')
         if self.inactive_color is None:
             self.inactive_color = self.theme_cls.background_dark_color
+            self._default_colors.append('inactive_color')
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
-
-        if self.inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+        if 'inactive_color' in self._default_colors:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
                     inactive_color=self.theme_cls.background_dark_color,
