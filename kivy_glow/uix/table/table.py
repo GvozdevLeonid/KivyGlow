@@ -9,9 +9,10 @@ from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.behaviors import HoverBehavior
 import kivy_glow.uix.table.cells as table_cells
 from kivy_glow.uix.checkbox import GlowCheckbox
-from kivy.uix.behaviors import ButtonBehavior
 from kivy_glow.uix.button import GlowButton
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
+from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -58,7 +59,6 @@ def get_cell_property_connection(cell_idx, cell_property, cell_property_type, of
 
 class GlowTableRow(GlowBoxLayout,
                    HoverBehavior,
-                   ButtonBehavior,
                    RecycleDataViewBehavior):
 
     index = NumericProperty(None, allownone=True)
@@ -275,6 +275,45 @@ class GlowTable(GlowBoxLayout):
             self.even_row_color = self.theme_cls.background_darkest_color
 
         if self.hover_row_color is None:
+            self.hover_row_color = self.theme_cls.background_dark_color
+
+        self.__update_table_data()
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        '''Fired when the app :attr:`theme_style` value changes.'''
+        super().on_theme_style(theme_manager, theme_style)
+
+        if self.disabled:
+            self.set_disabled_colors()
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    bg_color=self.theme_cls.background_darkest_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.bg_color = self.theme_cls.background_darkest_color
+
+        if self.header_color == self.theme_cls._get_background_light_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    header_color=self.theme_cls.background_light_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.header_color = self.theme_cls.background_light_color
+
+        if self.odd_row_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            self.odd_row_color = self.theme_cls.background_darkest_color
+
+        if self.even_row_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            self.even_row_color = self.theme_cls.background_darkest_color
+
+        if self.hover_row_color == self.theme_cls._get_background_dark_color(old_theme_style):
             self.hover_row_color = self.theme_cls.background_dark_color
 
         self.__update_table_data()

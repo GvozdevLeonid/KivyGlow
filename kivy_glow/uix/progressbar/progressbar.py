@@ -1,7 +1,9 @@
 __all__ = ('GlowProgressBar', )
 
 from kivy.uix.progressbar import ProgressBar
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
+from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.clock import Clock
 import os
@@ -55,6 +57,21 @@ class GlowProgressBar(DeclarativeBehavior,
             self.active_color = self.theme_cls.primary_color
         if self.inactive_color is None:
             self.inactive_color = self.theme_cls.background_dark_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    inactive_color=self.theme_cls.background_dark_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.inactive_color = self.theme_cls.background_dark_color
 
     def _get_value_pos(self):
         nval = self.value_normalized

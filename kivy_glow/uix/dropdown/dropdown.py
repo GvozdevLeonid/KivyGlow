@@ -2,6 +2,7 @@ __all__ = ('GlowDropDown', 'GlowSelectableDropDown')
 
 from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
 from kivy_glow.uix.button import GlowButton
+from kivy_glow.theme import ThemeManager
 from kivy.clock import Clock
 from kivy.metrics import dp
 from typing import Self
@@ -86,6 +87,13 @@ class GlowDropDown(GlowButton):
     and defaults to `None`.
     '''
 
+    dropdown_bg_color = ColorProperty(None, allownonw=True)
+    '''Dropdown bg color
+
+    :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     _item_text_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
@@ -138,6 +146,7 @@ class GlowDropDown(GlowButton):
         self.dropdown_container = GlowDropDownContainer(
             opening_transition=self.opening_transition,
             closing_transition=self.closing_transition,
+            bg_color=self.dropdown_bg_color,
             opening_time=self.opening_time,
             closing_time=self.closing_time,
             max_height=self.max_height,
@@ -151,6 +160,14 @@ class GlowDropDown(GlowButton):
         super().set_default_colors()
 
         if self.item_text_color is None:
+            self.item_text_color = self.theme_cls.text_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.item_text_color == self.theme_cls._get_text_color(old_theme_style):
             self.item_text_color = self.theme_cls.text_color
 
 
@@ -249,6 +266,13 @@ class GlowSelectableDropDown(GlowButton):
     and defaults to `None`.
     '''
 
+    dropdown_bg_color = ColorProperty(None, allownonw=True)
+    '''Dropdown bg color
+
+    :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     _item_text_color = ColorProperty((0, 0, 0, 0))
     _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
     _selected_item_text_color = ColorProperty((0, 0, 0, 0))
@@ -313,6 +337,7 @@ class GlowSelectableDropDown(GlowButton):
         self.dropdown_container = GlowDropDownContainer(
             opening_transition=self.opening_transition,
             closing_transition=self.closing_transition,
+            bg_color=self.dropdown_bg_color,
             opening_time=self.opening_time,
             closing_time=self.closing_time,
             max_height=self.max_height,
@@ -333,3 +358,11 @@ class GlowSelectableDropDown(GlowButton):
 
         if self.selected_item_text_color is None:
             self.selected_item_text_color = self.theme_cls.primary_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.item_text_color == self.theme_cls._get_text_color(old_theme_style):
+            self.item_text_color = self.theme_cls.text_color

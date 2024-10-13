@@ -5,6 +5,7 @@ from kivy.input.motionevent import MotionEvent
 from kivy.core.text import Label as CoreLabel
 from kivy.core.clipboard import Clipboard
 from kivy.utils import get_hex_from_color
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
 from kivy.uix.textinput import Selector
 from kivy.animation import Animation
@@ -176,6 +177,8 @@ class GlowLabel(DeclarativeBehavior,
             'Secondary',
             'PrimaryOpposite',
             'SecondaryOpposite',
+            'Warning',
+            'Success',
             'Error',
         )
     )
@@ -202,6 +205,19 @@ class GlowLabel(DeclarativeBehavior,
     _color = ColorProperty((1, 1, 1, 1))
     _selection_color = ColorProperty((1, 1, 1, 1))
     _focus = BooleanProperty(False)
+
+    _font_properties = ('text', 'font_size', 'font_name', 'font_script_name',
+                        'font_direction', 'bold', 'italic',
+                        'underline', 'strikethrough', 'font_family', '_color',
+                        'disabled_color', 'halign', 'valign', 'padding',
+                        'outline_width', 'disabled_outline_color',
+                        'outline_color', 'text_size', 'shorten', 'mipmap',
+                        'line_height', 'max_lines', 'strip', 'shorten_from',
+                        'split_str', 'ellipsis_options', 'unicode_errors',
+                        'markup', 'font_hinting', 'font_kerning',
+                        'font_blended', 'font_context', 'font_features',
+                        'base_direction', 'text_language',
+                        'limit_render_to_text_bbox')
 
     def __init__(self, *args, **kwargs):
         self.bind(color=self.setter('_color'))
@@ -264,7 +280,7 @@ class GlowLabel(DeclarativeBehavior,
                 self._label.options['color'] = value
             elif name == 'disabled_outline_color' and self.disabled:
                 self._label.options['outline_color'] = value
-            elif name == 'color':
+            elif name == '_color':
                 self._label.options['color'] = value if not self.disabled else self.disabled_color
             elif name == 'outline_color':
                 self._label.options['outline_color'] = value if not self.disabled else self.disabled_outline_color
@@ -357,11 +373,46 @@ class GlowLabel(DeclarativeBehavior,
                 self.color = self.theme_cls.opposite_text_color
             elif theme_color == 'SecondaryOpposite':
                 self.color = self.theme_cls.opposite_secondary_text_color
+            elif theme_color == 'Warning':
+                self.color = self.theme_cls.warning_color
+            elif theme_color == 'Success':
+                self.color = self.theme_cls.success_color
             elif theme_color == 'Error':
                 self.color = self.theme_cls.error_color
 
         if self.selection_color is None:
             self.selection_color = self.theme_cls.primary_light_color[:3] + [.5]
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+        new_color = None
+
+        if self.theme_color == 'Primary' and self.color == self.theme_cls._get_text_color(old_theme_style):
+            new_color = self.theme_cls.text_color
+        elif self.theme_color == 'Secondary' and self.color == self.theme_cls._get_secondary_text_color(old_theme_style):
+            new_color = self.theme_cls.secondary_text_color
+        elif self.theme_color == 'PrimaryOpposite' and self.color == self.theme_cls._get_opposite_text_color(old_theme_style):
+            new_color = self.theme_cls.opposite_text_color
+        elif self.theme_color == 'SecondaryOpposite' and self.color == self.theme_cls._get_opposite_secondary_text_color(old_theme_style):
+            new_color = self.theme_cls.opposite_secondary_text_color
+        elif self.theme_color == 'Warning' and self.color == self.theme_cls._get_warning_color(old_theme_style):
+            new_color = self.theme_cls.warning_color
+        elif self.theme_color == 'Success' and self.color == self.theme_cls._get_success_color(old_theme_style):
+            new_color = self.theme_cls.success_color
+        elif self.theme_color == 'Error' and self.color == self.theme_cls._get_error_color(old_theme_style):
+            new_color = self.theme_cls.error_color
+
+        if new_color is not None:
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    color=new_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.color = new_color
 
     def on_handle_image_left(self, label_instance: Self, handle_image_left: str) -> None:
         '''Fired when the :attr:`handle_image_left` value changes.'''

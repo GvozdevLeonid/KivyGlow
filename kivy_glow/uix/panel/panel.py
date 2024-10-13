@@ -3,6 +3,7 @@ __all__ = ('GlowPanel', )
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.button import GlowButton
 from kivy_glow.uix.widget import GlowWidget
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
 from kivy.lang import Builder
@@ -231,6 +232,31 @@ class GlowPanel(GlowBoxLayout):
             self.text_color = self.theme_cls.text_color
         if self.icon_color is None:
             self.icon_color = self.theme_cls.text_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    text_color=self.theme_cls.text_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.text_color = self.theme_cls.text_color
+
+        if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    icon_color=self.theme_cls.text_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.icon_color = self.theme_cls.text_color
 
     def set_active_tab(self, idx: int) -> None:
         for child in self.children[::-1]:

@@ -1,5 +1,6 @@
 __all__ = ('GlowSlider', )
 
+from kivy_glow.theme import ThemeManager
 from kivy_glow.uix.icon import GlowIcon
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
@@ -128,10 +129,44 @@ class GlowSlider(DeclarativeBehavior,
         if self.hint_bg_color is None:
             self.hint_bg_color = self.theme_cls.background_dark_color
 
-        self._thumb_color = self.thumb_inactive_color
-
         if self.bg_color is None:
             self.bg_color = self.theme_cls.background_dark_color
+
+        self._thumb_color = self.thumb_inactive_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.track_inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+            self._thumb_color = self.theme_cls.background_dark_color
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    track_inactive_color=self.theme_cls.background_dark_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.track_inactive_color = self.theme_cls.background_dark_color
+
+        if self.hint_bg_color == self.theme_cls._get_background_dark_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    hint_bg_color=self.theme_cls.background_dark_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.hint_bg_color = self.theme_cls.background_dark_color
+
+        if self.bg_color == self.theme_cls._get_background_dark_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    bg_color=self.theme_cls.background_dark_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.bg_color = self.theme_cls.background_dark_color
 
     def on_value(self, _, __):
         self._hint_text = str(round(self.value, 2))

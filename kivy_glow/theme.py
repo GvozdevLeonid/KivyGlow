@@ -86,21 +86,28 @@ class ThemeManager(EventDispatcher):
     )
 
     # Background color
-    theme_style = OptionProperty('Light', options=('Light', 'Dark'))
     background_palette = OptionProperty('Neutral', options=available_palette)
 
-    def _get_opposite_theme_style(self):
-        if self.theme_style == 'Dark':
+    # Theme
+    theme_style = OptionProperty('Light', options=('Light', 'Dark'))
+    theme_style_switch_animation_duration = NumericProperty(0.2)
+    theme_style_switch_animation = BooleanProperty(False)
+
+    def _get_opposite_theme_style(self, theme_style: str):
+        if theme_style == 'Dark':
             return 'Light'
-        elif self.theme_style == 'Light':
+        elif theme_style == 'Light':
             return 'Dark'
 
-    def _get_background_light_color(self) -> list:
-        if self.theme_style == 'Light':
+    def _get_background_light_color(self, theme_style: str = None) -> list:
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors[self.background_palette]['50']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors[self.background_palette]['700']
             )
@@ -109,12 +116,15 @@ class ThemeManager(EventDispatcher):
         _get_background_light_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_background_color(self) -> list:
-        if self.theme_style == 'Light':
+    def _get_background_color(self, theme_style: str = None) -> list:
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors[self.background_palette]['100']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors[self.background_palette]['800']
             )
@@ -123,12 +133,15 @@ class ThemeManager(EventDispatcher):
         _get_background_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_background_dark_color(self) -> list:
-        if self.theme_style == 'Light':
+    def _get_background_dark_color(self, theme_style: str = None) -> list:
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors[self.background_palette]['200']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors[self.background_palette]['900']
             )
@@ -137,12 +150,15 @@ class ThemeManager(EventDispatcher):
         _get_background_dark_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_background_darkest_color(self) -> list:
-        if self.theme_style == 'Light':
+    def _get_background_darkest_color(self, theme_style: str = None) -> list:
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors[self.background_palette]['300']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors[self.background_palette]['950']
             )
@@ -152,8 +168,12 @@ class ThemeManager(EventDispatcher):
     )
 
     # Text & Devider color
-    def _get_text_color(self, opposite: bool = False):
-        theme_style = self.theme_style if not opposite else self._get_opposite_theme_style()
+    def _get_text_color(self, theme_style: str = None, opposite: bool = False):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if opposite:
+            theme_style = self._get_opposite_theme_style(theme_style)
 
         if theme_style == 'Light':
             return get_color_from_hex(
@@ -168,15 +188,22 @@ class ThemeManager(EventDispatcher):
         _get_text_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_opposite_text_color(self):
-        return self._get_text_color(True)
+    def _get_opposite_text_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        return self._get_text_color(theme_style, True)
 
     opposite_text_color = AliasProperty(
         _get_opposite_text_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_secondary_text_color(self, opposite: bool = False):
-        theme_style = self.theme_style if not opposite else self._get_opposite_theme_style()
+    def _get_secondary_text_color(self, theme_style: str = None, opposite: bool = False):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if opposite:
+            theme_style = self._get_opposite_theme_style(theme_style)
 
         if theme_style == 'Light':
             return get_color_from_hex(
@@ -191,19 +218,25 @@ class ThemeManager(EventDispatcher):
         _get_secondary_text_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_opposite_secondary_text_color(self):
-        return self._get_secondary_text_color(True)
+    def _get_opposite_secondary_text_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        return self._get_secondary_text_color(theme_style, True)
 
     opposite_secondary_text_color = AliasProperty(
         _get_opposite_secondary_text_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_disabled_color(self):
-        if self.theme_style == 'Light':
+    def _get_disabled_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors[self.background_palette]['500']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors[self.background_palette]['500']
             )
@@ -212,8 +245,12 @@ class ThemeManager(EventDispatcher):
         _get_disabled_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_divider_color(self, opposite: bool = False):
-        theme_style = self.theme_style if not opposite else self._get_opposite_theme_style()
+    def _get_divider_color(self, theme_style: str = None, opposite: bool = False):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if opposite:
+            theme_style = self._get_opposite_theme_style(theme_style)
 
         if theme_style == 'Light':
             return get_color_from_hex(
@@ -228,19 +265,25 @@ class ThemeManager(EventDispatcher):
         _get_divider_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_opposite_divider_color(self, opposite: bool = False):
-        return self._get_divider_color(True)
+    def _get_opposite_divider_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        return self._get_divider_color(theme_style, True)
 
     opposite_divider_color = AliasProperty(
         _get_opposite_divider_color, bind=('background_palette', 'theme_style')
     )
 
-    def _get_error_color(self):
-        if self.theme_style == 'Light':
+    def _get_error_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors['Red']['600']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors['Red']['400']
             )
@@ -249,12 +292,15 @@ class ThemeManager(EventDispatcher):
         _get_error_color, bind=('theme_style', )
     )
 
-    def _get_success_color(self):
-        if self.theme_style == 'Light':
+    def _get_success_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors['Green']['600']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors['Green']['400']
             )
@@ -263,12 +309,15 @@ class ThemeManager(EventDispatcher):
         _get_success_color, bind=('theme_style', )
     )
 
-    def _get_warning_color(self):
-        if self.theme_style == 'Light':
+    def _get_warning_color(self, theme_style: str = None):
+        if theme_style is None:
+            theme_style = self.theme_style
+
+        if theme_style == 'Light':
             return get_color_from_hex(
                 self.colors['Amber']['600']
             )
-        elif self.theme_style == 'Dark':
+        elif theme_style == 'Dark':
             return get_color_from_hex(
                 self.colors['Amber']['400']
             )
@@ -474,7 +523,7 @@ class ThemeManager(EventDispatcher):
     def set_clearcolor(self, theme_style):
         Window.clearcolor = self.background_color
 
-    def lighten_color(self, color, factor=0.2):
+    def lighten_color(self, color, factor=0.3):
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
@@ -490,7 +539,7 @@ class ThemeManager(EventDispatcher):
 
         return float(r), float(g), float(b), a
 
-    def darken_color(self, color, factor=0.2):
+    def darken_color(self, color, factor=0.3):
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
@@ -506,7 +555,14 @@ class ThemeManager(EventDispatcher):
 
         return float(r), float(g), float(b), a
 
-    def darken_or_lighten_color(self, color, factor=0.2):
+    def darken_or_lighten_color(self, color, factor=0.3):
+
+        def normalized_channel(color):
+            if color <= 0.03928:
+                return color / 12.92
+            else:
+                return ((color + 0.055) / 1.055) ** 2.4
+
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
@@ -516,7 +572,7 @@ class ThemeManager(EventDispatcher):
             else:
                 r, g, b, a = color
 
-        luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+        luminance = 0.2126 * normalized_channel(r) + 0.7152 * normalized_channel(g) + 0.0722 * normalized_channel(b)
         if luminance < .5:
             return self.lighten_color(color, factor)
         return self.darken_color(color, factor)

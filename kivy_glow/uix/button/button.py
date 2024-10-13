@@ -4,6 +4,7 @@ from kivy_glow.uix.anchorlayout import GlowAnchorLayout
 from kivy_glow.uix.behaviors import HoverBehavior
 from kivy.input.motionevent import MotionEvent
 from kivy.uix.behaviors import ButtonBehavior
+from kivy_glow.theme import ThemeManager
 from kivy_glow.uix.icon import GlowIcon
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
@@ -328,6 +329,56 @@ class GlowButton(HoverBehavior,
             elif self.mode == 'soft-outline':
                 self._bg_color = self.bg_color
                 self._border_color = self.border_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        '''Fired when the app :attr:`theme_style` value changes.'''
+        super().on_theme_style(theme_manager, theme_style)
+
+        if self.disabled:
+            self.set_disabled_colors()
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+        if self.mode == 'filled':
+            if self.text_color == self.theme_cls._get_opposite_text_color(old_theme_style):
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        text_color=self.theme_cls.opposite_text_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self.text_color = self.theme_cls.opposite_text_color
+
+            if self.icon_color == self.theme_cls._get_opposite_text_color(old_theme_style):
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        icon_color=self.theme_cls.opposite_text_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self.icon_color = self.theme_cls.opposite_text_color
+
+        elif self.mode == 'outline':
+            if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        text_color=self.theme_cls.text_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self.text_color = self.theme_cls.text_color
+
+            if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        icon_color=self.theme_cls.text_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self.icon_color = self.theme_cls.text_color
 
     def _set_icon(self, *args) -> None:
         '''Add icon to the Button'''

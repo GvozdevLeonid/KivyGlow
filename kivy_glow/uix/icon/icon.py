@@ -10,10 +10,8 @@ from kivy_glow.icons import (
 )
 from kivy.properties import (
     VariableListProperty,
-    BooleanProperty,
     NumericProperty,
     StringProperty,
-    OptionProperty,
     AliasProperty,
     ColorProperty,
 )
@@ -57,9 +55,7 @@ class GlowIcon(GlowLabel):
     '''
 
     badge_content = StringProperty('')
-    '''Icon badge content. Can be icon or text.
-
-    For icon set :attr:`badge_font_name` as `'Icons'`
+    '''Icon badge content. Can be icon (only static icons) or text.
 
     :attr:`badge_content` is an :class:`~kivy.properties.StringProperty`
     and defaults to `empty`.
@@ -67,8 +63,6 @@ class GlowIcon(GlowLabel):
 
     badge_font_name = StringProperty('MontserratLight')
     '''Icon badge font name.
-
-    For icon in badge set `'Icons'`
 
     :attr:`badge_font_name` is an :class:`~kivy.properties.StringProperty`
     and defaults to `MontserratLight`.

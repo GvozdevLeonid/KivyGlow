@@ -8,8 +8,9 @@ from kivy_glow.uix.recycleview import GlowRecycleView
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.behaviors import HoverBehavior
 from kivy.input.motionevent import MotionEvent
-from kivy.uix.behaviors import ButtonBehavior
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
+from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -36,7 +37,6 @@ class SelectableRecycleBoxLayout(LayoutSelectionBehavior, GlowRecycleBoxLayout):
 
 class GlowSelectableListItem(GlowBoxLayout,
                              HoverBehavior,
-                             ButtonBehavior,
                              RecycleDataViewBehavior):
 
     '''Your list item should inherit from GlowSelectableListItem or GlowListItem depending on whether you need checkboxes for selection.
@@ -81,7 +81,6 @@ class GlowSelectableListItem(GlowBoxLayout,
     For more information, see in the
     :class:`~kivy_glow.uix.boxlayout.GlowBoxLayout` and
     :class:`~kivy_glow.uix.behaviors.HoverBehavior` and
-    :class:`~kivy.uix.behaviors.ButtonBehavior` and
     :class:`~kivy.uix.recycleview.views.RecycleDataViewBehavior`
     classes documentation.
     '''
@@ -164,7 +163,6 @@ class GlowSelectableListItem(GlowBoxLayout,
 
 class GlowListItem(GlowBoxLayout,
                    HoverBehavior,
-                   ButtonBehavior,
                    RecycleDataViewBehavior):
 
     '''Inheritance class to create your own list item without selectability.
@@ -198,7 +196,6 @@ class GlowListItem(GlowBoxLayout,
     For more information, see in the
     :class:`~kivy_glow.uix.boxlayout.GlowBoxLayout` and
     :class:`~kivy_glow.uix.behaviors.HoverBehavior` and
-    :class:`~kivy.uix.behaviors.ButtonBehavior` and
     :class:`~kivy.uix.recycleview.views.RecycleDataViewBehavior`
     classes documentation.
     '''
@@ -462,6 +459,32 @@ class GlowList(GlowBoxLayout):
             self.even_item_color = self.theme_cls.background_darkest_color
 
         if self.hover_item_color is None:
+            self.hover_item_color = self.theme_cls.background_dark_color
+
+        self.__update_list_data()
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    bg_color=self.theme_cls.background_darkest_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.bg_color = self.theme_cls.background_darkest_color
+
+        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            self.odd_item_color = self.theme_cls.background_darkest_color
+
+        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
+            self.even_item_color = self.theme_cls.background_darkest_color
+
+        if self.odd_item_color == self.theme_cls._get_background_darkest_color(old_theme_style):
             self.hover_item_color = self.theme_cls.background_dark_color
 
         self.__update_list_data()

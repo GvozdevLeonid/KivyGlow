@@ -22,8 +22,9 @@ class GlowApp(App, ThemeBehavior):
     theme_cls = ObjectProperty()
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.theme_cls = ThemeManager()
+
+        super().__init__(*args, **kwargs)
 
     def load_all_kv_files(self, path_to_directory: str) -> None:
         '''Recursively loads KV files from the selected directory.'''

@@ -3,6 +3,7 @@ __all__ = ('GlowCheckbox', )
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.input.motionevent import MotionEvent
 from kivy_glow.uix.widget import GlowWidget
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
 from kivy.core.window import Window
@@ -219,3 +220,21 @@ class GlowCheckbox(ToggleButtonBehavior,
             self.active_color = self.theme_cls.primary_color
         if self.inactive_color is None:
             self.inactive_color = self.theme_cls.divider_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.inactive_color == self.theme_cls._get_divider_color(old_theme_style):
+            self.inactive_color = self.theme_cls.divider_color
+
+            if self.state == 'normal':
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        _color=self.inactive_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self._color = self.inactive_color

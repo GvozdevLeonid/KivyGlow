@@ -1,6 +1,5 @@
 __all__ = ('GlowSplitter', )
 
-from kivy.uix.behaviors import ButtonBehavior
 from kivy_glow.uix.widget import GlowWidget
 from kivy_glow import kivy_glow_uix_dir
 from kivy.uix.splitter import Splitter
@@ -29,8 +28,7 @@ with open(
     Builder.load_string(kv_file.read())
 
 
-class GlowSplitterStrip(ButtonBehavior,
-                        HoverBehavior,
+class GlowSplitterStrip(HoverBehavior,
                         GlowWidget):
     def on_enter(self):
         Window.set_system_cursor('hand')
@@ -50,8 +48,7 @@ class GlowSplitter(DeclarativeBehavior,
         super().__init__(*args, **kwargs)
 
 
-class GlowSplitterWidgetStrip(ButtonBehavior,
-                              HoverBehavior,
+class GlowSplitterWidgetStrip(HoverBehavior,
                               GlowWidget):
     def on_enter(self):
         Window.set_system_cursor('hand')

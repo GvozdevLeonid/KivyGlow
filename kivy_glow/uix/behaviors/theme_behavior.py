@@ -1,5 +1,6 @@
 __all__ = ('ThemeBehavior', )
 
+from kivy_glow.theme import ThemeManager
 from kivy.event import EventDispatcher
 from kivy.core.window import Window
 from kivy.utils import platform
@@ -40,10 +41,13 @@ class ThemeBehavior(EventDispatcher):
 
     def __init__(self, *args, **kwargs) -> None:
         self.theme_cls = App.get_running_app().theme_cls
-        self.set_device()
 
+        super().__init__(*args, **kwargs)
+        self.register_event_type('on_theme_style')
+
+        self.set_device()
+        self.theme_cls.bind(theme_style=lambda theme_manager, theme_style: self.dispatch('on_theme_style', theme_manager, theme_style))
         Clock.schedule_once(self.set_default_widget_style, -1)
-        super().__init__(**kwargs)
 
     def set_default_widget_style(self, *args) -> None:
         '''Set default widget style. Based on kivy.utils.platform.'''
@@ -53,10 +57,14 @@ class ThemeBehavior(EventDispatcher):
             else:
                 self.widget_style = 'desctop'
 
-    def set_device(self, *args):
+    def set_device(self, *args) -> None:
+        '''Set device type. Based on kivy.utils.platform.'''
         if platform != "android" and platform != "ios":
             self.device = "desktop"
         elif Window.width >= dp(600) and Window.height >= dp(600):
             self.device = "tablet"
         else:
             self.device = "mobile"
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        pass

@@ -3,6 +3,7 @@ __all__ = ('GlowSwitch', )
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy_glow.uix.behaviors import HoverBehavior
 from kivy_glow.uix.widget import GlowWidget
+from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
 from kivy.core.window import Window
@@ -69,6 +70,24 @@ class GlowSwitch(ToggleButtonBehavior,
         if self.thumb_color is None:
             self.thumb_color = self.theme_cls.background_color
 
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.inactive_color == self.theme_cls._get_background_dark_color(old_theme_style):
+            self.inactive_color = self.theme_cls.background_dark_color
+            if self.state == 'normal':
+                self._color = self.inactive_color
+
+        if self.thumb_color == self.theme_cls._get_background_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    thumb_color=self.theme_cls.background_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.thumb_color = self.theme_cls.background_color
+
     def on_enter(self):
         Window.set_system_cursor('hand')
 
@@ -130,4 +149,4 @@ class GlowSwitch(ToggleButtonBehavior,
         self.state = 'normal' if self.state == 'down' else 'down'
 
     def on_touch_up(self, touch):
-        return super().on_touch_up(touch)  
+        return super().on_touch_up(touch)

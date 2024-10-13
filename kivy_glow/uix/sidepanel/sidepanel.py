@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.input.motionevent import MotionEvent
 from kivy_glow.uix.button import GlowButton
 from kivy_glow.uix.label import GlowLabel
+from kivy_glow.theme import ThemeManager
 from kivy_glow.uix.icon import GlowIcon
 from kivy_glow import kivy_glow_uix_dir
 from kivy.lang import Builder
@@ -198,6 +199,32 @@ class GlowSidePanelButton(GlowButton):
 
         if self.selected_color is None:
             self.selected_color = self.theme_cls.primary_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        if self.disabled:
+            self.set_disabled_colors()
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.text_color == self.theme_cls._get_text_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    text_color=self.theme_cls.text_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.text_color = self.theme_cls.text_color
+
+        if self.icon_color == self.theme_cls._get_text_color(old_theme_style):
+            if self.theme_cls.theme_style_switch_animation:
+                Animation(
+                    icon_color=self.theme_cls.text_color,
+                    d=self.theme_cls.theme_style_switch_animation_duration,
+                    t='linear',
+                ).start(self)
+            else:
+                self.icon_color = self.theme_cls.text_color
 
     def set_disabled_colors(self, *args) -> None:
         if self.disabled:

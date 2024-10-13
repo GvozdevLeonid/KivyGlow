@@ -4,6 +4,7 @@ from kivy_glow.uix.scrollview import GlowScrollView
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy.input.motionevent import MotionEvent
 from kivy_glow.uix.widget import GlowWidget
+from kivy_glow.theme import ThemeManager
 from kivy.animation import Animation
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -427,4 +428,12 @@ class GlowDropDownContainer(GlowBoxLayout):
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
         if self.bg_color is None:
+            self.bg_color = self.theme_cls.background_darkest_color
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.bg_color == self.theme_cls._get_background_darkest_color(old_theme_style):
             self.bg_color = self.theme_cls.background_darkest_color

@@ -3,6 +3,7 @@ __all__ = ('GlowComboBox', )
 from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
 from kivy_glow.uix.textfield import GlowTextField
 from kivy_glow.uix.button import GlowButton
+from kivy_glow.theme import ThemeManager
 from kivy.clock import Clock
 from kivy.metrics import dp
 from typing import Self
@@ -257,3 +258,11 @@ class GlowComboBox(GlowTextField):
     def on_pre_open(self):
         '''Fires before the ComboVox is opened.'''
         pass
+
+    def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
+
+        old_theme_style = self.theme_cls._get_opposite_theme_style(theme_style)
+
+        if self.item_text_color == self.theme_cls._get_text_color(old_theme_style):
+            self.item_text_color = self.theme_cls.text_color

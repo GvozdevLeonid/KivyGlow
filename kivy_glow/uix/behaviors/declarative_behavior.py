@@ -25,7 +25,7 @@ class DeclarativeBehavior:
     def __init__(self, *args, **kwargs) -> None:
         supported_keys = list(self.properties().keys()) + ['__no_builder']
         filtered_kwargs = {k: v for k, v in kwargs.items() if k in supported_keys or k.startswith('on_')}
-        super().__init__(*args, **filtered_kwargs)
+        super().__init__(**filtered_kwargs)
 
         for key, value in kwargs.items():
             if key not in filtered_kwargs.keys():
