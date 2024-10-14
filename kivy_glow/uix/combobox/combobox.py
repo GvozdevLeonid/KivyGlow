@@ -163,7 +163,6 @@ class GlowComboBox(GlowTextField):
 
         self.register_event_type('on_pre_open')
 
-        Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_combobox, -1)
 
     def on_parent(self, instance: Self, parent) -> None:

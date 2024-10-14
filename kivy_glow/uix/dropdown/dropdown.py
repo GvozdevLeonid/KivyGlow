@@ -105,7 +105,6 @@ class GlowDropDown(GlowButton):
 
         self.register_event_type('on_selected_item')
 
-        Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_dropdown, -1)
 
     def on_parent(self, instance: Self, parent) -> None:
@@ -287,7 +286,6 @@ class GlowSelectableDropDown(GlowButton):
 
         super().__init__(*args, **kwargs)
 
-        Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_selectable_dropdown, -1)
 
     def on_parent(self, instance: Self, parent) -> None:

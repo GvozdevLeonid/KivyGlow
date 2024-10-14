@@ -66,7 +66,6 @@ class GlowSidePanelButton(GlowButton):
         self.adaptive_height = True
         self.right_text_label = None
 
-        Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_sidepanelbutton, -1)
 
     def on_parent(self, instance: Self, parent) -> None:
