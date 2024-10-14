@@ -158,8 +158,8 @@ class GlowDropDown(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        super().set_default_colors()
         self._default_colors.clear()
+        super().set_default_colors()
 
         if self.item_text_color is None:
             self.item_text_color = self.theme_cls.text_color
@@ -351,8 +351,8 @@ class GlowSelectableDropDown(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        super().set_default_colors()
         self._default_colors.clear()
+        super().set_default_colors()
 
         if self.item_text_color is None:
             self.item_text_color = self.theme_cls.text_color
