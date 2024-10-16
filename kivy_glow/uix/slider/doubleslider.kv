@@ -3,70 +3,73 @@
         Color:
             rgba: (self._track_inactive_color if self.value_track else self._bg_color) if self.orientation == 'horizontal' else (0, 0, 0, 0)
         SmoothLine:
-            width: self.line_width
             points: self.x + self.padding, self.center_y, self.min_value_pos[0] , self.center_y
-        SmoothLine:
             width: self.line_width
+        SmoothLine:
             points: self.max_value_pos[0], self.center_y, self.right - self.padding , self.center_y
+            width: self.line_width
         Color:
             rgba: (self._track_inactive_color if self.value_track else self._bg_color) if self.orientation == 'vertical' else (0, 0, 0, 0)
         SmoothLine:
-            width: self.line_width
             points: self.center_x, self.y + self.padding, self.center_x, self.min_value_pos[1]
-        SmoothLine:
             width: self.line_width
+        SmoothLine:
             points: self.center_x, self.max_value_pos[1], self.center_x, self.top - self.padding
+            width: self.line_width
         Color:
             rgba: (self._track_active_color if self.value_track else self._bg_color) if self.orientation == 'horizontal' else (0, 0, 0, 0)
         SmoothLine:
-            width: self.line_width
             points: self.min_value_pos[0], self.center_y, self.max_value_pos[0], self.center_y
+            width: self.line_width
         Color:
             rgba: (self._track_active_color if self.value_track else self._bg_color) if self.orientation == 'vertical' else (0, 0, 0, 0)
         SmoothLine:
-            width: self.line_width
             points: self.center_x, self.min_value_pos[1], self.center_x, self.max_value_pos[1]
-    size_hint_y: None
+            width: self.line_width
     height: self.thumb_size
+    size_hint_y: None
     Thumb:
         id: glow_doubleslider_min_thumb
-        icon: 'blank'
-        shadow: 'outside'
-        shadow_color: 0, 0, 0, 1
-        adaptive_size: False
-        bg_color: root._thumb_color
-        border_radius: [self.width, ]
-        shadow_blur_radius: dp(10)
-        size: root.thumb_size, root.thumb_size
         pos: (root.min_value_pos[0] - self.width / 2, root.center_y - self.height / 2) if root.orientation == 'horizontal' else (root.center_x - self.width / 2, root.min_value_pos[1] - self.height / 2)
+        size: (root.thumb_size, root.thumb_size)
+        border_radius: (self.width, )
+        bg_color: root._thumb_color
+        shadow_color: (0, 0, 0, 1)
+        shadow_blur_radius: '10dp'
+        adaptive_size: False
+        shadow: 'outside'
+        icon: 'blank'
+
     Thumb:
         id: glow_doubleslider_max_thumb
-        icon: 'blank'
-        shadow: 'outside'
-        shadow_color: 0, 0, 0, 1
-        adaptive_size: False
-        bg_color: root._thumb_color
-        border_radius: [self.width, ]
-        shadow_blur_radius: dp(10)
-        size: root.thumb_size, root.thumb_size
         pos: (root.max_value_pos[0] - self.width / 2, root.center_y - self.height / 2) if root.orientation == 'horizontal' else (root.center_x - self.width / 2, root.max_value_pos[1] - self.height / 2)
+        size: (root.thumb_size, root.thumb_size)
+        border_radius: (self.width, )
+        bg_color: root._thumb_color
+        shadow_color: (0, 0, 0, 1)
+        shadow_blur_radius: '10dp'
+        adaptive_size: False
+        shadow: 'outside'
+        icon: 'blank'
+
     GlowLabel:
         id: glow_doubleslider_min_hint
-        adaptive_size: True
-        padding: dp(5)
-        text: root._min_hint_text
+        pos: (root.min_value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.min_value_pos[1] - self.height / 2)
+        hidden: root.hint and not root._min_active
+        border_radius: root.hint_border_radius
         bg_color: root._hint_bg_color
         color: root._hint_text_color
-        border_radius: root.hint_border_radius
-        hidden: root.hint and not root._min_active
-        pos: (root.min_value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.min_value_pos[1] - self.height / 2)
+        text: root._min_hint_text
+        adaptive_size: True
+        padding: ('5dp', )
+
     GlowLabel:
         id: glow_doubleslider_max_hint
-        adaptive_size: True
-        padding: dp(5)
-        text: root._max_hint_text
+        pos: (root.max_value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.max_value_pos[1] - self.height / 2)
+        hidden: root.hint and not root._max_active
+        border_radius: root.hint_border_radius
         bg_color: root._hint_bg_color
         color: root._hint_text_color
-        border_radius: root.hint_border_radius
-        hidden: root.hint and not root._max_active
-        pos: (root.max_value_pos[0] - self.width / 2, root.center_y + root.thumb_size / 2 + dp(5)) if root.orientation == 'horizontal' else (root.center_x + root.thumb_size / 2 + dp(5), root.max_value_pos[1] - self.height / 2)
+        text: root._max_hint_text
+        adaptive_size: True
+        padding: ('5dp', )

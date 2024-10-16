@@ -27,16 +27,16 @@ from math import (
 Builder.load_string(
     '''
 <GlowClusterMapMarker>:
-    size_hint: None, None
-    source: root.source
     size: list(map(dp, self.texture_size))
+    size_hint: (None, None)
+    source: root.source
 
     GlowLabel:
         text: '{}'.format(root.num_points)
-        font_style: 'DisplayS'
         color: root.text_color
-        size: root.size
+        font_style: 'DisplayS'
         halign: 'center'
+        size: root.size
         pos: root.pos
 '''
 )

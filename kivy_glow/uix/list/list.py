@@ -307,13 +307,12 @@ class GlowList(GlowBoxLayout):
     and defaults to `None`.
     '''
 
-    _odd_item_color = ColorProperty((0, 0, 0, 1))
-    _even_item_color = ColorProperty((0, 0, 0, 1))
-    _hover_item_color = ColorProperty((0, 0, 0, 1))
+    _odd_item_color = ColorProperty((0, 0, 0, 0))
+    _even_item_color = ColorProperty((0, 0, 0, 0))
+    _hover_item_color = ColorProperty((0, 0, 0, 0))
 
     _formatted_list_data = ListProperty()
     _selected_items = {}
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(odd_item_color=self.setter('_odd_item_color'))
@@ -450,46 +449,37 @@ class GlowList(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_darkest_color
 
         if self.odd_item_color is None:
-            self.odd_item_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('odd_item_color')
+            self._odd_item_color = self.theme_cls.background_darkest_color
 
         if self.even_item_color is None:
-            self.even_item_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('even_item_color')
+            self._even_item_color = self.theme_cls.background_darkest_color
 
         if self.hover_item_color is None:
-            self.hover_item_color = self.theme_cls.background_dark_color
-            self._default_colors.append('hover_item_color')
-
-        self.__update_list_data()
+            self._hover_item_color = self.theme_cls.background_dark_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'bg_color' in self._default_colors:
+        if self.bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    bg_color=self.theme_cls.background_darkest_color,
+                    _bg_color=self.theme_cls.background_darkest_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.bg_color = self.theme_cls.background_darkest_color
+                self._bg_color = self.theme_cls.background_darkest_color
 
-        if 'odd_item_color' in self._default_colors:
-            self.odd_item_color = self.theme_cls.background_darkest_color
+        if self.odd_item_color is None:
+            self._odd_item_color = self.theme_cls.background_darkest_color
 
-        if 'odd_item_color' in self._default_colors:
-            self.even_item_color = self.theme_cls.background_darkest_color
+        if self.odd_item_color is None:
+            self._even_item_color = self.theme_cls.background_darkest_color
 
-        if 'odd_item_color' in self._default_colors:
-            self.hover_item_color = self.theme_cls.background_dark_color
-
-        self.__update_list_data()
+        if self.odd_item_color is None:
+            self._hover_item_color = self.theme_cls.background_dark_color

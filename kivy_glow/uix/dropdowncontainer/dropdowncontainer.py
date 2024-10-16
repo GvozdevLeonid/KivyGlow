@@ -146,10 +146,13 @@ class GlowDropDownContainer(GlowBoxLayout):
     _attach_to = None
     _state = 'closed'
     _height = None
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
-        self.container = GlowBoxLayout(adaptive_height=True, spacing='4dp', padding=[0, 0, '5dp', 0], orientation='vertical', opacity=0)
+        self.container = GlowBoxLayout(padding=(0, 0, '5dp', 0),
+                                       orientation='vertical',
+                                       adaptive_height=True,
+                                       spacing='4dp',
+                                       opacity=0)
         self.scroll = GlowScrollView(always_overscroll=False)
 
         self.fbind('size', self._reposition)
@@ -411,10 +414,10 @@ class GlowDropDownContainer(GlowBoxLayout):
         for i in range(items - 1):
             self.container.add_widget(
                 GlowWidget(
-                    size_hint_y=None,
+                    bg_color=self.theme_cls.divider_color,
                     pos_hint={'center_y': .5},
+                    size_hint_y=None,
                     height='2dp',
-                    bg_color=self.theme_cls.divider_color
                 ),
                 index=i * 2 + 1)
 
@@ -427,17 +430,15 @@ class GlowDropDownContainer(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_darkest_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'bg_color' in self._default_colors:
-            self.bg_color = self.theme_cls.background_darkest_color
+        if self.bg_color is None:
+            self._bg_color = self.theme_cls.background_darkest_color
 
         if self.use_separator:
             for child in self.children[1::2]:

@@ -38,7 +38,7 @@ class GlowPaginator(GlowBoxLayout):
     and default to `10`.
     '''
 
-    items = ListProperty([])
+    items = ListProperty(())
     '''Any iterable objects
 
     :attr:`items` is an :class:`~kivy.properties.ListProperty`

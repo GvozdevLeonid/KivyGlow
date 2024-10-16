@@ -14,22 +14,23 @@ register('GlowRelativeLayout', module='kivy_glow.uix.relativelayout')
 register('GlowStackLayout', module='kivy_glow.uix.stacklayout')
 register('GlowTableLayout', module='kivy_glow.uix.tablelayout')
 
-register('GlowScreen', module='kivy_glow.uix.screen')
-register('GlowScreenManager', module='kivy_glow.uix.screenmanager')
+register('GlowWidget', module='kivy_glow.uix.widget')
 
 register('GlowScrollView', module='kivy_glow.uix.scrollview')
 
-register('GlowWidget', module='kivy_glow.uix.widget')
+register('GlowScreen', module='kivy_glow.uix.screen')
+register('GlowScreenManager', module='kivy_glow.uix.screenmanager')
 
-register('GlowLabel', module='kivy_glow.uix.label')
 register('GlowIcon', module='kivy_glow.uix.icon')
+register('GlowLabel', module='kivy_glow.uix.label')
+register('GlowImage', module='kivy_glow.uix.image')
 
 register('GlowTextField', module='kivy_glow.uix.textfield')
 register('GlowNumberField', module='kivy_glow.uix.numberfield')
 
 register('GlowButton', module='kivy_glow.uix.button')
-register('GlowCheckbox', module='kivy_glow.uix.checkbox')
 register('GlowSwitch', module='kivy_glow.uix.switch')
+register('GlowCheckbox', module='kivy_glow.uix.checkbox')
 
 register('GlowSlider', module='kivy_glow.uix.slider')
 register('GlowDoubleSlider', module='kivy_glow.uix.slider')
@@ -42,24 +43,24 @@ register('GlowComboBox', module='kivy_glow.uix.combobox')
 register('GlowDropDown', module='kivy_glow.uix.dropdown')
 register('GlowSelectableDropDown', module='kivy_glow.uix.dropdown')
 
-register('GlowExpansionPanelHeader', module='kivy_glow.uix.expansionpanel')
 register('GlowExpansionPanel', module='kivy_glow.uix.expansionpanel')
+register('GlowExpansionPanelHeader', module='kivy_glow.uix.expansionpanel')
 
-register('GlowSplitterWidget', module='kivy_glow.uix.splitter')
 register('GlowSplitter', module='kivy_glow.uix.splitter')
+register('GlowSplitterLayout', module='kivy_glow.uix.splitter')
 
 register('GlowTable', module='kivy_glow.uix.table')
 register('GlowRowTable', module='kivy_glow.uix.table')
 
-register('GlowLabelCell', module='kivy_glow.uix.table')
 register('GlowIconCell', module='kivy_glow.uix.table')
+register('GlowLabelCell', module='kivy_glow.uix.table')
 register('GlowButtonCell', module='kivy_glow.uix.table')
-register('GlowIconButtonCell', module='kivy_glow.uix.table')
 register('GlowSwitchCell', module='kivy_glow.uix.table')
+register('GlowIconButtonCell', module='kivy_glow.uix.table')
 
 register('GlowList', module='kivy_glow.uix.list')
-register('GlowSelectableListItem', module='kivy_glow.uix.list')
 register('GlowListItem', module='kivy_glow.uix.list')
+register('GlowSelectableListItem', module='kivy_glow.uix.list')
 
 register('GlowPaginator', module='kivy_glow.uix.paginator')
 
@@ -68,8 +69,8 @@ register('GlowVSpacer', module='kivy_glow.uix.spacer')
 
 register('GlowToolBar', module='kivy_glow.uix.toolbar')
 
+register('GlowSidePanel', module='kivy_glow.uix.sidepanel')
 register('GlowSidePanelLayout', module='kivy_glow.uix.sidepanel')
 register('GlowSidePanelButton', module='kivy_glow.uix.sidepanel')
-register('GlowSidePanel', module='kivy_glow.uix.sidepanel')
 
 register('GlowMap', module='kivy_glow.uix.map')

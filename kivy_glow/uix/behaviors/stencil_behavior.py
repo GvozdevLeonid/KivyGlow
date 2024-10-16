@@ -10,16 +10,16 @@ Builder.load_string(
     canvas.before:
         StencilPush
         RoundedRectangle:
-            pos: root.pos
+            radius: root.radius if root.radius else (0, 0, 0, 0)
             size: root.size
-            radius: root.radius if root.radius else [0, 0, 0, 0]
+            pos: root.pos
         StencilUse
     canvas.after:
         StencilUnUse
         RoundedRectangle:
-            pos: root.pos
+            radius: root.radius if root.radius else (0, 0, 0, 0)
             size: root.size
-            radius: root.radius if root.radius else [0, 0, 0, 0]
+            pos: root.pos
         StencilPop
 '''
 )
@@ -30,9 +30,9 @@ class StencilBehavior:
     Stencil behavior class.
     '''
 
-    radius = VariableListProperty([0], length=4)
+    radius = VariableListProperty((0, ), length=4)
     '''Canvas radius.
 
     :attr:`radius` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0, 0, 0]`.
+    and defaults to `(0, 0, 0, 0)`.
     '''

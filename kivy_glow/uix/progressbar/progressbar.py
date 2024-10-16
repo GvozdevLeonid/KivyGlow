@@ -37,19 +37,47 @@ class GlowProgressBar(DeclarativeBehavior,
     min = NumericProperty(0.)
     '''Minimum value allowed for :attr:`value`.
 
-    :attr:`max` is a :class:`~kivy.properties.NumericProperty` and defaults to 0
+    :attr:`min` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `0`.
     '''
 
-    padding = NumericProperty('16sp')
+    padding = NumericProperty('16dp')
+    '''Padding for progress bar. One size all borders.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(16)`.
+    '''
+
     active_color = ColorProperty(None, allownone=True)
+    '''Padding for progress bar. One size all borders.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(16)`.
+    '''
+
     inactive_color = ColorProperty(None, allownone=True)
+    '''Padding for progress bar. One size all borders.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(16)`.
+    '''
+
     line_width = NumericProperty('4dp')
+    '''Padding for progress bar. One size all borders.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(16)`.
+    '''
 
     mode = OptionProperty('line', options=('line', 'circle'))
+    '''Padding for progress bar. One size all borders.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(16)`.
+    '''
 
     _active_color = ColorProperty((0, 0, 0, 0))
     _inactive_color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(active_color=self.setter('_active_color'))
@@ -60,27 +88,25 @@ class GlowProgressBar(DeclarativeBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
 
     def set_default_colors(self, *args):
-        self._default_colors.clear()
 
         if self.active_color is None:
-            self.active_color = self.theme_cls.primary_color
-            self._default_colors.append('active_color')
+            self._active_color = self.theme_cls.primary_color
+
         if self.inactive_color is None:
-            self.inactive_color = self.theme_cls.background_dark_color
-            self._default_colors.append('inactive_color')
+            self._inactive_color = self.theme_cls.background_dark_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'inactive_color' in self._default_colors:
+        if self.inactive_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    inactive_color=self.theme_cls.background_dark_color,
+                    _inactive_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.inactive_color = self.theme_cls.background_dark_color
+                self._inactive_color = self.theme_cls.background_dark_color
 
     def _set_value(self, value):
         value = max(self.min, min(self.max, value))

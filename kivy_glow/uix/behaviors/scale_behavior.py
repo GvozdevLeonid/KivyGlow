@@ -13,10 +13,10 @@ Builder.load_string(
     canvas.before:
         PushMatrix
         Scale:
+            origin: self.origin if self.origin else self.center
             x: self.scale_x
             y: self.scale_y
             z: self.scale_z
-            origin: self.origin if self.origin else self.center
     canvas.after:
         PopMatrix
 '''

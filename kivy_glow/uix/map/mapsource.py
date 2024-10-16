@@ -21,14 +21,14 @@ class MapSource:
         'osm': {
             'min_zoom': 0,
             'max_zoom': 19,
-            'sub_domains': ['a', 'b', 'c'],
+            'sub_domains': ('a', 'b', 'c'),
             'url_template': 'http://{sub_domain}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             'attribution': 'Maps & Data © [i][ref=http://www.osm.org/copyright]OpenStreetMap[/ref][/i] contributors.',
         },
         'osm-hot': {
             'min_zoom': 0,
             'max_zoom': 19,
-            'sub_domains': ['a', 'b', 'c'],
+            'sub_domains': ('a', 'b', 'c'),
             'url_template': 'http://{sub_domain}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
             'attribution': '[i][ref=https://www.openstreetmap.org/copyright]OpenStreetMap[/ref][/i] contributors, Tiles style by [i][ref=https://www.hotosm.org/]Humanitarian OpenStreetMap Team[/ref][/i] hosted by [i][ref=https://openstreetmap.fr/]OpenStreetMap France[/ref][/i]'
         },
@@ -89,70 +89,70 @@ class MapSource:
         'thunderforest-transport': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-transport-dark': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-landscape': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-outdoors': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-pioneer': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-mobile-atlas': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'thunderforest-neighbourhood': {
             'min_zoom': 0,
             'max_zoom': 22,
-            'sub_domains': ['a', 'b', 'c', 'd'],
+            'sub_domains': ('a', 'b', 'c', 'd'),
             'url_template': 'https://{sub_domain}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey={api_key}',
             'attribution': '[i][ref=http://www.thunderforest.com/]Thunderforest[/ref][/i], [i][ref=https://www.openstreetmap.org/copyright">OpenStreetMap[/ref][/i] contributors'
         },
         'google-road': {
             'min_zoom': 0,
             'max_zoom': 19,
-            'sub_domains': ['1', '2', '3'],
+            'sub_domains': ('1', '2', '3'),
             'url_template': 'https://mt{sub_domain}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
             'attribution': 'Maps & Data [i][ref=https://www.google.com/maps]GoogleMaps[/ref][/i]'
         },
         'google-hybrid': {
             'min_zoom': 0,
             'max_zoom': 19,
-            'sub_domains': ['1', '2', '3'],
+            'sub_domains': ('1', '2', '3'),
             'url_template': 'https://mt{sub_domain}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
             'attribution': 'Maps & Data [i][ref=https://www.google.com/maps]GoogleMaps[/ref][/i]'
         },
         'google-satellite': {
             'min_zoom': 0,
             'max_zoom': 19,
-            'sub_domains': ['1', '2', '3'],
+            'sub_domains': ('1', '2', '3'),
             'url_template': 'https://mt{sub_domain}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
             'attribution': 'Maps & Data [i][ref=https://www.google.com/maps]GoogleMaps[/ref][/i]'
         },

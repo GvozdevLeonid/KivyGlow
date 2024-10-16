@@ -43,8 +43,8 @@ class GlowTableLayout(DeclarativeBehavior,
     minimum_height = NumericProperty(0)
     minimum_size = ReferenceListProperty(minimum_width, minimum_height)
 
-    spacing = VariableListProperty([0, 0], length=2)
-    padding = VariableListProperty([0, 0, 0, 0], length=4)
+    spacing = VariableListProperty((0, 0), length=2)
+    padding = VariableListProperty((0, 0, 0, 0), length=4)
 
     def __init__(self, *args, **kwargs):
         self._rows = 1
@@ -261,7 +261,7 @@ class GlowTableLayout(DeclarativeBehavior,
     def _get_row_col_attrs(self, row, col, rowspan, colspan):
         spacing_x, spacing_y = self.spacing
 
-        x, y = self.x + self.padding[0], self.top - self.padding[3]
+        x, y = self.x + self.padding[0], self.top - self.padding[1]
         w, h = 0, 0
 
         x += sum(self._cols_w[:col])

@@ -1,8 +1,8 @@
 <GlowDialog>:
-    border_radius: ['10dp', ]
+    border_radius: ('10dp', )
     GlowBoxLayout:
         id: glow_dialog_content
-        padding: ['24dp', ] if root.widget_style == 'desctop' else ['12dp', ]
+        padding: ('24dp', ) if root.widget_style == 'desctop' else ('12dp', )
         adaptive_height: True if root.size_hint_y is None else False
         orientation: 'vertical'
         spacing: '5dp'
@@ -27,8 +27,8 @@
             size_hint_y: None
         GlowScrollView:
             id: glow_dialog_content_container
-            always_overscroll: False
             size_hint_y: 1 if root.stretch_content_height else None
+            always_overscroll: False
         GlowVSpacer:
             adaptive_height: True if root.stretch_content_height else False
         GlowWidget:
@@ -39,6 +39,6 @@
             size_hint_y: None
         GlowBoxLayout:
             id: glow_dialog_buttons_container
-            adaptive_size: True
             pos_hint: {'right': 1}
+            adaptive_size: True
             spacing: '10dp'

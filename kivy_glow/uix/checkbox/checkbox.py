@@ -98,12 +98,15 @@ class GlowCheckbox(ToggleButtonBehavior,
     :attr:`animation` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `decrease`.
     '''
-
-    _icon = StringProperty('blank')
+    _active_color = ColorProperty(None, allow_none=True)
+    _inactive_color = ColorProperty(None, allow_none=True)
     _color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
+    _icon = StringProperty('blank')
 
     def __init__(self, *args, **kwargs) -> None:
+        self.bind(active_color=self.setter('_active_color'))
+        self.bind(inactive_color=self.setter('_inactive_color'))
+
         super().__init__(*args, **kwargs)
         self._animation = (
             Animation(
@@ -135,15 +138,13 @@ class GlowCheckbox(ToggleButtonBehavior,
 
     def on_state(self, checkbox_instance: Self, state: str) -> None:
         '''Fired when the :attr:`state` value changes.'''
-        if self.active_color is None:
-            self.set_default_colors()
 
         if state == 'down':
             if not self.disabled:
-                animation = Animation(_color=self.active_color, d=.2)
+                animation = Animation(_color=self._active_color, d=.2)
                 animation.start(self)
             else:
-                self._color = self.active_color
+                self._color = self._active_color
 
             self._animation.cancel(self)
             self._animation.start(self)
@@ -155,10 +156,10 @@ class GlowCheckbox(ToggleButtonBehavior,
             self.active = True
         else:
             if not self.disabled:
-                animation = Animation(_color=self.inactive_color, d=.2)
+                animation = Animation(_color=self._inactive_color, d=.2)
                 animation.start(self)
             else:
-                self._color = self.inactive_color
+                self._color = self._inactive_color
             self._animation.cancel(self)
 
             if not self.group:
@@ -217,27 +218,29 @@ class GlowCheckbox(ToggleButtonBehavior,
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.active_color is None:
-            self.active_color = self.theme_cls.primary_color
-            self._default_colors.append('active_color')
+            self._active_color = self.theme_cls.primary_color
         if self.inactive_color is None:
-            self.inactive_color = self.theme_cls.divider_color
-            self._default_colors.append('inactive_color')
+            self._inactive_color = self.theme_cls.divider_color
+
+        if self.state == 'normal' and self._color != self._inactive_color:
+            self._color = self._inactive_color
+        elif self.state == 'down' and self._color != self._active_color:
+            self._color = self._active_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'inactive_color' in self._default_colors:
-            self.inactive_color = self.theme_cls.divider_color
+        if self.inactive_color is None:
+            self._inactive_color = self.theme_cls.divider_color
 
             if self.state == 'normal':
                 if self.theme_cls.theme_style_switch_animation:
                     Animation(
-                        _color=self.inactive_color,
+                        _color=self._inactive_color,
                         d=self.theme_cls.theme_style_switch_animation_duration,
                         t='linear',
                     ).start(self)
                 else:
-                    self._color = self.inactive_color
+                    self._color = self._inactive_color

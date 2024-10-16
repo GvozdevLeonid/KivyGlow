@@ -9,6 +9,7 @@ from kivy_glow.uix.scrollview import GlowScrollView
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy.uix.screenmanager import ScreenManager
 from kivy.input.motionevent import MotionEvent
+from kivy.uix.behaviors import ButtonBehavior
 from kivy_glow.uix.button import GlowButton
 from kivy_glow.uix.label import GlowLabel
 from kivy_glow.theme import ThemeManager
@@ -53,18 +54,45 @@ class GlowSidePanelException(Exception):
 
 class GlowSidePanelButton(GlowButton):
 
-    right_text = StringProperty()
+    right_text = StringProperty('')
+    '''Additional text located in the right corner
+
+    :attr:`right_text` is an :class:`~kivy.properties.StringProperty`
+    and defaults to `''`.
+    '''
 
     selected = BooleanProperty(False)
+    '''True if panel item selected
+
+    :attr:`selected` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `False`.
+    '''
+
+    hover_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format of the hovered panel item
+
+    :attr:`selected_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
 
     selected_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format of the selected panel item
 
-    _default_colors = []
+    :attr:`selected_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    _hover_color = ColorProperty(None, allownone=True)
+    _selected_color = ColorProperty(None, allownone=True)
 
     def __init__(self, *args, **kwargs) -> None:
+        self.bind(hover_color=self.setter('_hover_color'))
+        self.bind(selected_color=self.setter('_selected_color'))
+
         super().__init__(*args, **kwargs)
-        self.adaptive_height = True
+
         self.right_text_label = None
+        self.adaptive_height = True
 
         Clock.schedule_once(self.initialize_sidepanelbutton, -1)
 
@@ -84,31 +112,31 @@ class GlowSidePanelButton(GlowButton):
     def on_enter(self) -> None:
         '''Fired at the Button hover enter event.'''
         Window.set_system_cursor('hand')
-        self.bg_color = self.theme_cls.primary_light_color
+        self._bg_color = self._hover_color
 
     def on_leave(self) -> None:
         '''Fired at the Button hover leave event.'''
         Window.set_system_cursor('arrow')
-        self.bg_color = [0, 0, 0, 0]
+        self._bg_color = (0, 0, 0, 0)
 
     def _set_icon(self, *args) -> None:
         '''Add icon to the Button'''
         if self.glow_icon is not None:
             self.unbind(icon_size=self.glow_icon.setter('font_size'),
-                        icon=self.glow_icon.setter('icon'),
-                        _icon_color=self.glow_icon.setter('color'))
+                        _icon_color=self.glow_icon.setter('color'),
+                        icon=self.glow_icon.setter('icon'),)
             self.ids.glow_button_container.remove_widget(self.glow_icon)
 
         if self.icon != 'blank':
             self.glow_icon = GlowIcon(
                 pos_hint={'center_y': 0.5, 'center_x': .5},
-                icon=self.icon,
-                color=self._icon_color,
                 icon_size=self.icon_size,
+                color=self._icon_color,
+                icon=self.icon,
             )
             self.bind(icon_size=self.glow_icon.setter('font_size'),
-                      icon=self.glow_icon.setter('icon'),
-                      _icon_color=self.glow_icon.setter('color'))
+                      _icon_color=self.glow_icon.setter('color'),
+                      icon=self.glow_icon.setter('icon'),)
 
             if self.icon_position in ('left', 'top'):
                 self.ids.glow_button_container.add_widget(self.glow_icon, index=2)
@@ -124,23 +152,20 @@ class GlowSidePanelButton(GlowButton):
                     self.ids.pop('glow_button_text')
 
     def on_selected(self, sidepanelbutton: Self, selected: bool) -> None:
-        if self.selected_color is None or self.icon_color is None or self.text_color is None:
+        if self._selected_color is None:
             self.set_default_colors()
 
         if selected:
-            self._text_color = self.selected_color
-            self._icon_color = self.selected_color
+            self._text_color = self._selected_color
+            self._icon_color = self._selected_color
         else:
-            self._text_color = self.text_color
-            self._icon_color = self.icon_color
+            self._text_color = self.text_color if self.text_color else self.theme_cls.text_color
+            self._icon_color = self.icon_color if self.icon_color else self.theme_cls.text_color
 
     def on_touch_down(self, touch: MotionEvent) -> bool:
         '''Fired at the Button on_touch_down event.'''
-        if touch.is_mouse_scrolling:
-            return False
-
         if self.collide_point(*touch.pos):
-            if not self.disabled:
+            if not self.disabled and not touch.is_mouse_scrolling:
                 animation = Animation(
                     _text_color=self.theme_cls.darken_or_lighten_color(self._text_color),
                     _icon_color=self.theme_cls.darken_or_lighten_color(self._icon_color),
@@ -148,7 +173,7 @@ class GlowSidePanelButton(GlowButton):
                 )
                 animation.start(self)
 
-        return super().on_touch_down(touch)
+        return ButtonBehavior.on_touch_down(self, touch)
 
     def on_touch_up(self, touch: MotionEvent) -> bool:
         def update_colors():
@@ -159,17 +184,18 @@ class GlowSidePanelButton(GlowButton):
                 parent.select_button(self)
 
                 if self.selected:
-                    self._text_color = self.selected_color
-                    self._icon_color = self.selected_color
+                    self._text_color = self._selected_color
+                    self._icon_color = self._selected_color
                 else:
-                    self._text_color = self.text_color
-                    self._icon_color = self.text_color
+                    self._text_color = self.text_color if self.text_color else self.theme_cls.text_color
+                    self._icon_color = self.icon_color if self.icon_color else self.theme_cls.text_color
             else:
                 self.set_disabled_colors()
 
-        Clock.schedule_once(lambda _: update_colors(), 0.1)
+        if touch.grab_current == self:
+            Clock.schedule_once(lambda _: update_colors(), 0.1)
 
-        return super().on_touch_up(touch)
+        return ButtonBehavior.on_touch_up(self, touch)
 
     def initialize_sidepanelbutton(self, *args):
         '''Initializing the SidePanelButton.'''
@@ -186,57 +212,60 @@ class GlowSidePanelButton(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors. Based on mode.'''
-        self._default_colors.clear()
 
-        if self.bg_color != (0, 0, 0, 0):
-            self.bg_color = (0, 0, 0, 0)
+        if self.bg_color is not None:
+            self._bg_color = (0, 0, 0, 0)
 
-        if self.border_color != (0, 0, 0, 0):
-            self.border_color = (0, 0, 0, 0)
+        if self.hover_color is None:
+            self._hover_color = self.theme_cls.primary_light_color
+
+        if self.border_color is not None:
+            self._border_color = (0, 0, 0, 0)
 
         if self.text_color is None:
-            self.text_color = self.theme_cls.text_color
-            self._default_colors.append('text_color')
+            self._text_color = self.theme_cls.text_color
 
         if self.icon_color is None:
-            self.icon_color = self.theme_cls.text_color
-            self._default_colors.append('icon_color')
+            self._icon_color = self.theme_cls.text_color
 
         if self.selected_color is None:
-            self.selected_color = self.theme_cls.primary_color
-            self._default_colors.append('selected_color')
+            self._selected_color = self.theme_cls.primary_color
+
+        if self.selected:
+            self._text_color = self._selected_color
+            self._icon_color = self._selected_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         if self.disabled:
             self.set_disabled_colors()
 
-        if 'text_color' in self._default_colors:
+        if self.text_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    text_color=self.theme_cls.text_color,
+                    _text_color=self.theme_cls.text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.text_color = self.theme_cls.text_color
+                self._text_color = self.theme_cls.text_color
 
-        if 'icon_color' in self._default_colors:
+        if self.icon_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    icon_color=self.theme_cls.text_color,
+                    _icon_color=self.theme_cls.text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.icon_color = self.theme_cls.text_color
+                self._icon_color = self.theme_cls.text_color
 
     def set_disabled_colors(self, *args) -> None:
         if self.disabled:
             self._text_color = self.theme_cls.disabled_color
             self._icon_color = self.theme_cls.disabled_color
         else:
-            self._text_color = self.text_color
-            self._icon_color = self.icon_color
+            self._text_color = self.text_color if self.text_color else self.theme_cls.text_color
+            self._icon_color = self.icon_color if self.icon_color else self.theme_cls.text_color
 
 
 class GlowSidePanel(GlowBoxLayout):
@@ -254,7 +283,12 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `left`.
     '''
 
-    scrim_color = ColorProperty([0, 0, 0, .7])
+    scrim_color = ColorProperty((0, 0, 0, .7))
+    '''The color in (r, g, b, a) or string format of the hovered scrim
+
+    :attr:`scrim_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `(0, 0, 0, .7)`.
+    '''
 
     close_on_click = BooleanProperty(True)
     '''Close when click on scrim or keyboard escape. It automatically sets to
@@ -629,7 +663,7 @@ class GlowSidePanelLayout(GlowFloatLayout):
 
     def add_scrim(self, screen_manager_instance: ScreenManager) -> None:
         with screen_manager_instance.canvas.after:
-            self._scrim_color = Color(rgba=[0, 0, 0, 0])
+            self._scrim_color = Color(rgba=(0, 0, 0, 0))
             self._scrim_rectangle = Rectangle(
                 pos=screen_manager_instance.pos,
                 size=screen_manager_instance.size,

@@ -80,7 +80,7 @@ class AdaptiveBehavior(EventDispatcher):
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
-        size_hint: None, None
+        size_hint: (None, None)
         size: self.minimum_size
 
     :attr:`adaptive_size` is an :class:`~kivy.properties.BooleanProperty`
@@ -91,7 +91,7 @@ class AdaptiveBehavior(EventDispatcher):
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
-        size_hint: None, None
+        size_hint: (None, None)
         size: 0, 0
         opacity: 0
 
@@ -238,8 +238,8 @@ class AdaptiveBehavior(EventDispatcher):
     def _on_hidden(self, *args):
         if self.hidden:
 
-            self._size_hint = self.size_hint_x, self.size_hint_y
-            self._size = self.width, self.height
+            self._size_hint = (self.size_hint_x, self.size_hint_y)
+            self._size = (self.width, self.height)
 
             try:
                 if issubclass(self.__class__, Label):
@@ -251,8 +251,8 @@ class AdaptiveBehavior(EventDispatcher):
             except Exception:
                 pass
 
-            self.size_hint = None, None
-            self.size = 2, 2
+            self.size_hint = (None, None)
+            self.size = (2, 2)
 
             self.opacity = 0
         else:

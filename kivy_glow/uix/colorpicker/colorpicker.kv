@@ -2,12 +2,12 @@
 #: import available_palette kivy_glow.colors.available_palette
 #: import colors kivy_glow.colors.colors
 <GlowColorPicker>:
-    border_radius: ['10dp', ]
+    border_radius: ('10dp', )
     GlowBoxLayout:
         id: glow_colorpicker_content
         adaptive_height: True if root.size_hint_y is None else False
         orientation: 'vertical'
-        padding: ['24dp', ]
+        padding: ('24dp', )
         spacing: '5dp'
         GlowIcon:
             id: glow_colorpicker_icon
@@ -34,8 +34,8 @@
                     GlowBoxLayout:
                         orientation: 'vertical'
                         adaptive_height: True
+                        padding: ('10dp', )
                         spacing: '20dp'
-                        padding: '10dp'
                         Widget:
                             canvas:
                                 Color:
@@ -56,7 +56,7 @@
                                     pos: self.pos
                                     texture: LinearGradient(colors=['#000000FF', '#00000000'], stops={0: .01}, angle=90, size=self.size)
                             id: glow_colorpicker_gradient_view
-                            size_hint: 1, None
+                            size_hint: (1, None)
                             height: '200dp'
                             on_touch_move:
                                 root.on_select_color_from_gradient(*args)
@@ -69,12 +69,12 @@
                                 Rectangle:
                                     size: self.width - self.padding * 2, self.height / 2
                                     pos: self.pos[0] + self.padding, self.pos[1] + self.height / 4
-                                    texture: LinearGradient(colors=['#FF0000FF', '#FFFF00FF', '#00FF00FF', '#00FFFFFF', '#0000FFFF', '#FF00FFFF', '#FF0000FF'], size=self.size)
+                                    texture: LinearGradient(colors=('#FF0000FF', '#FFFF00FF', '#00FF00FF', '#00FFFFFF', '#0000FFFF', '#FF00FFFF', '#FF0000FF'), size=self.size)
                             id: glow_colorpicker_gradient_slider
-                            thumb_active_color: root._gradient_color
                             thumb_inactive_color: root._gradient_color
+                            thumb_active_color: root._gradient_color
                             _thumb_color: root._gradient_color
-                            bg_color:( 0, 0, 0, 0)
+                            bg_color:(0, 0, 0, 0)
                             value_track: False
                             max: 100_000_000
                             on_value:
@@ -92,21 +92,21 @@
                     GlowBoxLayout:
                         orientation: 'vertical'
                         GlowScrollView:
-                            size_hint_y: None
                             height: panel.minimum_height + dp(5)
                             do_scroll_y: False
+                            size_hint_y: None
                             GlowPanel:
                                 id: panel
-                                mode: 'underline'
-                                adaptive_width: True
                                 tabs: [{'text': palette} for palette in available_palette]
+                                adaptive_width: True
+                                mode: 'underline'
                                 on_active_tab:
                                     root._set_palette(self._active_tab.text)
                         GlowScrollView:
                             id: palette_scroll_view
                             bar_inactive_color: app.theme_cls.primary_color[:3] + [.2]
                             bar_color: app.theme_cls.primary_color
-                            scroll_type: ['bars', 'content']
+                            scroll_type: ('bars', 'content')
                             pos_hint: {'center_x': .5}
                             always_overscroll: False
                             bar_width: '5dp'
@@ -114,19 +114,19 @@
                     name: 'tuner'
                     GlowBoxLayout:
                         orientation: 'vertical'
+                        padding: ('10dp', )
                         spacing: '20dp'
-                        padding: '10dp'
                         GlowSlider:
                             canvas.before:
                                 Color:
-                                    rgba: 1, 1, 1, 1
+                                    rgba: (1, 1, 1, 1)
                                 Rectangle:
-                                    size: self.width - self.padding * 2, self.height / 2
-                                    pos: self.pos[0] + self.padding, self.pos[1] + self.height / 4
-                                    texture: LinearGradient(colors=['#000000FF', '#FF0000FF'], size=self.size)
+                                    texture: LinearGradient(colors=('#000000FF', '#FF0000FF'), size=self.size)
+                                    pos: (self.pos[0] + self.padding, self.pos[1] + self.height / 4)
+                                    size: (self.width - self.padding * 2, self.height / 2)
                             id: glow_colorpicker_tune_red_slider
                             value: root._selected_color[0]
-                            bg_color:( 0, 0, 0, 0)
+                            bg_color: (0, 0, 0, 0)
                             value_track: False
                             max: 1
                             on_value:
@@ -135,14 +135,14 @@
                         GlowSlider:
                             canvas.before:
                                 Color:
-                                    rgba: 1, 1, 1, 1
+                                    rgba: (1, 1, 1, 1)
                                 Rectangle:
-                                    size: self.width - self.padding * 2, self.height / 2
-                                    pos: self.pos[0] + self.padding, self.pos[1] + self.height / 4
                                     texture: LinearGradient(colors=['#000000FF', '#00FF00FF'], size=self.size)
+                                    pos: (self.pos[0] + self.padding, self.pos[1] + self.height / 4)
+                                    size: (self.width - self.padding * 2, self.height / 2)
                             id: glow_colorpicker_tune_green_slider
                             value: root._selected_color[1]
-                            bg_color:( 0, 0, 0, 0)
+                            bg_color: (0, 0, 0, 0)
                             value_track: False
                             max: 1
                             on_value:
@@ -151,14 +151,15 @@
                         GlowSlider:
                             canvas.before:
                                 Color:
-                                    rgba: 1, 1, 1, 1
+                                    rgba: (1, 1, 1, 1)
                                 Rectangle:
-                                    size: self.width - self.padding * 2, self.height / 2
-                                    pos: self.pos[0] + self.padding, self.pos[1] + self.height / 4
-                                    texture: LinearGradient(colors=['#000000FF', '#0000FFFF'], size=self.size)
+                                    texture: LinearGradient(colors=('#000000FF', '#0000FFFF'), size=self.size)
+                                    pos: (self.pos[0] + self.padding, self.pos[1] + self.height / 4)
+                                    size: (self.width - self.padding * 2, self.height / 2)
+
                             id: glow_colorpicker_tune_blue_slider
                             value: root._selected_color[2]
-                            bg_color:( 0, 0, 0, 0)
+                            bg_color: (0, 0, 0, 0)
                             value_track: False
                             max: 1
                             on_value:
@@ -176,19 +177,19 @@
             Widget:
                 canvas:
                     Color:
-                        rgba: 1, 1, 1, 1
+                        rgba: (1, 1, 1, 1)
                     SmoothRoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [dp(10), ]
                         source: 'kivy_glow/assets/images/alpha_layer.png'
+                        radius: (dp(10), )
+                        size: self.size
+                        pos: self.pos
                 canvas.after:
                     Color: 
                         rgba: root._selected_color
                     SmoothRoundedRectangle:
-                        pos: self.pos
+                        radius: (dp(10), )
                         size: self.size
-                        radius: [dp(10), ]
+                        pos: self.pos
                 width: self.height
                 size_hint_x: None
             GlowTextField:
@@ -197,11 +198,11 @@
                 readonly: True
             GlowSelectableDropDown:
                 id: glow_colorpicker_selected_color_format
-                items: ['hex', 'rgb', 'rgba']
+                items: ('hex', 'rgb', 'rgba')
                 pos_hint: {'center_y': .5}
                 text: self.selected_item
-                mode: 'outline'
                 adaptive_size: True
+                mode: 'outline'
                 on_selected_item:
                     root._update_selected_color()
         GlowTableLayout:
@@ -209,34 +210,34 @@
             text_align: 'center'
             spacing: '30dp'
             GlowPanel:
-                row: 0
-                col: 0
-                colspan: 2
-                mode: 'text'
+                screen_alias: {'gradient-vertical': 'gradient', 'palette-outline': 'palette', 'tune': 'tuner'}
+                tabs: ({'icon': 'gradient-vertical'}, {'icon': 'palette-outline'}, {'icon': 'tune'})
+                pos_hint: {'center_x': .5}
                 adaptive_height: True
                 size_hint_x: .5
-                pos_hint: {'center_x': .5}
-                tabs: [{'icon': 'gradient-vertical'}, {'icon': 'palette-outline'}, {'icon': 'tune'}]
-                screen_alias: {'gradient-vertical': 'gradient', 'palette-outline': 'palette', 'tune': 'tuner'}
+                mode: 'text'
+                colspan: 2
+                row: 0
+                col: 0
                 on_active_tab:
                     tab = self._active_tab.icon
                     direction = 'left' if tuple(self.screen_alias.values()).index(self.screen_alias[tab]) < tuple(self.screen_alias.values()).index(screen_manager.current) else 'right'
                     screen_manager.transition.direction = direction
                     screen_manager.current = self.screen_alias[tab]
             GlowButton:
+                adaptive_height: True
+                text: 'select'
                 row: 1
                 col: 0
-                text: 'select'
-                adaptive_height: True
                 on_release:
                     root.dispatch('on_selected_color', root._selected_color)
                     root.dismiss()
             GlowButton:
+                adaptive_height: True
+                mode: 'outline'
+                text: 'cancel'
                 row: 1
                 col: 1
-                text: 'cancel'
-                mode: 'outline'
-                adaptive_height: True
                 on_release:
                     root.dismiss()
 

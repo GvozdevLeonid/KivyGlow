@@ -148,7 +148,6 @@ class GlowComboBox(GlowTextField):
     _item_text_color = ColorProperty((0, 0, 0, 0))
     _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
     _selected_item_text_color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -196,20 +195,21 @@ class GlowComboBox(GlowTextField):
         if self.dropdown_container._state == 'closed' and not self.dropdown_container._anim_playing:
             self.dispatch('on_pre_open')
             self.dropdown_container.items = [
-                GlowButton(adaptive_height=True,
+                GlowButton(text_color=self._item_text_color,
+                           adaptive_height=True,
                            mode='text',
                            text=item,
-                           text_color=self._item_text_color,
-                           icon_color=self._selected_item_icon_color,
+
                            on_release=lambda _, item=item: self._select_item(item))
                 if item != self.selected_item else
-                GlowButton(adaptive_height=True,
-                           mode='text',
-                           text=item,
-                           text_color=self._selected_item_text_color,
+                GlowButton(text_color=self._selected_item_text_color,
                            icon_color=self._selected_item_icon_color,
                            icon=self.selected_item_icon,
+                           adaptive_height=True,
                            icon_size=dp(16),
+                           mode='text',
+                           text=item,
+
                            on_release=lambda _, item=item: self._select_item(item))
                 for item in self.items
             ]
@@ -222,7 +222,16 @@ class GlowComboBox(GlowTextField):
 
     def initialize_combobox(self, *args) -> None:
         '''Initializing the Combobox.'''
-        self.button_open = GlowButton(adaptive_size=True, icon=self.icon, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._open)
+        self.button_open = GlowButton(
+            border_color=self.button_border_color,
+            icon_color=self.button_icon_color,
+            adaptive_size=True,
+            icon_size=dp(16),
+            mode='outline',
+            icon=self.icon,
+
+            on_release=self._open,
+        )
         self.dropdown_container = GlowDropDownContainer(
             opening_transition=self.opening_transition,
             closing_transition=self.closing_transition,
@@ -234,30 +243,29 @@ class GlowComboBox(GlowTextField):
             direction=self.direction,
             min_width=self.width,
         )
-        self.bind(width=self.dropdown_container.setter('min_width'))
-        self.bind(button_icon_color=self.button_open.setter('icon_color'))
-        self.bind(button_border_color=self.button_open.setter('border_color'))
-        self.bind(dropdown_bg_color=self.dropdown_container.setter('bg_color'))
-        self.bind(use_separator=self.dropdown_container.setter('use_separator'))
+
+        self.bind(button_icon_color=self.button_open.setter('icon_color'),
+                  button_border_color=self.button_open.setter('border_color'))
+
+        self.bind(width=self.dropdown_container.setter('min_width'),
+                  dropdown_bg_color=self.dropdown_container.setter('bg_color'),
+                  use_separator=self.dropdown_container.setter('use_separator'))
+
         self.right_content = self.button_open
         self.ids.textfield.disabled = True
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
         super().set_default_colors()
 
         if self.item_text_color is None:
-            self.item_text_color = self.theme_cls.text_color
-            self._default_colors.append('item_text_color')
+            self._item_text_color = self.theme_cls.text_color
 
         if self.selected_item_icon_color is None:
-            self.selected_item_icon_color = self.theme_cls.primary_color
-            self._default_colors.append('selected_item_icon_color')
+            self._selected_item_icon_color = self.theme_cls.primary_color
 
         if self.selected_item_text_color is None:
-            self.selected_item_text_color = self.theme_cls.primary_color
-            self._default_colors.append('selected_item_text_color')
+            self._selected_item_text_color = self.theme_cls.primary_color
 
     def on_pre_open(self):
         '''Fires before the ComboVox is opened.'''
@@ -266,5 +274,5 @@ class GlowComboBox(GlowTextField):
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'item_text_color' in self._default_colors:
-            self.item_text_color = self.theme_cls.text_color
+        if self.item_text_color is None:
+            self._item_text_color = self.theme_cls.text_color

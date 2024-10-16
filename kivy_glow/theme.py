@@ -3,14 +3,15 @@ from kivy.properties import (
     NumericProperty,
     OptionProperty,
     AliasProperty,
+    ColorProperty,
     DictProperty,
 )
 from kivy.utils import get_color_from_hex
 from kivy.event import EventDispatcher
+from kivy.animation import Animation
 from kivy.core.window import Window
-from kivy.clock import Clock
 from kivy.app import App
-
+from typing import Self
 from kivy_glow.colors import (
     available_palette,
     available_hue,
@@ -507,21 +508,34 @@ class ThemeManager(EventDispatcher):
         }
     )
 
+    app_bg_color = ColorProperty(None, allownone=True)
+    _app_bg_color = ColorProperty((0, 0, 0, 0))
+
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        self.bind(app_bg_color=self.setter('_app_bg_color'))
         self.colors = colors
 
-        Clock.schedule_once(lambda _: self.on_theme_style(self, self.theme_style), -1)
+        super().__init__(**kwargs)
 
-    def on_theme_style(self, _, theme_style: str) -> None:
+        self._app_bg_color = self.background_color
+
+    def on_theme_style(self, theme_manager: Self, theme_style: str) -> None:
         if (
             hasattr(App.get_running_app(), 'theme_cls')
             and App.get_running_app().theme_cls == self
         ):
-            self.set_clearcolor(theme_style)
+            if self.app_bg_color is None:
+                if self.theme_style_switch_animation:
+                    Animation(
+                        _app_bg_color=self.background_color,
+                        d=self.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(self)
+                else:
+                    self._app_bg_color = self.background_color
 
-    def set_clearcolor(self, theme_style):
-        Window.clearcolor = self.background_color
+    def on__app_bg_color(self, app, app_bg_color):
+        Window.clearcolor = app_bg_color
 
     def lighten_color(self, color, factor=0.3):
         r, g, b, a = 0, 0, 0, 0

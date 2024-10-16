@@ -16,6 +16,7 @@ from kivy.properties import (
     StringProperty,
     OptionProperty,
     ObjectProperty,
+    ColorProperty,
 )
 
 
@@ -112,8 +113,21 @@ class GlowExpansionPanel(GlowTableLayout):
     and defaults to `.2`.
     '''
 
+    button_icon_color = ColorProperty(None, allownonw=True)
+    '''Button icon color
+
+    :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    button_border_color = ColorProperty(None, allownonw=True)
+    '''Button border color
+
+    :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     _anim_playing = False
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -227,14 +241,14 @@ class GlowExpansionPanel(GlowTableLayout):
 
         elif len(self.children) == 2:
             if isinstance(self.children[0], GlowExpansionPanelHeader):
-                self.header_content = self.children[0]
                 self.expandable_content = self.children[1]
+                self.header_content = self.children[0]
 
                 self.remove_widget(self.header_content)
                 self.remove_widget(self.expandable_content)
             elif isinstance(self.children[1], GlowExpansionPanelHeader):
-                self.header_content = self.children[1]
                 self.expandable_content = self.children[0]
+                self.header_content = self.children[1]
 
                 self.remove_widget(self.header_content)
                 self.remove_widget(self.expandable_content)
@@ -244,42 +258,50 @@ class GlowExpansionPanel(GlowTableLayout):
             raise GlowExpansionPanelException('Expansionpanel must have expandable_content and optionally GlowExpansionPanelHeader. Additional widgets are not allowed')
 
         if self.header_content is None:
-            self.header_content = GlowLabel(text=self.header, font_style='TitleL', adaptive_height=True, pos_hint={'center_y': 0.5})
+            self.header_content = GlowLabel(pos_hint={'center_y': 0.5},
+                                            adaptive_height=True,
+                                            font_style='TitleL',
+                                            text=self.header,
+                                            )
 
-        self.button = GlowButton(adaptive_size=True,
+        self.button = GlowButton(pos_hint={'right': 1, 'center_y': 0.5},
+                                 border_color=self.button_border_color,
+                                 icon_color=self.button_icon_color,
                                  icon=self.icon_closed,
-                                 mode='outline',
-                                 pos_hint={'right': 1, 'center_y': 0.5},
-                                 on_release=self._change_state,
+                                 adaptive_size=True,
                                  hidden=self.hidden,
+                                 mode='outline',
+
+                                 on_release=self._change_state,
                                  )
-        self.bind(hidden=self.button.setter('hidden'))
+        self.bind(hidden=self.button.setter('hidden'),
+                  button_icon_color=self.button.setter('icon_color'),
+                  button_border_color=self.button.setter('border_color'))
+
         self.container = GlowBoxLayout(size_hint=(1, None), opacity=0, height=0)
 
         self.add_widget(self.header_content, row=0, col=0, colspan=9)
-        self.add_widget(self.button, row=0, col=9)
         self.add_widget(self.container, row=1, col=0, colspan=10)
+        self.add_widget(self.button, row=0, col=9)
 
         if self.state == 'opened':
             self._init_open()
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_dark_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_dark_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'bg_color' in self._default_colors:
+        if self.bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    bg_color=self.theme_cls.background_dark_color,
+                    _bg_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.bg_color = self.theme_cls.background_dark_color
+                self._bg_color = self.theme_cls.background_dark_color

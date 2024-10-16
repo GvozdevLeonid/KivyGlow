@@ -48,7 +48,7 @@ class GlowSplitter(DeclarativeBehavior,
         super().__init__(*args, **kwargs)
 
 
-class GlowSplitterWidgetStrip(HoverBehavior,
+class GlowSplitterLayoutStrip(HoverBehavior,
                               GlowWidget):
     def on_enter(self):
         Window.set_system_cursor('hand')
@@ -57,14 +57,18 @@ class GlowSplitterWidgetStrip(HoverBehavior,
         Window.set_system_cursor('arrow')
 
 
-class GlowSplitterWidget(DeclarativeBehavior,
+class GlowSplitterLayout(DeclarativeBehavior,
                          AdaptiveBehavior,
                          ThemeBehavior,
                          StyleBehavior,
                          Layout):
 
+    '''
+    The widget works like a boxlayout but allows you to resize child widgets using strip
+    '''
+
     orientation = OptionProperty('horizontal', options=('horizontal', 'vertical'))
-    padding = VariableListProperty([0, 0, 0, 0], length=4)
+    padding = VariableListProperty((0, 0, 0, 0), length=4)
     strip_size = NumericProperty('10dp')
     toggle_distance = NumericProperty('40dp')
 
@@ -85,7 +89,7 @@ class GlowSplitterWidget(DeclarativeBehavior,
 
     def add_widget(self, widget, index=0, *args, **kwargs):
         if len(self.children) > 0:
-            strip = GlowSplitterWidgetStrip(size_hint=(None, 1) if self.orientation == 'horizontal' else (1, None), size=(self.strip_size, self.strip_size))
+            strip = GlowSplitterLayoutStrip(size_hint=(None, 1) if self.orientation == 'horizontal' else (1, None), size=(self.strip_size, self.strip_size))
             strip.bind(on_touch_move=self.on_strip_move,
                        on_touch_down=self.on_strip_down,
                        on_touch_up=self.on_strip_up)
@@ -111,7 +115,7 @@ class GlowSplitterWidget(DeclarativeBehavior,
         if self.allow_recalculate and not self.hidden:
             self.allow_recalculate = False
             size_hint_property = 'size_hint_x' if self.orientation == 'horizontal' else 'size_hint_y'
-            relevant_children = [child for child in self.children if not isinstance(child, GlowSplitterWidgetStrip)]
+            relevant_children = [child for child in self.children if not isinstance(child, GlowSplitterLayoutStrip)]
 
             empty_size_hint = 1
             for child in relevant_children:
@@ -129,7 +133,7 @@ class GlowSplitterWidget(DeclarativeBehavior,
     def on_orientation(self, _, __):
         self.allow_recalculate = False
         for child in self.children:
-            if isinstance(child, GlowSplitterWidgetStrip):
+            if isinstance(child, GlowSplitterLayoutStrip):
                 child.size_hint = (None, 1) if self.orientation == 'horizontal' else (1, None)
                 child.size = (self.strip_size, self.strip_size)
             else:
@@ -143,7 +147,7 @@ class GlowSplitterWidget(DeclarativeBehavior,
     def _update_stretch(self):
         self.allow_recalculate = False
         size_hint_property = 'size_hint_x' if self.orientation == 'horizontal' else 'size_hint_y'
-        relevant_children = [child for child in self.children if not isinstance(child, GlowSplitterWidgetStrip)]
+        relevant_children = [child for child in self.children if not isinstance(child, GlowSplitterLayoutStrip)]
 
         num_widgets = len(relevant_children)
         if num_widgets == 0:

@@ -207,14 +207,13 @@ class GlowDialog(DeclarativeBehavior,
 
     _size_hint_y = 0
     _icon_color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(icon_color=self.setter('_icon_color'))
 
         super().__init__(*args, **kwargs)
         self.background = ''
-        self.background_color = 0, 0, 0, 0
+        self.background_color = (0, 0, 0, 0)
 
         if self.size_hint[0] == 1 and self.size_hint[1] == 1 and (self.device == "desktop" or self.device == "tablet"):
             self.size_hint = (None, None)
@@ -346,10 +345,10 @@ class GlowDialog(DeclarativeBehavior,
         '''Initializing the Dialog.'''
         if self.text is not None:
             self.content = GlowLabel(
-                text=self.text,
                 theme_color='Secondary',
                 halign=self.text_halign,
                 adaptive_height=True,
+                text=self.text,
             )
             self.ids.glow_dialog_content_container.add_widget(self.content)
 
@@ -377,36 +376,30 @@ class GlowDialog(DeclarativeBehavior,
 
     def set_default_colors(self, *args):
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_color
 
         if self.mode == 'warning':
             if self.icon == 'blank':
                 self.icon = 'alert-circle'
             if self.icon_color is None:
-                self.icon_color = self.theme_cls.warning_color
-                self._default_colors.append('icon_color')
+                self._icon_color = self.theme_cls.warning_color
 
         elif self.mode == 'error':
             if self.icon == 'blank':
                 self.icon = 'close-circle'
             if self.icon_color is None:
-                self.icon_color = self.theme_cls.error_color
-                self._default_colors.append('icon_color')
+                self._icon_color = self.theme_cls.error_color
 
         elif self.mode == 'success':
             if self.icon == 'blank':
                 self.icon = 'check-circle'
             if self.icon_color is None:
-                self.icon_color = self.theme_cls.success_color
-                self._default_colors.append('icon_color')
+                self._icon_color = self.theme_cls.success_color
 
         if self.icon_color is None:
-            self.icon_color = self.theme_cls.primary_color
-            self._default_colors.append('icon_color')
+            self._icon_color = self.theme_cls.primary_color
 
     def _add_content_ids(self):
         '''Add content ids to dialog.'''

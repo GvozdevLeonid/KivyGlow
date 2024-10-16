@@ -34,6 +34,7 @@ with open(
 
 class GlowTextField(HoverBehavior,
                     GlowBoxLayout):
+
     font_size = NumericProperty('16sp')
 
     cursor_color = ColorProperty(None, allownone=True)
@@ -83,11 +84,16 @@ class GlowTextField(HoverBehavior,
 
     _cursor_color = ColorProperty((0, 0, 0, 0))
     _selection_color = ColorProperty((0, 0, 0, 0))
+    _focus_border_color = ColorProperty((0, 0, 0, 0))
+    _error_color = ColorProperty((0, 0, 0, 0))
     _placeholder_color = ColorProperty((0, 0, 0, 0))
     _text_color = ColorProperty((0, 0, 0, 0))
-    _label_color = ColorProperty((0, 0, 0, 0))
-    _help_text_color = ColorProperty((0, 0, 0, 0))
+    _focus_text_color = ColorProperty((0, 0, 0, 0))
     _disabled_text_color = ColorProperty((0, 0, 0, 0))
+    _label_color = ColorProperty((0, 0, 0, 0))
+    _focus_label_color = ColorProperty((0, 0, 0, 0))
+    _help_text_color = ColorProperty((0, 0, 0, 0))
+    _focus_help_text_color = ColorProperty((0, 0, 0, 0))
 
     mask = StringProperty('')
     '''
@@ -119,7 +125,6 @@ class GlowTextField(HoverBehavior,
 
     left_content = ObjectProperty(None, allownone=True)
     right_content = ObjectProperty(None, allownone=True)
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self._textfield = None
@@ -130,13 +135,18 @@ class GlowTextField(HoverBehavior,
         self._label = Label(text=' ', valign='center', halign='center', font_size=sp(12), font_name='Montserrat')
         self._help_text = Label(text=' ', valign='center', halign='center', font_size=sp(12), font_name='Montserrat')
 
-        self.bind(label_color=self.setter('_label_color'))
-        self.bind(help_text_color=self.setter('_help_text_color'))
-        self.bind(text_color=self.setter('_text_color'))
-        self.bind(selection_color=self.setter('_selection_color'))
-        self.bind(placeholder_color=self.setter('_placeholder_color'))
         self.bind(cursor_color=self.setter('_cursor_color'))
+        self.bind(selection_color=self.setter('_selection_color'))
+        self.bind(focus_border_color=self.setter('_focus_border_color'))
+        self.bind(error_color=self.setter('_error_color'))
+        self.bind(placeholder_color=self.setter('_placeholder_color'))
+        self.bind(text_color=self.setter('_text_color'))
+        self.bind(focus_text_color=self.setter('_focus_text_color'))
         self.bind(disabled_text_color=self.setter('_disabled_text_color'))
+        self.bind(label_color=self.setter('_label_color'))
+        self.bind(focus_label_color=self.setter('_focus_label_color'))
+        self.bind(help_text_color=self.setter('_help_text_color'))
+        self.bind(focus_help_text_color=self.setter('_focus_help_text_color'))
 
         super().__init__(*args, **kwargs)
 
@@ -225,175 +235,157 @@ class GlowTextField(HoverBehavior,
             self.bind(hidden=self.right_content.setter('hidden'))
 
     def set_default_colors(self, *args):
-        self._default_colors.clear()
         self.background_color = 0, 0, 0, 0
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_color
 
         if self.border_color is None:
-            self.border_color = self.theme_cls.background_dark_color
-            self._default_colors.append('border_color')
+            self._border_color = self.theme_cls.background_dark_color
 
         if self.focus_border_color is None:
-            self.focus_border_color = self.theme_cls.primary_color
-            self._default_colors.append('focus_border_color')
+            self._focus_border_color = self.theme_cls.primary_color
 
         if self.text_color is None:
-            self.text_color = self.theme_cls.text_color
-            self._default_colors.append('text_color')
+            self._text_color = self.theme_cls.text_color
 
         if self.focus_text_color is None:
-            self.focus_text_color = self.theme_cls.text_color
-            self._default_colors.append('focus_text_color')
+            self._focus_text_color = self.theme_cls.text_color
 
         if self.disabled_text_color is None:
-            self.disabled_text_color = self.theme_cls.disabled_color
-            self._default_colors.append('disabled_text_color')
+            self._disabled_text_color = self.theme_cls.disabled_color
 
         if self.label_color is None:
-            self.label_color = self.theme_cls.secondary_text_color
-            self._default_colors.append('label_color')
+            self._label_color = self.theme_cls.secondary_text_color
 
         if self.focus_label_color is None:
-            self.focus_label_color = self.theme_cls.primary_color
-            self._default_colors.append('focus_label_color')
+            self._focus_label_color = self.theme_cls.primary_color
 
         if self.help_text_color is None:
-            self.help_text_color = self.theme_cls.secondary_text_color
-            self._default_colors.append('help_text_color')
+            self._help_text_color = self.theme_cls.secondary_text_color
 
         if self.focus_help_text_color is None:
-            self.focus_help_text_color = self.theme_cls.secondary_text_color
-            self._default_colors.append('focus_help_text_color')
+            self._focus_help_text_color = self.theme_cls.secondary_text_color
 
         if self.cursor_color is None:
-            self.cursor_color = self.theme_cls.primary_light_color
-            self._default_colors.append('cursor_color')
+            self._cursor_color = self.theme_cls.primary_light_color
 
         if self.placeholder_color is None:
-            self.placeholder_color = self.theme_cls.secondary_text_color
-            self._default_colors.append('placeholder_color')
+            self._placeholder_color = self.theme_cls.secondary_text_color
 
         if self.selection_color is None:
-            self.selection_color = self.theme_cls.primary_light_color[:3] + [.5]
-            self._default_colors.append('selection_color')
+            self._selection_color = self.theme_cls.primary_light_color[:3] + [.5]
 
         if self.error_color is None:
-            self.error_color = self.theme_cls.error_color
-            self._default_colors.append('error_color')
+            self._error_color = self.theme_cls.error_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         '''Fired when the app :attr:`theme_style` value changes.'''
         super().on_theme_style(theme_manager, theme_style)
 
-        if self.disabled:
-            self.set_disabled_colors()
-
-        if 'bg_color' in self._default_colors:
+        if self.bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    bg_color=self.theme_cls.background_color,
+                    _bg_color=self.theme_cls.background_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.bg_color = self.theme_cls.background_color
+                self._bg_color = self.theme_cls.background_color
 
-        if 'border_color' in self._default_colors:
+        if self.border_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    border_color=self.theme_cls.background_dark_color,
+                    _border_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.border_color = self.theme_cls.background_dark_color
+                self._border_color = self.theme_cls.background_dark_color
 
-        if 'text_color' in self._default_colors:
+        if self.text_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    text_color=self.theme_cls.text_color,
+                    _text_color=self.theme_cls.text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.text_color = self.theme_cls.text_color
+                self._text_color = self.theme_cls.text_color
 
-        if 'disabled_text_color' in self._default_colors:
+        if self.disabled_text_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    disabled_text_color=self.theme_cls.disabled_color,
+                    _disabled_text_color=self.theme_cls.disabled_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.disabled_text_color = self.theme_cls.disabled_color
+                self._disabled_text_color = self.theme_cls.disabled_color
 
-        if 'label_color' in self._default_colors:
+        if self.label_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    label_color=self.theme_cls.secondary_text_color,
+                    _label_color=self.theme_cls.secondary_text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.label_color = self.theme_cls.secondary_text_color
+                self._label_color = self.theme_cls.secondary_text_color
 
-        if 'help_text_color' in self._default_colors:
+        if self.help_text_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    help_text_color=self.theme_cls.secondary_text_color,
+                    _help_text_color=self.theme_cls.secondary_text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.help_text_color = self.theme_cls.secondary_text_color
+                self._help_text_color = self.theme_cls.secondary_text_color
 
-        if 'placeholder_color' in self._default_colors:
+        if self.placeholder_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    placeholder_color=self.theme_cls.secondary_text_color,
+                    _placeholder_color=self.theme_cls.secondary_text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.placeholder_color = self.theme_cls.secondary_text_color
+                self._placeholder_color = self.theme_cls.secondary_text_color
 
-        if 'focus_text_color' in self._default_colors:
-            self.focus_text_color = self.theme_cls.text_color
+        if self.focus_text_color is None:
+            self._focus_text_color = self.theme_cls.text_color
 
-        if 'focus_help_text_color' in self._default_colors:
-            self.focus_help_text_color = self.theme_cls.secondary_text_color
+        if self.focus_help_text_color is None:
+            self._focus_help_text_color = self.theme_cls.secondary_text_color
 
-        if 'error_color' in self._default_colors:
-            self.error_color = self.theme_cls.error_color
+        if self.error_color is None:
+            self._error_color = self.theme_cls.error_color
 
     def on_focus(self, _, __):
         if not self.error:
             if self.focus:
                 animation = (
-                    Animation(_border_color=self.focus_border_color, d=.2)
-                    & Animation(_text_color=self.focus_text_color, d=.2)
-                    & Animation(_label_color=self.focus_label_color, d=.2)
-                    & Animation(_help_text_color=self.focus_help_text_color, d=.2))
+                    Animation(_border_color=self._focus_border_color, d=.2)
+                    & Animation(_text_color=self._focus_text_color, d=.2)
+                    & Animation(_label_color=self._focus_label_color, d=.2)
+                    & Animation(_help_text_color=self._focus_help_text_color, d=.2))
                 animation.start(self)
             else:
                 animation = (
-                    Animation(_border_color=self.border_color, d=.2)
-                    & Animation(_text_color=self.text_color, d=.2)
-                    & Animation(_label_color=self.label_color, d=.2)
-                    & Animation(_help_text_color=self.help_text_color, d=.2))
+                    Animation(_border_color=self.border_color if self.border_color else self.theme_cls.background_dark_color, d=.2)
+                    & Animation(_text_color=self.text_color if self.text_color else self.theme_cls.text_color, d=.2)
+                    & Animation(_label_color=self.label_color if self.label_color else self.theme_cls.secondary_text_color, d=.2)
+                    & Animation(_help_text_color=self.help_text_color if self.help_text_color else self.theme_cls.secondary_text_color, d=.2))
                 animation.start(self)
 
     def on_error(self, _, __):
         if self.error:
             animation = (
-                Animation(_border_color=self.error_color, d=.2)
-                & Animation(_text_color=self.error_color, d=.2)
-                & Animation(_label_color=self.error_color, d=.2)
-                & Animation(_help_text_color=self.error_color, d=.2))
+                Animation(_border_color=self._error_color, d=.2)
+                & Animation(_text_color=self._error_color, d=.2)
+                & Animation(_label_color=self._error_color, d=.2)
+                & Animation(_help_text_color=self._error_color, d=.2))
             animation.start(self)
         else:
             self.on_focus(self, self.focus)

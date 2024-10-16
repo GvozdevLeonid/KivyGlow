@@ -13,9 +13,9 @@ Builder.load_string(
     canvas.before:
         PushMatrix
         Rotate:
-            angle: self.rotate_angle
-            axis: tuple(self.rotate_axis)
             origin: self.origin if self.origin else self.center
+            axis: tuple(self.rotate_axis)
+            angle: self.rotate_angle
     canvas.after:
         PopMatrix
 '''

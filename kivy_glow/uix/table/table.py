@@ -179,10 +179,10 @@ class GlowTable(GlowBoxLayout):
     even_row_color = ColorProperty(None, allownone=True)
     hover_row_color = ColorProperty(None, allownone=True)
 
-    _header_color = ColorProperty((0, 0, 0, 1))
-    _odd_row_color = ColorProperty((0, 0, 0, 1))
-    _even_row_color = ColorProperty((0, 0, 0, 1))
-    _hover_row_color = ColorProperty((0, 0, 0, 1))
+    _header_color = ColorProperty((0, 0, 0, 0))
+    _odd_row_color = ColorProperty((0, 0, 0, 0))
+    _even_row_color = ColorProperty((0, 0, 0, 0))
+    _hover_row_color = ColorProperty((0, 0, 0, 0))
 
     _viewclass = StringProperty('GlowTableRow')
     _cell_viewclasses = []
@@ -190,7 +190,6 @@ class GlowTable(GlowBoxLayout):
     _display_table_data = ListProperty()
     _selected_rows = {}
     _original_rows = {}
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self._header = None
@@ -263,67 +262,54 @@ class GlowTable(GlowBoxLayout):
         return [self.table_data[idx] for idx in self.selected_rows]
 
     def set_default_colors(self, *args):
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_darkest_color
 
         if self.header_color is None:
-            self.header_color = self.theme_cls.background_light_color
-            self._default_colors.append('header_color')
+            self._header_color = self.theme_cls.background_light_color
 
         if self.odd_row_color is None:
-            self.odd_row_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('odd_row_color')
+            self._odd_row_color = self.theme_cls.background_darkest_color
 
         if self.even_row_color is None:
-            self.even_row_color = self.theme_cls.background_darkest_color
-            self._default_colors.append('even_row_color')
+            self._even_row_color = self.theme_cls.background_darkest_color
 
         if self.hover_row_color is None:
-            self.hover_row_color = self.theme_cls.background_dark_color
-            self._default_colors.append('hover_row_color')
-
-        self.__update_table_data()
+            self._hover_row_color = self.theme_cls.background_dark_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         '''Fired when the app :attr:`theme_style` value changes.'''
         super().on_theme_style(theme_manager, theme_style)
 
-        if self.disabled:
-            self.set_disabled_colors()
-
-        if 'bg_color' in self._default_colors:
+        if self.bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    bg_color=self.theme_cls.background_darkest_color,
+                    _bg_color=self.theme_cls.background_darkest_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.bg_color = self.theme_cls.background_darkest_color
+                self._bg_color = self.theme_cls.background_darkest_color
 
-        if 'header_color' in self._default_colors:
+        if self.header_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    header_color=self.theme_cls.background_light_color,
+                    _header_color=self.theme_cls.background_light_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.header_color = self.theme_cls.background_light_color
+                self._header_color = self.theme_cls.background_light_color
 
-        if 'odd_row_color' in self._default_colors:
-            self.odd_row_color = self.theme_cls.background_darkest_color
+        if self.odd_row_color is None:
+            self._odd_row_color = self.theme_cls.background_darkest_color
 
-        if 'even_row_color' in self._default_colors:
-            self.even_row_color = self.theme_cls.background_darkest_color
+        if self.even_row_color is None:
+            self._even_row_color = self.theme_cls.background_darkest_color
 
-        if 'hover_row_color' in self._default_colors:
-            self.hover_row_color = self.theme_cls.background_dark_color
-
-        self.__update_table_data()
+        if self.hover_row_color is None:
+            self._hover_row_color = self.theme_cls.background_dark_color
 
     def initialize_table(self, *args):
         self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
@@ -525,7 +511,7 @@ class GlowTable(GlowBoxLayout):
                     width=cell_width,
                     text_color=self.theme_cls.text_color,
                     icon_color=self.theme_cls.text_color,
-                    padding=[0, ],
+                    padding=(0, ),
                     anchor_x='left',
                     on_press=lambda button, column=cell_idx: self.__on_click_column(button, column)
                 )

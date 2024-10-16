@@ -106,16 +106,50 @@ class GlowFileManager(DeclarativeBehavior,
                       ModalView):
 
     selector = OptionProperty('file', options=['file', 'files', 'folder'])
+    '''File manager mode.
+
+    `file` - single file selection
+    `files` - multiple file selection
+    `folder` - single folder selection
+
+    :attr:`selector` is an :class:`~kivy.properties.OptionProperty`
+    and defaults to `file`.
+    '''
 
     ext = ListProperty()
+    ''' available file extension options
+
+    :attr:`ext` is an :class:`~kivy.properties.ListProperty`
+    and defaults to `empty`.
+    '''
 
     show_hidden = BooleanProperty(False)
+    '''Show hidden files
+
+    :attr:`show_hidden` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `False`.
+    '''
 
     sort_by = OptionProperty('name', options=['name', 'date', 'size', 'type'], allownone=True)
+    '''Option for sorting files and folders
+
+    :attr:`sort_by` is an :class:`~kivy.properties.OptionProperty`
+    and defaults to `name`.
+    '''
 
     sort_reverse = BooleanProperty(False)
+    '''Reverse sorting
 
-    current_path = StringProperty(os.path.expanduser("~"))
+    :attr:`sort_reverse` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `False`.
+    '''
+
+    current_path = StringProperty(os.path.expanduser('~'))
+    '''The path that is currently shown
+
+    :attr:`current_path` is an :class:`~kivy.properties.StringProperty`
+    and defaults to `os.path.expanduser("~")`.
+    '''
 
     dismiss_manager = ObjectProperty(lambda x: None)
     '''Function called when the user reaches directory tree root or closed manager.

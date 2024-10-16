@@ -80,38 +80,167 @@ class GlowDoubleSlider(GlowWidget):
     '''
 
     padding = NumericProperty('16sp')
+    '''Padding of the slider. The padding is used for graphical representation
+    and interaction. It prevents the cursor from going out of the bounds of the
+    slider bounding box.
+
+    By default, padding is 16sp. The range of the slider is reduced from
+    padding \\*2 on the screen. It allows drawing the default thumb of 32sp
+    size without having the thumb go out of the widget.
+
+    :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `sp(16)`.
+    '''
 
     min_value = NumericProperty(0.)
+    '''Current minimum value used for the slider.
+
+    :attr:`min_value` is an :class:`~kivy.properties.NumericProperty` and defaults
+    to `0.`
+    '''
+
     max_value = NumericProperty(100.)
+    '''Current minimum value used for the slider.
+
+    :attr:`min_value` is an :class:`~kivy.properties.NumericProperty` and defaults
+    to `100.`
+    '''
 
     min = NumericProperty(0.)
+    '''Minimum value allowed for :attr:`min_value` and :attr:`max_value`.
+
+    :attr:`min` is an :class:`~kivy.properties.NumericProperty` and defaults to
+    `0.`
+    '''
+
     max = NumericProperty(100.)
+    '''Maximum value allowed for :attr:`min_value` and :attr:`max_value`.
+
+    :attr:`max` is an :class:`~kivy.properties.NumericProperty` and defaults to
+    `100.`
+    '''
+
     range = ReferenceListProperty(min, max)
+    '''Range of the double slider in the format (minimum value, maximum value)
+
+    :attr:`range` is an :class:`~kivy.properties.ReferenceListProperty` of
+    (:attr:`min`, :attr:`max`) properties.
+    '''
 
     step = BoundedNumericProperty(0, min=0)
+    '''Step size of the slider.
+
+    :attr:`step` is an :class:`~kivy.properties.NumericProperty` and defaults
+    to `0`.
+    '''
 
     orientation = OptionProperty('horizontal', options=(
         'vertical', 'horizontal'))
+    '''
+    Orientation of the slider.
 
-    thumb_size = NumericProperty('16dp')
+    :attr:`orientation` is an :class:`~kivy.properties.OptionProperty` and
+    defaults to `'horizontal'`.
+    '''
+
+    thumb_size = NumericProperty('16sp')
+    ''' Thumb size
+
+    :attr:`thumb_size` is an :class:`~kivy.properties.NumericProperty` and
+    defaults to `sp(16)`.
+    '''
+
     value_track = BooleanProperty(True)
+    '''Decides if slider should draw the line indicating the
+    space between :attr:`min_value` and :attr:`max_value` properties values.
+
+    :attr:`value_track` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `True`.
+    '''
+
     line_width = NumericProperty('4dp')
+    '''Slider line width
+
+    :attr:`line_width` is an :class:`~kivy.properties.NumericProperty`
+    and defaults to `dp(4)`.
+    '''
 
     active = BooleanProperty(False)
+    '''
+
+    :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `False`.
+    '''
 
     thumb_active_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format of the thumb when it active
+
+    :attr:`thumb_active_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     thumb_inactive_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format of the thumb when it inactive
+
+    :attr:`thumb_inactive_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
 
     track_active_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format that indicated range between
+    :attr:`min_value` - :attr:`max_value` properties values.
+
+    :attr:`track_active_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     track_inactive_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format that indicated range between
+     :attr:`min` - :attr:`min_value` and :attr:`max_value` - :attr:`max` properties values.
+
+    :attr:`track_inactive_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
 
     hint = BooleanProperty(True)
+    '''If active, then show a tooltip showing the current value
+
+    :attr:`hint` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `True`.
+    '''
+
     hint_bg_color = ColorProperty(None, allownone=True)
+    '''The color in (r, g, b, a) or string format of the hint background color
+
+    :attr:`hint_bg_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
     hint_text_color = ColorProperty(None, allownone=True)
-    hint_border_radius = VariableListProperty(['4dp', ], length=4)
+    '''The color in (r, g, b, a) or string format of the hint text color
+
+    :attr:`hint_text_color` is an :class:`~kivy.properties.ColorProperty`
+    and defaults to `None`.
+    '''
+
+    hint_border_radius = VariableListProperty(('4dp', ), length=4)
+    '''Hint border radius
+
+    :attr:`hint_border_radius` is an :class:`~kivy.properties.VariableListProperty`
+    and defaults to `(dp(4), dp(4), dp(4), dp(4))`.
+    '''
+
+    use_center = BooleanProperty(True)
+    '''Whether to move two sliders at the same time.
+
+    :attr:`use_center` is an :class:`~kivy.properties.BooleanProperty`
+    and defaults to `True`.
+    '''
 
     _thumb_color = ColorProperty((0, 0, 0, 0))
-    _track_active_color = ColorProperty((1, 0, 0, 0))
+    _thumb_active_color = ColorProperty((0, 0, 0, 0))
+    _thumb_inactive_color = ColorProperty((0, 0, 0, 0))
+    _track_active_color = ColorProperty((0, 0, 0, 0))
     _track_inactive_color = ColorProperty((0, 0, 0, 0))
     _hint_bg_color = ColorProperty((0, 0, 0, 0))
     _hint_text_color = ColorProperty((0, 0, 0, 0))
@@ -122,14 +251,11 @@ class GlowDoubleSlider(GlowWidget):
     _min_active = BooleanProperty(False)
     _max_active = BooleanProperty(False)
 
-    use_center = BooleanProperty(True)
-    '''Whether to move two sliders at the same time.
-    default is True.
-    '''
     _last_center_pos = None
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
+        self.bind(thumb_active_color=self.setter('_thumb_active_color'))
+        self.bind(thumb_inactive_color=self.setter('_thumb_inactive_color'))
         self.bind(track_active_color=self.setter('_track_active_color'))
         self.bind(track_inactive_color=self.setter('_track_inactive_color'))
         self.bind(hint_bg_color=self.setter('_hint_bg_color'))
@@ -366,7 +492,7 @@ class GlowDoubleSlider(GlowWidget):
                     height=self.thumb_size * 1.2,
                     duration=0.1, t='out_quad')
                 animation.start(self.ids.glow_doubleslider_max_thumb)
-            self._thumb_color = self.thumb_active_color
+            self._thumb_color = self._thumb_active_color
         else:
             self._min_active = False
             self._max_active = False
@@ -380,73 +506,66 @@ class GlowDoubleSlider(GlowWidget):
                 height=self.thumb_size,
                 duration=0.1, t='out_quad')
             animation.start(self.ids.glow_doubleslider_max_thumb)
-            self._thumb_color = self.thumb_inactive_color
+            self._thumb_color = self._thumb_inactive_color
 
     def set_default_colors(self, *args):
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_dark_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_dark_color
 
         if self.thumb_active_color is None:
-            self.thumb_active_color = self.theme_cls.primary_color
-            self._default_colors.append('thumb_active_color')
+            self._thumb_active_color = self.theme_cls.primary_color
 
         if self.thumb_inactive_color is None:
-            self.thumb_inactive_color = self.theme_cls.primary_color
-            self._default_colors.append('thumb_inactive_color')
+            self._thumb_inactive_color = self.theme_cls.primary_color
 
         if self.track_active_color is None:
-            self.track_active_color = self.theme_cls.primary_color
-            self._default_colors.append('track_active_color')
+            self._track_active_color = self.theme_cls.primary_color
 
         if self.track_inactive_color is None:
-            self.track_inactive_color = self.theme_cls.background_dark_color
-            self._default_colors.append('track_inactive_color')
+            self._track_inactive_color = self.theme_cls.background_dark_color
 
         if self.hint_text_color is None:
-            self.hint_text_color = self.theme_cls.primary_color
-            self._default_colors.append('hint_text_color')
+            self._hint_text_color = self.theme_cls.primary_color
 
         if self.hint_bg_color is None:
-            self.hint_bg_color = self.theme_cls.background_dark_color
-            self._default_colors.append('hint_bg_color')
+            self._hint_bg_color = self.theme_cls.background_dark_color
 
-        self._thumb_color = self.thumb_inactive_color
+        self._thumb_color = self._thumb_inactive_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
+        super().on_theme_style(theme_manager, theme_style)
 
-        if 'track_inactive_color' in self._default_colors:
+        if self.track_inactive_color is None:
             self._thumb_color = self.theme_cls.background_dark_color
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    track_inactive_color=self.theme_cls.background_dark_color,
+                    _track_inactive_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.track_inactive_color = self.theme_cls.background_dark_color
+                self._track_inactive_color = self.theme_cls.background_dark_color
 
-        if 'hint_bg_color' in self._default_colors:
+        if self.hint_bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    hint_bg_color=self.theme_cls.background_dark_color,
+                    _hint_bg_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.hint_bg_color = self.theme_cls.background_dark_color
+                self._hint_bg_color = self.theme_cls.background_dark_color
 
-        if 'bg_color' in self._default_colors:
+        if self.bg_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    bg_color=self.theme_cls.background_dark_color,
+                    _bg_color=self.theme_cls.background_dark_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.bg_color = self.theme_cls.background_dark_color
+                self._bg_color = self.theme_cls.background_dark_color
 
     def on_min_value(self, _, __):
         self._min_hint_text = str(round(self.min_value, 2))

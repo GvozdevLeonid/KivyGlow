@@ -230,54 +230,76 @@ class GlowNumberField(GlowTextField):
 
         if self.widget_style == 'mobile':
             self.text_align = 'center'
-            self.button_up = GlowButton(adaptive_size=True, icon=self.icon_up, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._up, disabled=True if self._value == self.maximum else False, hidden=self.hidden)
-            self.button_down = GlowButton(adaptive_size=True, icon=self.icon_down, icon_color=self.button_icon_color, border_color=self.button_border_color, icon_size=dp(16), mode='outline', on_release=self._down, disabled=True if self._value == self.minimum else False, hidden=self.hidden)
+            self.button_up = GlowButton(disabled=True if self._value == self.maximum else False,
+                                        border_color=self.button_border_color,
+                                        icon_color=self.button_icon_color,
+                                        hidden=self.hidden,
+                                        adaptive_size=True,
+                                        icon=self.icon_up,
+                                        icon_size=dp(16),
+                                        mode='outline',
+
+                                        on_release=self._up,)
+            self.button_down = GlowButton(disabled=True if self._value == self.minimum else False,
+                                          border_color=self.button_border_color,
+                                          icon_color=self.button_icon_color,
+                                          icon=self.icon_down,
+                                          hidden=self.hidden,
+                                          adaptive_size=True,
+                                          icon_size=dp(16),
+                                          mode='outline',
+
+                                          on_release=self._down,)
 
             self.left_content = self.button_down
             self.right_content = self.button_up
 
         else:
             self.text_align = 'right'
-            self.button_up = GlowButton(adaptive_height=True,
-                                        size_hint_x=None,
-                                        width=dp(20),
-                                        icon=self.icon_up,
-                                        icon_color=self.button_icon_color,
+            self.button_up = GlowButton(disabled=True if self._value == self.maximum else False,
                                         border_color=self.button_border_color,
-                                        mode='outline',
-                                        padding=[0, ],
+                                        border_radius=('5dp', '5dp', 0, 0),
+                                        icon_color=self.button_icon_color,
+                                        border_width=(2, 2, 2, 1),
+                                        adaptive_height=True,
+                                        hidden=self.hidden,
+                                        icon=self.icon_up,
+                                        size_hint_x=None,
                                         icon_size=dp(12),
-                                        border_radius=['5dp', '5dp', 0, 0],
-                                        border_width=[2, 2, 2, 1],
-                                        on_release=self._up,
-                                        disabled=True if self._value == self.maximum else False,
-                                        hidden=self.hidden)
+                                        mode='outline',
+                                        padding=(0, ),
+                                        width=dp(20),
 
-            self.button_down = GlowButton(adaptive_height=True,
-                                          size_hint_x=None,
-                                          width=dp(20),
-                                          icon=self.icon_down,
-                                          icon_color=self.button_icon_color,
+                                        on_release=self._up,)
+
+            self.button_down = GlowButton(disabled=True if self._value == self.minimum else False,
                                           border_color=self.button_border_color,
-                                          mode='outline',
-                                          padding=[0, ],
+                                          border_radius=(0, 0, '5dp', '5dp'),
+                                          icon_color=self.button_icon_color,
+                                          border_width=(2, 1, 2, 2),
+                                          adaptive_height=True,
+                                          icon=self.icon_down,
+                                          hidden=self.hidden,
+                                          size_hint_x=None,
                                           icon_size=dp(12),
-                                          border_radius=[0, 0, '5dp', '5dp'],
-                                          border_width=[2, 1, 2, 2],
-                                          on_release=self._down,
-                                          disabled=True if self._value == self.minimum else False,
-                                          hidden=self.hidden)
+                                          mode='outline',
+                                          padding=(0, ),
+                                          width=dp(20),
+
+                                          on_release=self._down,)
 
             self.right_content = GlowBoxLayout(
                 self.button_up,
                 self.button_down,
-                adaptive_size=True,
                 orientation='vertical',
-                padding=[0, ],
+                adaptive_size=True,
+                padding=(0, ),
                 spacing=0,
             )
 
-        self.bind(button_icon_color=self.button_up.setter('icon_color'))
-        self.bind(button_icon_color=self.button_down.setter('icon_color'))
-        self.bind(button_border_color=self.button_up.setter('border_color'))
-        self.bind(button_border_color=self.button_down.setter('border_color'))
+        self.bind(hidden=self.button_up.setter('hidden'),
+                  button_icon_color=self.button_up.setter('icon_color'),
+                  button_border_color=self.button_up.setter('border_color'))
+        self.bind(hidden=self.button_down.setter('hidden'),
+                  button_icon_color=self.button_down.setter('icon_color'),
+                  button_border_color=self.button_down.setter('border_color'))

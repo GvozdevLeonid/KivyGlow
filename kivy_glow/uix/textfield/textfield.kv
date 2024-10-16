@@ -56,13 +56,14 @@
                 ),\
                 self.y - self._help_text.texture_size[1])
 
+    padding: ('10dp', dp(10) + self.spacing + self._label.texture_size[1], '10dp', '10dp') if self.mode == 'inside' else ('10dp', )
+    border_width: ('1dp', ) if self.border_style == 'full' else (0, 0, 0, '1dp')
+    border_radius: ('5dp', ) if self.border_style == 'full' else (0, )
+    height: self.minimum_height
     orientation: 'horizontal'
     size_hint_y: None
-    height: self.minimum_height
-    border_width: ['1dp', ] if self.border_style == 'full' else [0, 0, 0, '1dp']
-    border_radius: ['5dp', ] if self.border_style == 'full' else [0, ]
     spacing: dp(5)
-    padding: ['10dp', dp(10) + self.spacing + self._label.texture_size[1], '10dp', '10dp',] if self.mode == 'inside' else ['10dp', ]
+
     TextInput:
         canvas.before:
             Clear
@@ -79,16 +80,16 @@
                 rgba: root._disabled_text_color if root.disabled else (root._placeholder_color if not self.text else root._text_color)
 
         id: textfield
+        use_handles: root.use_handles if root.use_handles is not None else root.widget_style == 'mobile'
+        use_bubble: root.use_bubble if root.use_bubble is not None else root.widget_style == 'mobile'
+        selection_color: root._selection_color
         pos_hint: {'center_y': 0.5}
+        height: self.minimum_height
         font_size: root.font_size
         multiline: root.multiline
         readonly: root.readonly
         password: root.password
-        use_handles: root.use_handles if root.use_handles is not None else root.widget_style == 'mobile'
-        use_bubble: root.use_bubble if root.use_bubble is not None else root.widget_style == 'mobile'
-        size_hint_y: None
-        height: self.minimum_height
-        selection_color: root._selection_color
-        font_name: 'Montserrat'
-        text: root.text
         halign: root.text_align
+        font_name: 'Montserrat'
+        size_hint_y: None
+        text: root.text

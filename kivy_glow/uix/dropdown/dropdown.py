@@ -95,7 +95,6 @@ class GlowDropDown(GlowButton):
     '''
 
     _item_text_color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -127,10 +126,11 @@ class GlowDropDown(GlowButton):
     def _open(self, *args) -> None:
         '''Open DropDown.'''
         self.dropdown_container.items = [
-            GlowButton(adaptive_height=True,
+            GlowButton(text_color=self._item_text_color,
+                       adaptive_height=True,
                        mode='text',
                        text=item,
-                       text_color=self._item_text_color,
+
                        on_release=lambda _, item=item: self._select_item(item))
             for item in self.items
         ]
@@ -157,18 +157,16 @@ class GlowDropDown(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
         super().set_default_colors()
 
         if self.item_text_color is None:
-            self.item_text_color = self.theme_cls.text_color
-            self._default_colors.append('item_text_color')
+            self._item_text_color = self.theme_cls.text_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'item_text_color' in self._default_colors:
-            self.item_text_color = self.theme_cls.text_color
+        if self.item_text_color is None:
+            self._item_text_color = self.theme_cls.text_color
 
 
 class GlowSelectableDropDown(GlowButton):
@@ -276,7 +274,6 @@ class GlowSelectableDropDown(GlowButton):
     _item_text_color = ColorProperty((0, 0, 0, 0))
     _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
     _selected_item_text_color = ColorProperty((0, 0, 0, 0))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -309,20 +306,21 @@ class GlowSelectableDropDown(GlowButton):
     def _open(self, *args) -> None:
         '''Open DropDown.'''
         self.dropdown_container.items = [
-            GlowButton(adaptive_height=True,
+            GlowButton(text_color=self._item_text_color,
+                       adaptive_height=True,
                        mode='text',
                        text=item,
-                       text_color=self._item_text_color,
-                       icon_color=self._selected_item_icon_color,
+
                        on_release=lambda _, item=item: self._select_item(item))
             if item != self.selected_item else
-            GlowButton(adaptive_height=True,
-                       mode='text',
-                       text=item,
-                       text_color=self._selected_item_text_color,
+            GlowButton(text_color=self._selected_item_text_color,
                        icon_color=self._selected_item_icon_color,
                        icon=self.selected_item_icon,
+                       adaptive_height=True,
                        icon_size=dp(16),
+                       mode='text',
+                       text=item,
+
                        on_release=lambda _, item=item: self._select_item(item))
             for item in self.items
         ]
@@ -349,23 +347,19 @@ class GlowSelectableDropDown(GlowButton):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
         super().set_default_colors()
 
         if self.item_text_color is None:
-            self.item_text_color = self.theme_cls.text_color
-            self._default_colors.append('item_text_color')
+            self._item_text_color = self.theme_cls.text_color
 
         if self.selected_item_icon_color is None:
-            self.selected_item_icon_color = self.theme_cls.primary_color
-            self._default_colors.append('selected_item_icon_color')
+            self._selected_item_icon_color = self.theme_cls.primary_color
 
         if self.selected_item_text_color is None:
-            self.selected_item_text_color = self.theme_cls.primary_color
-            self._default_colors.append('selected_item_text_color')
+            self._selected_item_text_color = self.theme_cls.primary_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'item_text_color' in self._default_colors:
-            self.item_text_color = self.theme_cls.text_color
+        if self.item_text_color is None:
+            self._item_text_color = self.theme_cls.text_color

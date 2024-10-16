@@ -89,7 +89,6 @@ class GlowPanel(GlowBoxLayout):
     _active_tab = ObjectProperty(None, allownone=True)
     _active_pos = ListProperty(None, allownone=True)
     _active_size = ListProperty(None, allownone=True)
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(active_color=self.setter('_active_color'))
@@ -137,11 +136,11 @@ class GlowPanel(GlowBoxLayout):
             if (i < len(tabs) - 1) and self.mode == 'badge':
                 self.add_widget(
                     GlowWidget(
+                        bg_color=self.theme_cls.divider_color,
+                        pos_hint={'center_y': .5},
                         size_hint_x=None,
                         size_hint_y=.5,
-                        pos_hint={'center_y': .5},
                         width='2dp',
-                        bg_color=self.theme_cls.divider_color
                     )
                 )
             if tab.get('active', False):
@@ -167,12 +166,21 @@ class GlowPanel(GlowBoxLayout):
                     child.size_hint_x = 1
                     child.adaptive_width = True if (self.adaptive_width or self.adaptive_size) else False
 
+    def on__active_color(self, panel_instance: Self, active_color) -> None:
+        '''Fired when the :attr:`active_color` value changes.'''
+        for child in self.children[:]:
+            if isinstance(child, GlowButton):
+                if child == self._active_tab and self.mode == 'text':
+                    child.text_color = active_color
+                else:
+                    child.text_color = self._text_color
+
     def on__text_color(self, panel_instance: Self, text_color) -> None:
         '''Fired when the :attr:`text_color` value changes.'''
         for child in self.children[:]:
             if isinstance(child, GlowButton):
                 if child == self._active_tab and self.mode == 'text':
-                    child.text_color = self.active_color
+                    child.text_color = self._active_color
                 else:
                     child.text_color = text_color
 
@@ -181,7 +189,7 @@ class GlowPanel(GlowBoxLayout):
         for child in self.children[:]:
             if isinstance(child, GlowButton):
                 if child == self._active_tab and self.mode == 'text':
-                    child.icon_color = self.active_color
+                    child.icon_color = self._active_color
                 else:
                     child.icon_color = icon_color
 
@@ -225,43 +233,45 @@ class GlowPanel(GlowBoxLayout):
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
-        self._default_colors.clear()
+
+        if self.bg_color is None and self.mode == 'badge':
+            self._bg_color = self.theme_cls.primary_dark_color
 
         if self.active_color is None:
-            self.active_color = self.theme_cls.primary_color
-            self._default_colors.append('active_color')
-        if self.bg_color is None and self.mode == 'badge':
-            self.bg_color = self.theme_cls.primary_dark_color
-            self._default_colors.append('bg_color')
+            self._active_color = self.theme_cls.primary_color
+
         if self.text_color is None:
-            self.text_color = self.theme_cls.text_color
-            self._default_colors.append('text_color')
+            self._text_color = self.theme_cls.text_color
+
         if self.icon_color is None:
-            self.icon_color = self.theme_cls.text_color
-            self._default_colors.append('icon_color')
+            self._icon_color = self.theme_cls.text_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
-        if 'text_color' in self._default_colors:
+        if self.text_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    text_color=self.theme_cls.text_color,
+                    _text_color=self.theme_cls.text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.text_color = self.theme_cls.text_color
+                self._text_color = self.theme_cls.text_color
 
-        if 'icon_color' in self._default_colors:
+        if self.icon_color is None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    icon_color=self.theme_cls.text_color,
+                    _icon_color=self.theme_cls.text_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.icon_color = self.theme_cls.text_color
+                self._icon_color = self.theme_cls.text_color
+
+        if self.mode == 'badge':
+            for child in self.children[1::2]:
+                child.bg_color = self.theme_cls.divider_color
 
     def set_active_tab(self, idx: int) -> None:
         for child in self.children[::-1]:

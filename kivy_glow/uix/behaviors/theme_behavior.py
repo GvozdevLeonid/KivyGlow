@@ -41,9 +41,9 @@ class ThemeBehavior(EventDispatcher):
 
     def __init__(self, *args, **kwargs) -> None:
         self.theme_cls = App.get_running_app().theme_cls
+        self.register_event_type('on_theme_style')
 
         super().__init__(*args, **kwargs)
-        self.register_event_type('on_theme_style')
 
         self.set_device()
         self.theme_cls.bind(theme_style=lambda theme_manager, theme_style: self.dispatch('on_theme_style', theme_manager, theme_style))

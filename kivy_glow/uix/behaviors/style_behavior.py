@@ -18,134 +18,134 @@ Builder.load_string(
     canvas.before:
         PushMatrix
         Rotate:
-            angle: self.rotate_angle
-            axis: tuple(self.rotate_axis)
             origin: self.background_origin if self.background_origin else self.center
+            axis: tuple(self.rotate_axis)
+            angle: self.rotate_angle
         Color:
             rgba: self._shadow_color if self.shadow == 'outside' else (0, 0, 0, 0)
         BoxShadow:
-            size: self.size
-            pos: self.pos
+            spread_radius: self.shadow_spread_radius
+            blur_radius: self.shadow_blur_radius
             border_radius: self._border_radius
             offset: self.shadow_offset
-            blur_radius: self.shadow_blur_radius
-            spread_radius: self.shadow_spread_radius
+            size: self.size
+            pos: self.pos
     canvas:
         Color:
             rgba: self._bg_color
         SmoothRoundedRectangle:
             group: "bg_color_instruction"
-            pos: self.pos
-            size: self.size
             radius: self._border_radius if self._border_radius else (0, 0, 0, 0)
             source: self.background_image
+            size: self.size
+            pos: self.pos
         Color:
             rgba: self._border_color if self._border_width[0] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # left
-            cap: 'none'
             width: self._border_width[0]
-            points: [ \
+            cap: 'none'
+            points: ( \
                 self.x + self._border_width[0], \
                 self.y + self._border_radius[3] + (1 if self._border_radius[3] < 1 else 0), \
                 self.x + self._border_width[0], \
                 self.top - self._border_radius[0] - (1 if self._border_radius[0] < 1 else 0) \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_width[1] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # top
-            cap: 'none'
             width: self._border_width[1]
-            points: [ \
+            cap: 'none'
+            points: ( \
                 self.x + self._border_radius[0] + (1 if self._border_radius[0] < 1 else 0), \
                 self.top - self._border_width[1], \
                 self.right - self._border_radius[1] - (1 if self._border_radius[1] < 1 else 0), \
                 self.top - self._border_width[1] \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_width[2] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # right
-            cap: 'none'
             width: self._border_width[2]
-            points: [ \
+            cap: 'none'
+            points: ( \
                 self.right - self._border_width[2], \
                 self.y + self._border_radius[2] + (1 if self._border_radius[2] < 1 else 0), \
                 self.right - self._border_width[2], \
                 self.top - self._border_radius[1] - (1 if self._border_radius[1] < 1 else 0) \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_width[3] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # bottom
-            cap: 'none'
             width: self._border_width[3]
-            points: [ \
+            cap: 'none'
+            points: ( \
                 self.x + self._border_radius[3] + (1 if self._border_radius[3] < 1 else 0), \
                 self.y + self._border_width[3], \
                 self.right - self._border_radius[2] - (1 if self._border_radius[2] < 1 else 0), \
                 self.y + self._border_width[3] \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_radius[0] and self._border_width[1] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # lt
-            cap: 'none'
             width: self._border_width[1]
-            ellipse: [ \
+            cap: 'none'
+            ellipse: ( \
                 self.x + self._border_width[0], \
                 self.top - 2 * self._border_radius[0] + self._border_width[1], \
                 2 * self._border_radius[0] - self._border_width[0] * 2, \
                 2 * self._border_radius[0] - self._border_width[1] * 2, \
                 270, \
                 360 \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_radius[1] and self._border_width[1] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # rt
-            cap: 'none'
             width: self._border_width[1]
-            ellipse: [ \
+            cap: 'none'
+            ellipse: ( \
                 self.right - 2 * self._border_radius[1] + self._border_width[1], \
                 self.top - 2 * self._border_radius[1] + self._border_width[1], \
                 2 * self._border_radius[1] - self._border_width[1] * 2, \
                 2 * self._border_radius[1] - self._border_width[1] * 2, \
                 0, \
                 90 \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_radius[2] and self._border_width[3] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # rb
-            cap: 'none'
             width: self._border_width[3]
-            ellipse: [ \
+            cap: 'none'
+            ellipse: ( \
                 self.right - 2 * self._border_radius[2] + self._border_width[3], \
                 self.y + self._border_width[3], \
                 2 * self._border_radius[2] - self._border_width[3] * 2, \
                 2 * self._border_radius[2] - self._border_width[3] * 2, \
                 90, \
                 180 \
-            ]
+            )
         Color:
             rgba: self._border_color if self._border_radius[3] and self._border_width[3] >= 1 else (0, 0, 0, 0)
         SmoothLine:  # lb
-            cap: 'none'
             width: self._border_width[3]
-            ellipse: [ \
+            cap: 'none'
+            ellipse: ( \
                 self.x + self._border_width[3], \
                 self.y + self._border_width[3], \
                 2 * self._border_radius[3] - self._border_width[3] * 2, \
                 2 * self._border_radius[3] - self._border_width[3] * 2, \
                 180, \
                 270 \
-            ]
+            )
     canvas.after:
         Color:
             rgba: self._shadow_color if self.shadow == 'inside' else (0, 0, 0, 0)
         BoxShadow:
+            spread_radius: self.shadow_spread_radius
+            blur_radius: self.shadow_blur_radius
+            border_radius: self._border_radius
+            offset: self.shadow_offset
             size: self.size
             pos: self.pos
             inset: True
-            border_radius: self._border_radius
-            offset: self.shadow_offset
-            blur_radius: self.shadow_blur_radius
-            spread_radius: self.shadow_spread_radius
         PopMatrix
     ''',
     filename='StyleBehavior.kv'
@@ -173,11 +173,11 @@ class StyleBehavior:
     and defaults to `None`.
     '''
 
-    border_radius = VariableListProperty([0], length=4)
+    border_radius = VariableListProperty((0, ), length=4)
     '''Canvas radius.
 
     :attr:`border_radius` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0, 0, 0]`.
+    and defaults to `(0, 0, 0, 0)`.
     '''
 
     border_color = ColorProperty(None, allownone=True)
@@ -187,11 +187,11 @@ class StyleBehavior:
     and defaults to `None`.
     '''
 
-    border_width = VariableListProperty([0], length=4)
+    border_width = VariableListProperty((0, ), length=4)
     '''Border width.
 
     :attr:`border_width` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0, 0, 0]`.
+    and defaults to `(0, 0, 0, 0)`.
     '''
 
     rotate_angle = NumericProperty(0)
@@ -229,14 +229,14 @@ class StyleBehavior:
     and defaults to `None`.
     '''
 
-    shadow_offset = VariableListProperty([0], length=2)
+    shadow_offset = VariableListProperty((0, ), length=2)
     '''Specifies shadow offsets in (horizontal, vertical) format.
     Positive values for the offset indicate that the shadow should move to the right and/or top.
     The negative ones indicate that the shadow should move to the left and/or down.
 
 
     :attr:`shadow_offset` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0]`.
+    and defaults to `(0, 0)`.
     '''
 
     shadow_blur_radius = NumericProperty(15)
@@ -246,18 +246,18 @@ class StyleBehavior:
     and defaults to `15`.
     '''
 
-    shadow_spread_radius = VariableListProperty([0], length=2)
+    shadow_spread_radius = VariableListProperty((0, ), length=2)
     '''Define the shrink/expansion of the shadow.
 
     :attr:`shadow_spread_radius` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0]`.
+    and defaults to `(0, 0)`.
     '''
 
     _bg_color = ColorProperty((0, 0, 0, 0))
     _border_color = ColorProperty((0, 0, 0, 0))
     _shadow_color = ColorProperty((0, 0, 0, 0))
-    _border_radius = VariableListProperty([0], length=4)
-    _border_width = VariableListProperty([0.0001], length=4)
+    _border_radius = VariableListProperty((0, ), length=4)
+    _border_width = VariableListProperty((0.0001, ), length=4)
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(border_color=self.setter('_border_color'))

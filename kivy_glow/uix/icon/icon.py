@@ -26,8 +26,6 @@ class GlowIcon(GlowLabel):
 
     For more information, see in the :class:`~kivy_glow.uix.label.GlowLabel` class documentation.
     '''
-    allowed_icon_styles = ('outlined', 'rounded', 'sharp')
-    allowed_icon_weights = ('100', '200', '300', '400', '500', '600', '700')
 
     allow_selection = False
     '''Do not allow select the icon'''
@@ -68,11 +66,11 @@ class GlowIcon(GlowLabel):
     and defaults to `MontserratLight`.
     '''
 
-    badge_border_radius = VariableListProperty([0], length=4)
+    badge_border_radius = VariableListProperty((0, ), length=4)
     '''Badge canvas radius.
 
     :attr:`badge_border_radius` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0, 0, 0]`.
+    and defaults to `(0, 0, 0, 0)`.
     '''
 
     badge_border_color = ColorProperty(None, allownone=True)
@@ -82,11 +80,11 @@ class GlowIcon(GlowLabel):
     and defaults to `None`.
     '''
 
-    badge_border_width = VariableListProperty([0], length=4)
+    badge_border_width = VariableListProperty((0, ), length=4)
     '''Badge border width.
 
     :attr:`badge_border_width` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `[0, 0, 0, 0]`.
+    and defaults to `(0, 0, 0, 0)`.
     '''
 
     badge_bg_color = ColorProperty(None, allownone=True)
@@ -103,12 +101,15 @@ class GlowIcon(GlowLabel):
     and defaults to `None`.
     '''
 
-    badge_padding = VariableListProperty(['3dp'], length=4)
+    badge_padding = VariableListProperty(('3dp', ), length=4)
     '''Badge padding.
 
     :attr:`badge_padding` is an :class:`~kivy.properties.VariableListProperty`
-    and defaults to `['3dp', '3dp', '3dp', '3dp']`.
+    and defaults to `('3dp', '3dp', '3dp', '3dp')`.
     '''
+
+    allowed_icon_styles = ('outlined', 'rounded', 'sharp')
+    allowed_icon_weights = ('100', '200', '300', '400', '500', '600', '700')
 
     def _get_icon_font_name(self):
         if len(self.icon.split(':')) == 3:

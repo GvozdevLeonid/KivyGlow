@@ -106,8 +106,6 @@ class GlowColorPicker(DeclarativeBehavior,
     and defaults to `center`.
     '''
 
-    _selected_color = ColorProperty((1, 0, 0, 1))
-
     margin = NumericProperty('48dp')
     """Colorpicker maegin from device width.
 
@@ -145,8 +143,8 @@ class GlowColorPicker(DeclarativeBehavior,
 
     _size_hint_y = 0
     _icon_color = ColorProperty((0, 0, 0, 0))
+    _selected_color = ColorProperty((1, 0, 0, 1))
     _gradient_color = ColorProperty((1, 0, 0, 1))
-    _default_colors = []
 
     def __init__(self, *args, **kwargs):
         self.bind(icon_color=self.setter('_icon_color'))
@@ -284,15 +282,12 @@ class GlowColorPicker(DeclarativeBehavior,
 
     def set_default_colors(self, *args):
         '''Set defaults colors.'''
-        self._default_colors.clear()
 
         if self.bg_color is None:
-            self.bg_color = self.theme_cls.background_color
-            self._default_colors.append('bg_color')
+            self._bg_color = self.theme_cls.background_color
 
         if self.icon_color is None:
-            self.icon_color = self.theme_cls.primary_color
-            self._default_colors.append('icon_color')
+            self._icon_color = self.theme_cls.primary_color
 
     def on__selected_color(self, *args):
         self._update_selected_color()

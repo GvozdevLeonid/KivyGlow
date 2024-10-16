@@ -202,10 +202,9 @@ class GlowLabel(DeclarativeBehavior,
     and defaults to `atlas://data/images/defaulttheme/selector_right`.
     '''
 
-    _color = ColorProperty((1, 1, 1, 1))
     _selection_color = ColorProperty((1, 1, 1, 1))
+    _color = ColorProperty((1, 1, 1, 1))
     _focus = BooleanProperty(False)
-    _default_colors = []
     _font_properties = ('text', 'font_size', 'font_name', 'font_script_name',
                         'font_direction', 'bold', 'italic',
                         'underline', 'strikethrough', 'font_family', '_color',
@@ -232,6 +231,9 @@ class GlowLabel(DeclarativeBehavior,
         self._bubble = None
 
         super().__init__(*args, **kwargs)
+
+        self.funbind('color', self._trigger_texture_update, 'color')
+        self.fbind('_color', self._trigger_texture_update, 'color')
 
         self.register_event_type('on_double_tap')
         self.register_event_type('on_triple_tap')
@@ -364,35 +366,31 @@ class GlowLabel(DeclarativeBehavior,
 
     def on_theme_color(self, label_instance: Self, theme_color: str) -> None:
         '''Fired when the :attr:`theme_color` value changes.'''
-        self._default_colors.clear()
 
         if self.color is None:
             if theme_color == 'Primary':
-                self.color = self.theme_cls.text_color
+                self._color = self.theme_cls.text_color
             elif theme_color == 'Secondary':
-                self.color = self.theme_cls.secondary_text_color
+                self._color = self.theme_cls.secondary_text_color
             elif theme_color == 'PrimaryOpposite':
-                self.color = self.theme_cls.opposite_text_color
+                self._color = self.theme_cls.opposite_text_color
             elif theme_color == 'SecondaryOpposite':
-                self.color = self.theme_cls.opposite_secondary_text_color
+                self._color = self.theme_cls.opposite_secondary_text_color
             elif theme_color == 'Warning':
-                self.color = self.theme_cls.warning_color
+                self._color = self.theme_cls.warning_color
             elif theme_color == 'Success':
-                self.color = self.theme_cls.success_color
+                self._color = self.theme_cls.success_color
             elif theme_color == 'Error':
-                self.color = self.theme_cls.error_color
-
-            self._default_colors.append('color')
+                self._color = self.theme_cls.error_color
 
         if self.selection_color is None:
-            self.selection_color = self.theme_cls.primary_light_color[:3] + [.5]
-            self._default_colors.append('selection_color')
+            self._selection_color = self.theme_cls.primary_light_color[:3] + [.5]
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         super().on_theme_style(theme_manager, theme_style)
 
         new_color = None
-        if 'color' in self._default_colors:
+        if self.color is None:
             if self.theme_color == 'Primary':
                 new_color = self.theme_cls.text_color
             elif self.theme_color == 'Secondary':
@@ -411,12 +409,12 @@ class GlowLabel(DeclarativeBehavior,
         if new_color is not None:
             if self.theme_cls.theme_style_switch_animation:
                 Animation(
-                    color=new_color,
+                    _color=new_color,
                     d=self.theme_cls.theme_style_switch_animation_duration,
                     t='linear',
                 ).start(self)
             else:
-                self.color = new_color
+                self._color = new_color
 
     def on_handle_image_left(self, label_instance: Self, handle_image_left: str) -> None:
         '''Fired when the :attr:`handle_image_left` value changes.'''
