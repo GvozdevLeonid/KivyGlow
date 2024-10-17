@@ -319,9 +319,10 @@ class GlowList(GlowBoxLayout):
         self.bind(even_item_color=self.setter('_even_item_color'))
         self.bind(hover_item_color=self.setter('_hover_item_color'))
 
-        self.bind(_odd_item_color=lambda _, __: self.__update_colors())
-        self.bind(_even_item_color=lambda _, __: self.__update_colors())
-        self.bind(_hover_item_color=lambda _, __: self.__update_colors())
+        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors())
+        self.bind(_odd_row_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_even_row_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_hover_row_color=lambda _, __: self._update_colors_trigger())
 
         super().__init__(*args, **kwargs)
 
@@ -446,6 +447,8 @@ class GlowList(GlowBoxLayout):
                 item_data['item_bg_color'] = self._odd_item_color
 
             item_data['hover_item_bg_color'] = self._hover_item_color
+
+        self.ids.glow_list_view.refresh_from_data()
 
     def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''

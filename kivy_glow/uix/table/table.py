@@ -201,11 +201,10 @@ class GlowTable(GlowBoxLayout):
         self.bind(even_row_color=self.setter('_even_row_color'))
         self.bind(hover_row_color=self.setter('_hover_row_color'))
 
-        self.bind(_header_color=lambda _, __: self.__update_colors())
-
-        self.bind(_odd_row_color=lambda _, __: self.__update_colors())
-        self.bind(_even_row_color=lambda _, __: self.__update_colors())
-        self.bind(_hover_row_color=lambda _, __: self.__update_colors())
+        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors())
+        self.bind(_odd_row_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_even_row_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_hover_row_color=lambda _, __: self._update_colors_trigger())
 
         self.bind(selectable=lambda _, __: self.__update_table_view())
 
@@ -225,6 +224,7 @@ class GlowTable(GlowBoxLayout):
                 self._header.unbind(height=self.ids.glow_table_header.setter('height'),
                                     minimum_width=self._header.setter('size_hint_min_x'))
                 self._header.unbind(minimum_width=self.ids.glow_table_layout.setter('size_hint_min_x'))
+                self.unbind(_header_color=self._header.setter('bg_color'))
             if 'glow_table_view' in self.ids and 'glow_table_header' in self.ids:
                 self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
             if self.paginator is not None:
@@ -236,6 +236,7 @@ class GlowTable(GlowBoxLayout):
                 self._header.bind(height=self.ids.glow_table_header.setter('height'),
                                   minimum_width=self._header.setter('size_hint_min_x'))
                 self._header.bind(minimum_width=self.ids.glow_table_layout.setter('size_hint_min_x'))
+                self.bind(_header_color=self._header.setter('bg_color'))
             if 'glow_table_view' in self.ids and 'glow_table_header' in self.ids:
                 self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
             if self.paginator is not None:
@@ -310,6 +311,19 @@ class GlowTable(GlowBoxLayout):
 
         if self.hover_row_color is None:
             self._hover_row_color = self.theme_cls.background_dark_color
+
+        for child in self._header.children:
+            if not isinstance(child, GlowCheckbox):
+                if self.theme_cls.theme_style_switch_animation:
+                    Animation(
+                        text_color=self.theme_cls.text_color,
+                        icon_color=self.theme_cls.text_color,
+                        d=self.theme_cls.theme_style_switch_animation_duration,
+                        t='linear',
+                    ).start(child)
+                else:
+                    child.text_color = self.theme_cls.text_color
+                    child.icon_color = self.theme_cls.text_color
 
     def initialize_table(self, *args):
         self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
@@ -465,6 +479,7 @@ class GlowTable(GlowBoxLayout):
                 padding=['10dp', ],
                 spacing='5dp',
             )
+            self.bind(_header_color=self._header.setter('bg_color'))
         else:
             self._header.clear_widgets()
 
@@ -499,20 +514,20 @@ class GlowTable(GlowBoxLayout):
 
             self._header.add_widget(
                 GlowButton(
-                    font_style='TitleM',
-                    text=column_name,
-                    mode='text',
                     icon='blank' if self.sorted_on != cell_idx else ('arrow-down' if self.sorted_order == 'ASC' else 'arrow-up'),
-                    adaptive_height=True,
                     pos_hint={'center_y': .5, 'left': 0},
-                    size_hint_x=cell_size_hint,
-                    size_hint_min_x=cell_min_width,
-                    size_hint_max_x=cell_max_width,
-                    width=cell_width,
                     text_color=self.theme_cls.text_color,
                     icon_color=self.theme_cls.text_color,
-                    padding=(0, ),
+                    size_hint_min_x=cell_min_width,
+                    size_hint_max_x=cell_max_width,
+                    size_hint_x=cell_size_hint,
+                    adaptive_height=True,
+                    font_style='TitleM',
+                    width=cell_width,
+                    text=column_name,
                     anchor_x='left',
+                    padding=(0, ),
+                    mode='text',
                     on_press=lambda button, column=cell_idx: self.__on_click_column(button, column)
                 )
             )
@@ -646,7 +661,6 @@ class GlowTable(GlowBoxLayout):
             self._display_table_data = self._formatted_table_data
 
     def __update_colors(self, *args):
-        self._header.bg_color = self._header_color
         for row_idx, row_data in enumerate(self._formatted_table_data):
             if row_idx % 2 == 0:
                 row_data['row_bg_color'] = self._even_row_color
@@ -654,6 +668,8 @@ class GlowTable(GlowBoxLayout):
                 row_data['row_bg_color'] = self._odd_row_color
 
             row_data['hover_row_bg_color'] = self._hover_row_color
+
+        self.ids.glow_table_view.refresh_from_data()
 
     def _update_display_table_data(self, _, page):
         self._display_table_data = self.paginator.get_page_items()
