@@ -141,21 +141,21 @@ class AdaptiveBehavior(EventDispatcher):
 
     def _update_width_by_min_width(self, *args) -> None:
         if not len(self.children):
-            self.width = 2
+            self.width = dp(2)
         else:
-            self.width = max(self.minimum_width, 2)
+            self.width = max(self.minimum_width, dp(2))
 
     def _update_height_by_min_height(self, *args) -> None:
         if not len(self.children):
-            self.height = 2
+            self.height = dp(2)
         else:
-            self.height = max(self.minimum_height, 2)
+            self.height = max(self.minimum_height, dp(dp))
 
     def _update_width_by_texture_size(self, *args) -> None:
-        self.width = max(self.texture_size[0], 2)
+        self.width = max(self.texture_size[0], dp(2))
 
     def _update_height_by_texture_size(self, *args) -> None:
-        self.height = max(self.texture_size[1], 2)
+        self.height = max(self.texture_size[1], dp(2))
 
     def on_breakpoint(self, breakpoint: str) -> None:
         '''Fired when the :attr:`breakpoint` value changes.'''
@@ -252,8 +252,7 @@ class AdaptiveBehavior(EventDispatcher):
                 pass
 
             self.size_hint = (None, None)
-            self.size = (2, 2)
-
+            self.size = (dp(2), dp(2))
             self.opacity = 0
         else:
             self.size_hint = self._size_hint
