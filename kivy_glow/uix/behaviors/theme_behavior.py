@@ -21,9 +21,9 @@ class ThemeBehavior(EventDispatcher):
 
     :attr:`theme_cls` is an :class:`~kivy.properties.ObjectProperty`.
     '''
-    widget_style = OptionProperty(None, options=('desctop', 'mobile'), allownone=True)
+    widget_style = OptionProperty(None, options=('desktop', 'mobile'), allownone=True)
     '''Allows to set one of the two style properties for the widget:
-    `'desctop'`, `'mobile'`.
+    `'desktop'`, `'mobile'`.
 
     Some widgets have slightly modified appearance and/or additional controls for mobile devices.
     :attr:`widget_style` is an :class:`~kivy.properties.OptionProperty`.
@@ -55,7 +55,7 @@ class ThemeBehavior(EventDispatcher):
             if platform in ('android', 'ios'):
                 self.widget_style = 'mobile'
             else:
-                self.widget_style = 'desctop'
+                self.widget_style = 'desktop'
 
     def set_device(self, *args) -> None:
         '''Set device type. Based on kivy.utils.platform.'''
