@@ -59,12 +59,12 @@ class ThemeBehavior(EventDispatcher):
 
     def set_device(self, *args) -> None:
         '''Set device type. Based on kivy.utils.platform.'''
-        if platform != "android" and platform != "ios":
-            self.device = "desktop"
+        if platform not in ('android', 'ios'):
+            self.device = 'desktop'
         elif Window.width >= dp(600) and Window.height >= dp(600):
-            self.device = "tablet"
+            self.device = 'tablet'
         else:
-            self.device = "mobile"
+            self.device = 'mobile'
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         pass
