@@ -320,9 +320,9 @@ class GlowList(GlowBoxLayout):
         self.bind(hover_item_color=self.setter('_hover_item_color'))
 
         self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors())
-        self.bind(_odd_row_color=lambda _, __: self._update_colors_trigger())
-        self.bind(_even_row_color=lambda _, __: self._update_colors_trigger())
-        self.bind(_hover_row_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_odd_item_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_even_item_color=lambda _, __: self._update_colors_trigger())
+        self.bind(_hover_item_color=lambda _, __: self._update_colors_trigger())
 
         super().__init__(*args, **kwargs)
 
