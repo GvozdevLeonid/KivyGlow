@@ -149,7 +149,7 @@ class AdaptiveBehavior(EventDispatcher):
         if not len(self.children):
             self.height = dp(2)
         else:
-            self.height = max(self.minimum_height, dp(dp))
+            self.height = max(self.minimum_height, dp(2))
 
     def _update_width_by_texture_size(self, *args) -> None:
         self.width = max(self.texture_size[0], dp(2))
