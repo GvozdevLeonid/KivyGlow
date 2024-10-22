@@ -106,8 +106,6 @@ class GlowCheckbox(ToggleButtonBehavior,
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))
         self.bind(inactive_color=self.setter('_inactive_color'))
-
-        super().__init__(*args, **kwargs)
         self._animation = (
             Animation(
                 scale_x=.8,
@@ -118,6 +116,8 @@ class GlowCheckbox(ToggleButtonBehavior,
                 scale_y=1,
                 duration=0.1, t='out_quad')
         )
+
+        super().__init__(*args, **kwargs)
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(lambda _: self.on_state(self, self.state), -1)
 
