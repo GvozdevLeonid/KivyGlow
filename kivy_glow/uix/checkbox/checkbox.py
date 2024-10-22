@@ -98,8 +98,8 @@ class GlowCheckbox(ToggleButtonBehavior,
     :attr:`animation` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `decrease`.
     '''
-    _active_color = ColorProperty(None, allow_none=True)
-    _inactive_color = ColorProperty(None, allow_none=True)
+    _active_color = ColorProperty((0, 0, 0, 0), allow_none=True)
+    _inactive_color = ColorProperty((0, 0, 0, 0), allow_none=True)
     _color = ColorProperty((0, 0, 0, 0))
     _icon = StringProperty('blank')
 
