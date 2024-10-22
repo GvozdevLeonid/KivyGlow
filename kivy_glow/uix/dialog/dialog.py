@@ -398,7 +398,7 @@ class GlowDialog(DeclarativeBehavior,
             if self.icon_color is None:
                 self._icon_color = self.theme_cls.success_color
 
-        if self.icon_color is None:
+        elif self.mode is None and self.icon_color is None:
             self._icon_color = self.theme_cls.primary_color
 
     def _add_content_ids(self):
