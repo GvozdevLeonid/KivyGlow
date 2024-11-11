@@ -467,7 +467,7 @@ class GlowSidePanel(GlowBoxLayout):
             self.status = 'opening_with_animation'
             if animation:
                 Animation(
-                    open_progress=1.0,
+                    open_progress=1,
                     d=self.opening_time * (1 - self.open_progress),
                     t=self.opening_transition,
                 ).start(self)
@@ -479,7 +479,7 @@ class GlowSidePanel(GlowBoxLayout):
             self.status = 'closing_with_animation'
             if animation:
                 Animation(
-                    open_progress=0.0,
+                    open_progress=0,
                     d=self.closing_time * self.open_progress,
                     t=self.closing_transition,
                 ).start(self)
@@ -643,7 +643,7 @@ class GlowSidePanelLayout(GlowFloatLayout):
         if self._side_panel.mode == 'embedded':
             self._screen_manager.size_hint_x = None
             if self._side_panel.anchor == 'left':
-                self._screen_manager.x = self._side_panel.right
+                self._screen_manager.x = self._side_panel.width * self._side_panel.open_progress
                 self._screen_manager.width = self.width - self._screen_manager.x
             else:
                 self._screen_manager.x = 0
