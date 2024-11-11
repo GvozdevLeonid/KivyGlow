@@ -161,7 +161,8 @@ class GlowSplitterLayout(DeclarativeBehavior,
         self.allow_recalculate = True
 
     def on_strip_down(self, instance, touch):
-        if touch.grab_current == instance:
+        if instance.collide_point(*touch.pos):
+            touch.grab(instance)
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
             self.scheduled_update = Clock.schedule_once(lambda _: self._recalculate_child_with_strip_pos(instance, touch))
@@ -170,6 +171,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
 
     def on_strip_up(self, instance, touch):
         if touch.grab_current == instance:
+            touch.ungrab(instance)
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
             self.scheduled_update = Clock.schedule_once(lambda _: self._recalculate_child_with_strip_pos(instance, touch))
