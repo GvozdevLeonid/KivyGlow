@@ -3,12 +3,12 @@ __all__ = ('GlowTable', )
 from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from kivy_glow.effects.stiffscroll import StiffScrollEffect
 from kivy_glow.uix.paginator import GlowPaginator
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.behaviors import HoverBehavior
 import kivy_glow.uix.table.cells as table_cells
 from kivy_glow.uix.checkbox import GlowCheckbox
+from kivy.effects.scroll import ScrollEffect
 from kivy_glow.uix.button import GlowButton
 from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
@@ -172,7 +172,7 @@ class GlowTable(GlowBoxLayout):
         Use or not use checkboxes for rows.
     '''
 
-    effect_cls = ObjectProperty(StiffScrollEffect)
+    effect_cls = ObjectProperty(ScrollEffect)
 
     header_color = ColorProperty(None, allownone=True)
     odd_row_color = ColorProperty(None, allownone=True)

@@ -3,11 +3,11 @@ __all__ = ('GlowList', 'GlowSelectableListItem', 'GlowListItem')
 from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from kivy_glow.effects.stiffscroll import StiffScrollEffect
 from kivy_glow.uix.recycleview import GlowRecycleView
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.behaviors import HoverBehavior
 from kivy.input.motionevent import MotionEvent
+from kivy.effects.scroll import ScrollEffect
 from kivy_glow.theme import ThemeManager
 from kivy_glow import kivy_glow_uix_dir
 from kivy.animation import Animation
@@ -279,11 +279,11 @@ class GlowList(GlowBoxLayout):
     and defaults to `GlowSelectableListItem`.
     '''
 
-    effect_cls = ObjectProperty(StiffScrollEffect)
+    effect_cls = ObjectProperty(ScrollEffect)
     '''Effect applied to sroll
 
     :attr:`effect_cls` is an :class:`~kivy.properties.ObjectProperty`
-    and defaults to `StiffScrollEffect`.
+    and defaults to `ScrollEffect`.
     '''
 
     odd_item_color = ColorProperty(None, allownone=True)

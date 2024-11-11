@@ -153,7 +153,8 @@ class GlowDropDownContainer(GlowBoxLayout):
                                        adaptive_height=True,
                                        spacing='4dp',
                                        opacity=0)
-        self.scroll = GlowScrollView(always_overscroll=False)
+
+        self.scroll = GlowScrollView()
 
         self.fbind('size', self._reposition)
 

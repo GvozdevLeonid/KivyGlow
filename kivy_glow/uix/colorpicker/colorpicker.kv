@@ -24,7 +24,6 @@
             adaptive_height: True
         GlowScrollView:
             id: glow_colorpicker_content_container
-            always_overscroll: False
             size_hint_y: None
             height: '300dp'
             GlowScreenManager:
@@ -104,12 +103,6 @@
                                     root._set_palette(self._active_tab.text)
                         GlowScrollView:
                             id: palette_scroll_view
-                            bar_inactive_color: app.theme_cls.primary_color[:3] + [.2]
-                            bar_color: app.theme_cls.primary_color
-                            scroll_type: ('bars', 'content')
-                            pos_hint: {'center_x': .5}
-                            always_overscroll: False
-                            bar_width: '5dp'
                 GlowScreen:
                     name: 'tuner'
                     GlowBoxLayout:

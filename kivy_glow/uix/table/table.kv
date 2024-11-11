@@ -7,12 +7,11 @@
         do_scroll: False
         border_width: (0, 0, 0, 1)
         border_color: app.theme_cls.divider_color
-    RecycleView:
+    GlowRecycleView:
         id: glow_table_view
-        viewclass: root._viewclass
         data: root._display_table_data
-        always_overscroll: False
         effect_cls: root.effect_cls
+        viewclass: root._viewclass
         SelectableRecycleBoxLayout:
             id: glow_table_layout
             default_height: '56dp'
