@@ -1,7 +1,8 @@
 __all__ = ('GlowImage', )
 
-from kivy_glow.uix.widget import GlowWidget
 from kivy.uix.image import AsyncImage
+
+from kivy_glow.uix.widget import GlowWidget
 
 
 class GlowImage(GlowWidget,

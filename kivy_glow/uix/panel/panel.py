@@ -1,25 +1,28 @@
 __all__ = ('GlowPanel', )
 
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.button import GlowButton
-from kivy_glow.uix.widget import GlowWidget
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.lang import Builder
-from kivy.clock import Clock
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.properties import (
+    ColorProperty,
+    ListProperty,
     NumericProperty,
     ObjectProperty,
     OptionProperty,
-    ColorProperty,
-    ListProperty,
 )
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.button import GlowButton
+from kivy_glow.uix.widget import GlowWidget
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'panel', 'panel.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'panel', 'panel.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -32,21 +35,21 @@ class GlowPanel(GlowBoxLayout):
             Called on changed active tab
     '''
 
-    active_color = ColorProperty(None, allownone=True)
+    active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the active tab
 
     :attr:`active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    text_color = ColorProperty(None, allownone=True)
+    text_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the tab text
 
     :attr:`text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_color = ColorProperty(None, allownone=True)
+    icon_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the tab icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
@@ -68,29 +71,29 @@ class GlowPanel(GlowBoxLayout):
     :attr:`tabs` is an :class:`~kivy.properties.ListProperty`
     '''
 
-    tab_width = NumericProperty(None, allownone=True)
+    tab_width = NumericProperty(defaultvalue=None, allownone=True)
     '''Fixed width for each tab
 
     :attr:`tab_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    mode = OptionProperty('badge', options=('badge', 'underline', 'text'))
+    mode = OptionProperty(defaultvalue='badge', options=('badge', 'underline', 'text'))
     '''Various panel display options
 
     :attr:`tab_width` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `badge`.
     '''
 
-    _active_color = ColorProperty((0, 0, 0, 0))
-    _text_color = ColorProperty((0, 0, 0, 0))
-    _icon_color = ColorProperty((0, 0, 0, 0))
+    _active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
-    _active_tab = ObjectProperty(None, allownone=True)
-    _active_pos = ListProperty(None, allownone=True)
-    _active_size = ListProperty(None, allownone=True)
+    _active_tab = ObjectProperty(defaultvalue=None, allownone=True)
+    _active_pos = ListProperty(defaultvalue=None, allownone=True)
+    _active_size = ListProperty(defaultvalue=None, allownone=True)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))
         self.bind(text_color=self.setter('_text_color'))
         self.bind(icon_color=self.setter('_icon_color'))
@@ -100,7 +103,7 @@ class GlowPanel(GlowBoxLayout):
 
         Clock.schedule_once(self.set_default_colors, -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if self._active_tab is not None:
             if parent is None:
                 self._active_tab.unbind(pos=self._set_active_pos)
@@ -111,7 +114,7 @@ class GlowPanel(GlowBoxLayout):
 
         return super().on_parent(instance, parent)
 
-    def on_tabs(self, panel_instance: Self, tabs: list[dict]) -> None:
+    def on_tabs(self, instance: Self, tabs: list[dict]) -> None:
         '''Fired when the :attr:`tabs` value changes.'''
         self.clear_widgets()
         for i, tab in enumerate(tabs):
@@ -141,7 +144,7 @@ class GlowPanel(GlowBoxLayout):
                         size_hint_x=None,
                         size_hint_y=.5,
                         width='2dp',
-                    )
+                    ),
                 )
             if tab.get('active', False):
                 self._active_tab = tab_button
@@ -149,7 +152,7 @@ class GlowPanel(GlowBoxLayout):
         if self._active_tab is None:
             self._active_tab = self.children[-1]
 
-    def on_tab_width(self, panel_instance: Self, tab_width: int) -> None:
+    def on_tab_width(self, instance: Self, tab_width: int) -> None:
         '''Fired when the :attr:`tab_width` value changes.'''
         if tab_width is not None:
             self.adaptive_width = True
@@ -166,7 +169,7 @@ class GlowPanel(GlowBoxLayout):
                     child.size_hint_x = 1
                     child.adaptive_width = True if (self.adaptive_width or self.adaptive_size) else False
 
-    def on__active_color(self, panel_instance: Self, active_color) -> None:
+    def on__active_color(self, instance: Self, active_color: tuple[float, float, float, float]) -> None:
         '''Fired when the :attr:`active_color` value changes.'''
         for child in self.children[:]:
             if isinstance(child, GlowButton):
@@ -175,7 +178,7 @@ class GlowPanel(GlowBoxLayout):
                 else:
                     child.text_color = self._text_color
 
-    def on__text_color(self, panel_instance: Self, text_color) -> None:
+    def on__text_color(self, instance: Self, text_color: tuple[float, float, float, float]) -> None:
         '''Fired when the :attr:`text_color` value changes.'''
         for child in self.children[:]:
             if isinstance(child, GlowButton):
@@ -184,7 +187,7 @@ class GlowPanel(GlowBoxLayout):
                 else:
                     child.text_color = text_color
 
-    def on__icon_color(self, panel_instance: Self, icon_color) -> None:
+    def on__icon_color(self, instance: Self, icon_color: tuple[float, float, float, float]) -> None:
         '''Fired when the :attr:`icon_color` value changes.'''
         for child in self.children[:]:
             if isinstance(child, GlowButton):
@@ -193,25 +196,25 @@ class GlowPanel(GlowBoxLayout):
                 else:
                     child.icon_color = icon_color
 
-    def _set_active_pos(self, button_instance: GlowButton, pos: tuple) -> None:
+    def _set_active_pos(self, instance: GlowButton, pos: tuple) -> None:
         self._active_pos = pos
 
-    def _set_active_size(self, button_instance: GlowButton, size: tuple) -> None:
+    def _set_active_size(self, instance: GlowButton, size: tuple) -> None:
         self._active_size = size
 
-    def _select_tab(self, tab):
+    def _select_tab(self, tab_instance: GlowButton) -> None:
         self._active_tab.unbind(pos=self._set_active_pos)
         self._active_tab.unbind(size=self._set_active_size)
         if self.mode == 'text':
             self._active_tab.text_color = self._text_color
             self._active_tab.icon_color = self._icon_color
 
-        self._active_tab = tab
+        self._active_tab = tab_instance
 
-    def on_active_tab(self, active_tab: GlowButton):
+    def on_active_tab(self, active_tab: GlowButton) -> None:
         pass
 
-    def on__active_tab(self, _, __):
+    def on__active_tab(self, instance: Self, tab_instance: GlowButton) -> None:
         if self._active_pos is not None:
             animation = Animation(
                 _active_pos=self._active_tab.pos,
@@ -279,5 +282,4 @@ class GlowPanel(GlowBoxLayout):
                 if idx == 0:
                     self._select_tab(child)
                     break
-                else:
-                    idx -= 1
+                idx -= 1

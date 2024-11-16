@@ -1,18 +1,20 @@
 __all__ = ('GlowApp', )
 
-from kivy_glow.config_parser import ExtendedKivyConfigParser as ConfigParser
-from kivy_glow.uix.behaviors import ThemeBehavior
-from kivy_glow.theme import ThemeManager
-from kivy.utils import platform
-from kivy.logger import Logger
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.app import App
 import os
+
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.logger import Logger
 from kivy.properties import (
-    StringProperty,
     ObjectProperty,
+    StringProperty,
 )
+from kivy.utils import platform
+
+from kivy_glow.config_parser import ExtendedKivyConfigParser as ConfigParser
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.behaviors import ThemeBehavior
 
 
 class GlowApp(App, ThemeBehavior):
@@ -21,7 +23,7 @@ class GlowApp(App, ThemeBehavior):
     config = ConfigParser(name='app')
     theme_cls = ObjectProperty()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.theme_cls = ThemeManager()
 
         super().__init__(*args, **kwargs)
@@ -29,7 +31,7 @@ class GlowApp(App, ThemeBehavior):
     def load_all_kv_files(self, path_to_directory: str) -> None:
         '''Recursively loads KV files from the selected directory.'''
 
-        for path_to_dir, dirs, files in os.walk(path_to_directory):
+        for path_to_dir, _, files in os.walk(path_to_directory):
             # When using the `load_all_kv_files` method, all KV files
             # from the `KivyGlow` library were loaded twice, which leads to
             # failures when using application built using `PyInstaller`.
@@ -37,7 +39,7 @@ class GlowApp(App, ThemeBehavior):
                 Logger.critical(
                     'KivyGlow'
                     'Do not use the word "kivy_glow" in the name of the directory '
-                    'from where you download KV files'
+                    'from where you download KV files',
                 )
             if (
                 'venv' in path_to_dir
@@ -60,10 +62,10 @@ class GlowApp(App, ThemeBehavior):
         from kivy.core.window import Window
         from kivy_glow.uix.label import GlowLabel
 
-        def start(fps_monitor):
+        def start(fps_monitor: GlowLabel) -> None:
             Clock.schedule_interval(lambda _: update_fps(fps_monitor), .5)
 
-        def update_fps(fps_monitor):
+        def update_fps(fps_monitor: GlowLabel) -> None:
             fps_monitor.text = f'FPS: {Clock.get_fps():.2f}'
 
         fps_monitor = GlowLabel(pos_hint={anchor: 1}, bg_color=self.theme_cls.primary_dark_color, halign='center', adaptive_height=True, font_style='LabelS')

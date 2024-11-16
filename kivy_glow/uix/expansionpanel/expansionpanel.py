@@ -1,27 +1,28 @@
 __all__ = ('GlowExpansionPanel', )
 
-from kivy_glow.uix.tablelayout import GlowTableLayout
+import os
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.lang import Builder
+from kivy.properties import (
+    ColorProperty,
+    NumericProperty,
+    ObjectProperty,
+    OptionProperty,
+    StringProperty,
+)
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
 from kivy_glow.uix.boxlayout import GlowBoxLayout
 from kivy_glow.uix.button import GlowButton
 from kivy_glow.uix.label import GlowLabel
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.core.window import Window
-from kivy.lang import Builder
-from kivy.clock import Clock
-import os
-from kivy.properties import (
-    NumericProperty,
-    StringProperty,
-    OptionProperty,
-    ObjectProperty,
-    ColorProperty,
-)
-
+from kivy_glow.uix.tablelayout import GlowTableLayout
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'expansionpanel', 'expansionpanel.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'expansionpanel', 'expansionpanel.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -31,7 +32,7 @@ class GlowExpansionPanelException(Exception):
 
 
 class GlowExpansionPanelHeader(GlowBoxLayout):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.adaptive_height = True
 
@@ -42,27 +43,27 @@ class GlowExpansionPanel(GlowTableLayout):
     This panel has a custom title and can hide or show content when you click on the expand/hide button
     '''
 
-    icon_opened = StringProperty('chevron-up')
+    icon_opened = StringProperty(defaultvalue='chevron-up')
     '''Icon for opened state
 
     :attr:`icon_opened` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-up`.
     '''
 
-    icon_closed = StringProperty('chevron-down')
+    icon_closed = StringProperty(defaultvalue='chevron-down')
     '''Icon for closed state
 
     :attr:`icon_closed` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-down`.
     '''
 
-    header = StringProperty('')
+    header = StringProperty(defaultvalue='')
     '''Simple text title
 
     :attr:`header` is an :class:`~kivy.properties.StringProperty`
     and defaults to `empty`.
     '''
-    header_content = ObjectProperty(None, allownone=True)
+    header_content = ObjectProperty(defaultvalue=None, allownone=True)
     '''Your custom header content.
     You should inherit your header from GlowExpansionPanelHeader class.
 
@@ -70,7 +71,7 @@ class GlowExpansionPanel(GlowTableLayout):
     and defaults to `None`.
     '''
 
-    expandable_content = ObjectProperty(None, allownone=True)
+    expandable_content = ObjectProperty(defaultvalue=None, allownone=True)
     '''Your expandable content.
     You can use any widget for your content.
 
@@ -78,49 +79,49 @@ class GlowExpansionPanel(GlowTableLayout):
     and defaults to `None`.
     '''
 
-    state = OptionProperty('closed', options=('opened', 'closed'))
+    state = OptionProperty(defaultvalue='closed', options=('opened', 'closed'))
     '''Current panel state
 
     :attr:`state` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `slosed`.
     '''
 
-    opening_transition = StringProperty('out_cubic')
+    opening_transition = StringProperty(defaultvalue='out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    button_icon_color = ColorProperty(None, allownonw=True)
+    button_icon_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button icon color
 
     :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    button_border_color = ColorProperty(None, allownonw=True)
+    button_border_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button border color
 
     :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
@@ -145,7 +146,7 @@ class GlowExpansionPanel(GlowTableLayout):
         '''Fired at the ExpansionPanel close event.'''
         pass
 
-    def open(self):
+    def open(self) -> None:
         '''Open ExpansionPanel.'''
         if self.state == 'closed' and not self._anim_playing:
             self._anim_playing = True
@@ -156,7 +157,7 @@ class GlowExpansionPanel(GlowTableLayout):
             Window.add_widget(self.expandable_content)
             Clock.schedule_once(self._continue_open)
 
-    def dismiss(self):
+    def dismiss(self) -> None:
         '''Close ExpansionPanel.'''
         if self.state == 'opened' and not self._anim_playing:
             self._anim_playing = True
@@ -210,7 +211,7 @@ class GlowExpansionPanel(GlowTableLayout):
         '''Final step for closing and oppening.'''
         self._anim_playing = False
 
-    def _change_state(self, button_instance: GlowButton) -> None:
+    def _change_state(self, instance: GlowButton) -> None:
         '''Open or close ExpansionPanel by clicking on button'''
         if self.state == 'closed':
             self.open()

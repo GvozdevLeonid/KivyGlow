@@ -3,8 +3,8 @@ __all__ = ('GlowGridLayout', )
 from kivy.uix.gridlayout import GridLayout
 
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )
@@ -17,11 +17,11 @@ class GlowGridLayout(DeclarativeBehavior,
                      GridLayout,
                      ):
 
-    def do_layout(self, *largs):
+    def do_layout(self, *largs) -> None:
         children = self.children
         if not children or not self._init_rows_cols_sizes(len(children)):
-            l, t, r, b = self.padding
-            self.minimum_size = l + r, t + b
+            left, top, right, bottom = self.padding
+            self.minimum_size = left + right, top + bottom
             return
         self._fill_rows_cols_sizes()
         self._update_minimum_size()
@@ -39,27 +39,24 @@ class GlowGridLayout(DeclarativeBehavior,
                     w = max(min(w, shw_max), shw_min)
                 else:
                     w = max(w, shw_min)
-            else:
-                if shw_max is not None:
-                    w = min(w, shw_max)
+            elif shw_max is not None:
+                w = min(w, shw_max)
 
             if shh_min is not None:
                 if shh_max is not None:
                     h = max(min(h, shh_max), shh_min)
                 else:
                     h = max(h, shh_min)
-            else:
-                if shh_max is not None:
-                    h = min(h, shh_max)
+            elif shh_max is not None:
+                h = min(h, shh_max)
 
             if shw is None:
                 if shh is not None:
                     c.height = h
+            elif shh is None:
+                c.width = w
             else:
-                if shh is None:
-                    c.width = w
-                else:
-                    c.size = (w, h)
+                c.size = (w, h)
 
             if c.height < h:
                 for key, value in c.pos_hint.items():

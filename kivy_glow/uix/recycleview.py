@@ -3,8 +3,8 @@ __all__ = ('GlowRecycleView', )
 from kivy.uix.recycleview import RecycleView
 
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )

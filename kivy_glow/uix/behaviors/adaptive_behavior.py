@@ -1,19 +1,21 @@
 __all__ = ('AdaptiveBehavior', )
 
-from kivy.uix.floatlayout import FloatLayout
-from kivy.event import EventDispatcher
-from kivy.uix.label import Label
-from kivy.clock import Clock
-from kivy.metrics import dp
 from typing import Self
+
+from kivy.clock import Clock
 from kivy.core.window import (
-    WindowBase,
     Window,
+    WindowBase,
 )
+from kivy.event import EventDispatcher
+from kivy.metrics import dp
 from kivy.properties import (
     BooleanProperty,
     DictProperty,
 )
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
+from kivy.uix.widget import Widget
 
 
 class AdaptiveBehavior(EventDispatcher):
@@ -39,14 +41,14 @@ class AdaptiveBehavior(EventDispatcher):
     '''
 
     breakpoints = DictProperty(
-        {
+        defaultvalue={
             'xs': 480,
             'sm': 768,
             'md': 976,
             'lg': 1440,
-            'xl': float('inf')
+            'xl': float('inf'),
 
-        }
+        },
     )
     '''Possible breakpoints for adaptive behavior
 
@@ -54,7 +56,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `{ 'xs': 480, 'sm': 768, 'md': 976, 'lg': 1440, 'xl': ∞}`.
     '''
 
-    adaptive_width = BooleanProperty(False)
+    adaptive_width = BooleanProperty(defaultvalue=False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -65,7 +67,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    adaptive_height = BooleanProperty(False)
+    adaptive_height = BooleanProperty(defaultvalue=False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -76,7 +78,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    adaptive_size = BooleanProperty(False)
+    adaptive_size = BooleanProperty(defaultvalue=False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -87,7 +89,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    hidden = BooleanProperty(False)
+    hidden = BooleanProperty(defaultvalue=False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -115,7 +117,7 @@ class AdaptiveBehavior(EventDispatcher):
 
         self._update_breakpoint_trigger()
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             Window.unbind(on_resize=self._on_window_resize)
         else:
@@ -124,11 +126,13 @@ class AdaptiveBehavior(EventDispatcher):
         if hasattr(super(), 'on_parent'):
             return super().on_parent(instance, parent)
 
+        return None
+
     def _on_window_resize(self, window: WindowBase, width: int, height: int) -> None:
         '''Fired at the Window resize event.'''
         self._update_breakpoint_trigger()
 
-    def _update_breakpoint(self, *args):
+    def _update_breakpoint(self, *args) -> None:
         breakpoints_keys = sorted(self.breakpoints.keys(), key=lambda x: self.breakpoints[x])
         breakpoints_values = sorted(self.breakpoints.values())
 
@@ -235,7 +239,7 @@ class AdaptiveBehavior(EventDispatcher):
         '''Fired when the :attr:`hidden` value changes.'''
         self._hidden_trigger()
 
-    def _on_hidden(self, *args):
+    def _on_hidden(self, *args) -> None:
         if self.hidden:
 
             self._size_hint = (self.size_hint_x, self.size_hint_y)

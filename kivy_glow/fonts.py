@@ -1,10 +1,11 @@
 '''
 List of default fonts.
 '''
-from kivy_glow import kivy_glow_fonts_dir
-from kivy.core.text import LabelBase
 import os
 
+from kivy.core.text import LabelBase
+
+from kivy_glow import kivy_glow_fonts_dir
 
 fonts = [
     {

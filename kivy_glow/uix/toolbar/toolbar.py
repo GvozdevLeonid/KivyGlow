@@ -1,65 +1,67 @@
 __all__ = ('GlowToolBar', )
 
-from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.button import GlowButton
-from kivy.core.window import WindowBase
-from kivy_glow import kivy_glow_uix_dir
-from kivy.lang import Builder
-from kivy.clock import Clock
-from typing import Self
 import os
+from typing import Self
+
+from kivy.clock import Clock
+from kivy.core.window import WindowBase
+from kivy.lang import Builder
 from kivy.properties import (
     BooleanProperty,
+    ListProperty,
     OptionProperty,
     StringProperty,
-    ListProperty,
 )
 
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.button import GlowButton
+from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
+
 with open(
-    os.path.join(kivy_glow_uix_dir, 'toolbar', 'toolbar.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'toolbar', 'toolbar.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
 
 class GlowToolBar(GlowBoxLayout):
 
-    title = StringProperty(None, allownone=True)
+    title = StringProperty(defaultvalue=None, allownone=True)
     '''Title toolbar text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty('left', options=('left', 'center', 'right'))
+    title_halign = OptionProperty(defaultvalue='left', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    title_font_style = StringProperty('DisplayM')
+    title_font_style = StringProperty(defaultvalue='DisplayM')
     '''Title font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
     and defaults to `DisplayM`.
     '''
 
-    left_buttons = ListProperty(None, allownone=True)
+    left_buttons = ListProperty(defaultvalue=None, allownone=True)
     '''Toolbar left buttons.
 
     :attr:`left_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    right_buttons = ListProperty(None, allownone=True)
+    right_buttons = ListProperty(defaultvalue=None, allownone=True)
     '''Toolbar right buttons.
 
     :attr:`right_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    use_overflow = BooleanProperty(False)
+    use_overflow = BooleanProperty(defaultvalue=False)
     '''If yoolbar is resized, buttons move to the overflow menu from right
     to left.
 
@@ -67,21 +69,21 @@ class GlowToolBar(GlowBoxLayout):
     and defaults to `False`.
     '''
 
-    overflow_buttons = ListProperty([])
+    overflow_buttons = ListProperty(defaultvalue=[])
     '''Toolbar overflow buttons.
 
     :attr:`overflow_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `empty`.
     '''
 
-    overflow_button_icon = StringProperty('dots-vertical')
+    overflow_button_icon = StringProperty(defaultvalue='dots-vertical')
     '''Toolbar overflow button icon.
 
     :attr:`overflow_button_icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `dots-vertical`.
     '''
 
-    is_overflow = BooleanProperty(False)
+    is_overflow = BooleanProperty(defaultvalue=False)
     _width = 0
 
     def __init__(self, *args, **kwargs) -> None:
@@ -94,7 +96,7 @@ class GlowToolBar(GlowBoxLayout):
             adaptive_size=True,
             disabled=True,
             mode='text',
-            on_release=lambda _: self.open_overflow_menu()
+            on_release=lambda _: self.open_overflow_menu(),
         )
 
         Clock.schedule_once(self.set_default_colors, -1)
@@ -124,7 +126,7 @@ class GlowToolBar(GlowBoxLayout):
         elif self.title is not None and not self.ids.glow_toolbar_title.is_shortened and self._width < width:
             if len(self.overflow_buttons) and getattr(self.overflow_buttons[-1], 'container', None) is not None:
                 button = self.overflow_buttons.pop(-1)
-                button_container = getattr(button, 'container')
+                button_container = button.container
 
                 if button_container == 'left':
                     self.ids.glow_toolbar_left_buttons_container.add_widget(button)
@@ -146,7 +148,7 @@ class GlowToolBar(GlowBoxLayout):
 
         self._width = width
 
-    def on_is_overflow(self, toolbar_instance: Self, is_overflow: list):
+    def on_is_overflow(self, instance: Self, is_overflow: list) -> None:
         '''Fired when the :attr:`is_overflow` value changes.'''
         if is_overflow:
             self.ids.glow_toolbar_right_buttons_container.add_widget(self.overflow_button)
@@ -155,7 +157,7 @@ class GlowToolBar(GlowBoxLayout):
             self.ids.glow_toolbar_right_buttons_container.remove_widget(self.overflow_button)
             self.overflow_button.disabled = True
 
-    def set_left_buttons(self, left_buttons: list):
+    def set_left_buttons(self, left_buttons: list) -> None:
         to_remove = []
         for button in self.overflow_buttons:
             if getattr(button, 'container', None) == 'left':
@@ -167,7 +169,7 @@ class GlowToolBar(GlowBoxLayout):
         self.ids.glow_toolbar_left_buttons_container.clear_widgets()
         self.initialize_toolbar()
 
-    def set_right_buttons(self, right_buttons: list):
+    def set_right_buttons(self, right_buttons: list) -> None:
         to_remove = []
         for button in self.overflow_buttons:
             if getattr(button, 'container', None) == 'right':
@@ -179,30 +181,30 @@ class GlowToolBar(GlowBoxLayout):
         self.ids.glow_toolbar_right_buttons_container.clear_widgets()
         self.initialize_toolbar()
 
-    def initialize_toolbar(self, *args):
+    def initialize_toolbar(self, *args) -> None:
         '''Initializing the ToolBar.'''
         if self.left_buttons is not None:
             for button in self.left_buttons:
-                setattr(button, 'container', 'left')
+                button.container = 'left'
                 button.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
                 self.ids.glow_toolbar_left_buttons_container.add_widget(button)
 
         if self.right_buttons is not None:
             for button in self.right_buttons:
-                setattr(button, 'container', 'right')
+                button.container = 'right'
                 button.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
                 self.ids.glow_toolbar_right_buttons_container.add_widget(button)
 
         if self.title is None:
             self.remove_widget(self.ids.glow_toolbar_title)
 
-    def set_default_colors(self, *args):
+    def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
 
         if self.bg_color is None:
             self._bg_color = self.theme_cls.primary_color
 
-    def open_overflow_menu(self):
+    def open_overflow_menu(self) -> None:
         '''Open menu with overflow buttons'''
 
         if self._overflow_menu is None:
@@ -212,7 +214,7 @@ class GlowToolBar(GlowBoxLayout):
         else:
             self._overflow_menu.dismiss()
 
-    def update_overflow(self, overflow_menu: GlowDropDownContainer):
+    def update_overflow(self, overflow_menu: GlowDropDownContainer) -> None:
         self._overflow_menu.unbind(on_dismiss=self.update_overflow)
         for button in self.overflow_buttons:
             button.parent = None

@@ -1,11 +1,12 @@
 __all__ = ('LinearGradient', 'RadialGradient')
 
-from kivy.graphics.texture import Texture
-from kivy.utils import get_color_from_hex
 import math
 
+from kivy.graphics.texture import Texture
+from kivy.utils import get_color_from_hex
 
-def _compute_max_distance(size, angle):
+
+def _compute_max_distance(size: float | int, angle: float | int) -> float:
     rad = math.radians(angle % 360)
 
     size -= 1
@@ -23,7 +24,7 @@ def _compute_max_distance(size, angle):
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
-def _format_colors(colors):
+def _format_colors(colors: list) -> list:
     formatted_colors = []
     for color in colors:
         if isinstance(color, str):
@@ -37,19 +38,22 @@ def _format_colors(colors):
     return formatted_colors
 
 
-def LinearGradient(colors: list, angle: int = 0, stops: dict = {}, size: tuple = (100, 100), crop_factor: float = 8.0):
+def LinearGradient(colors: list, angle: int = 0, stops: dict | None = None, size: tuple = (100, 100), crop_factor: float = 8.0) -> Texture:
     cropped_size = max(int(size[0] // crop_factor), int(size[1] // crop_factor))
     max_dist = _compute_max_distance(cropped_size, angle)
     texture = Texture.create(size=(cropped_size, cropped_size), colorfmt='rgba')
     buf = []
 
-    angle = angle % 360
+    angle %= 360
     rad = math.radians(angle)
     cos_angle = math.cos(rad)
     sin_angle = math.sin(rad)
 
     if not len(colors):
         return texture
+
+    if stops is None:
+        stops = {}
 
     colors = _format_colors(colors)
     formatted_stops = {}
@@ -90,7 +94,7 @@ def LinearGradient(colors: list, angle: int = 0, stops: dict = {}, size: tuple =
     return texture
 
 
-def RadialGradient(colors: list, center: tuple = (.5, .5), stops: dict = {}, size: tuple = (100, 100), crop_factor: float = 8.0):
+def RadialGradient(colors: list, center: tuple = (.5, .5), stops: dict | None = None, size: tuple = (100, 100), crop_factor: float = 8.0) -> Texture:
     cropped_size = max(int(size[0] // crop_factor), int(size[1] // crop_factor))
     texture = Texture.create(size=(cropped_size, cropped_size), colorfmt='rgba')
     center_x, center_y = center[0] * size, center[1] * size
@@ -104,6 +108,9 @@ def RadialGradient(colors: list, center: tuple = (.5, .5), stops: dict = {}, siz
 
     if not len(colors):
         return texture
+
+    if stops is None:
+        stops = {}
 
     colors = _format_colors(colors)
     formatted_stops = {}

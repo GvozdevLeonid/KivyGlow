@@ -1,39 +1,44 @@
 __all__ = ('GlowSplitter', )
 
-from kivy_glow.uix.widget import GlowWidget
-from kivy_glow import kivy_glow_uix_dir
-from kivy.uix.splitter import Splitter
-from kivy.core.window import Window
-from kivy.uix.layout import Layout
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import dp
 import os
-from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
-    AdaptiveBehavior,
-    StyleBehavior,
-    HoverBehavior,
-    ThemeBehavior,
-)
+from typing import Generator, Self
+
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import (
-    VariableListProperty,
     NumericProperty,
     OptionProperty,
+    VariableListProperty,
 )
+from kivy.uix.layout import Layout
+from kivy.uix.splitter import Splitter
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.uix.behaviors import (
+    AdaptiveBehavior,
+    DeclarativeBehavior,
+    HoverBehavior,
+    StyleBehavior,
+    ThemeBehavior,
+)
+from kivy_glow.uix.widget import GlowWidget
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'splitter', 'splitter.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'splitter', 'splitter.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
 
 class GlowSplitterStrip(HoverBehavior,
                         GlowWidget):
-    def on_enter(self):
+    def on_enter(self) -> None:
         Window.set_system_cursor('hand')
 
-    def on_leave(self):
+    def on_leave(self) -> None:
         Window.set_system_cursor('arrow')
 
 
@@ -43,17 +48,17 @@ class GlowSplitter(DeclarativeBehavior,
                    ThemeBehavior,
                    Splitter):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.strip_cls = GlowSplitterStrip
         super().__init__(*args, **kwargs)
 
 
 class GlowSplitterLayoutStrip(HoverBehavior,
                               GlowWidget):
-    def on_enter(self):
+    def on_enter(self) -> None:
         Window.set_system_cursor('hand')
 
-    def on_leave(self):
+    def on_leave(self) -> None:
         Window.set_system_cursor('arrow')
 
 
@@ -67,12 +72,12 @@ class GlowSplitterLayout(DeclarativeBehavior,
     The widget works like a boxlayout but allows you to resize child widgets using strip
     '''
 
-    orientation = OptionProperty('horizontal', options=('horizontal', 'vertical'))
-    padding = VariableListProperty((0, 0, 0, 0), length=4)
-    strip_size = NumericProperty('10dp')
-    toggle_distance = NumericProperty('40dp')
+    orientation = OptionProperty(defaultvalue='horizontal', options=('horizontal', 'vertical'))
+    padding = VariableListProperty(defaultvalue=(0, 0, 0, 0), length=4)
+    strip_size = NumericProperty(defaultvalue='10dp')
+    toggle_distance = NumericProperty(defaultvalue='40dp')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self.register_event_type('on_child_resized')
@@ -87,7 +92,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
         fbind('size', update)
         fbind('pos', update)
 
-    def add_widget(self, widget, index=0, *args, **kwargs):
+    def add_widget(self, widget: Widget, index: int = 0, *args, **kwargs) -> None:
         if len(self.children) > 0:
             strip = GlowSplitterLayoutStrip(size_hint=(None, 1) if self.orientation == 'horizontal' else (1, None), size=(self.strip_size, self.strip_size))
             strip.bind(on_touch_move=self.on_strip_move,
@@ -99,7 +104,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
         widget.bind(size_hint=self.change_child_size_hint)
         self._update_stretch()
 
-    def remove_widget(self, widget, *args, **kwargs):
+    def remove_widget(self, widget: Widget, *args, **kwargs) -> None:
         if len(self.children) > 1:
             strip = self.children[self.children.index(widget) - 1]
             strip.unbind(on_touch_move=self.on_strip_move,
@@ -111,7 +116,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
         super().remove_widget(widget, *args, **kwargs)
         self._update_stretch()
 
-    def change_child_size_hint(self, instance, _):
+    def change_child_size_hint(self, instance: Self, value: tuple[float | int | None, float | int | None]) -> None:
         if self.allow_recalculate and not self.hidden:
             self.allow_recalculate = False
             size_hint_property = 'size_hint_x' if self.orientation == 'horizontal' else 'size_hint_y'
@@ -130,7 +135,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
 
             self.allow_recalculate = True
 
-    def on_orientation(self, _, __):
+    def on_orientation(self, instnce: Self, orientation: str) -> None:
         self.allow_recalculate = False
         for child in self.children:
             if isinstance(child, GlowSplitterLayoutStrip):
@@ -144,7 +149,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
         self._update_stretch()
         self._trigger_layout()
 
-    def _update_stretch(self):
+    def _update_stretch(self) -> None:
         self.allow_recalculate = False
         size_hint_property = 'size_hint_x' if self.orientation == 'horizontal' else 'size_hint_y'
         relevant_children = [child for child in self.children if not isinstance(child, GlowSplitterLayoutStrip)]
@@ -160,7 +165,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
 
         self.allow_recalculate = True
 
-    def on_strip_down(self, instance, touch):
+    def on_strip_down(self, instance: GlowSplitterStrip, touch: MotionEvent) -> bool:
         if instance.collide_point(*touch.pos):
             touch.grab(instance)
             if self.scheduled_update:
@@ -169,7 +174,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
             return True
         return False
 
-    def on_strip_up(self, instance, touch):
+    def on_strip_up(self, instance: GlowSplitterStrip, touch: MotionEvent) -> bool:
         if touch.grab_current == instance:
             touch.ungrab(instance)
             if self.scheduled_update:
@@ -178,7 +183,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
             return True
         return False
 
-    def on_strip_move(self, instance, touch):
+    def on_strip_move(self, instance: GlowSplitterStrip, touch: MotionEvent) -> bool:
         if touch.grab_current == instance:
             if self.scheduled_update:
                 Clock.unschedule(self.scheduled_update)
@@ -186,7 +191,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
             return True
         return False
 
-    def _recalculate_child_with_strip_pos(self, instance, touch):
+    def _recalculate_child_with_strip_pos(self, instance: GlowSplitterStrip, touch: MotionEvent) -> None:
         self.allow_recalculate = False
 
         child_before = self.children[self.children.index(instance) + 1]
@@ -263,7 +268,7 @@ class GlowSplitterLayout(DeclarativeBehavior,
     def on_child_resized(self) -> None:
         pass
 
-    def _iterate_layout(self, sizes):
+    def _iterate_layout(self, sizes: list) -> Generator:
         len_children = len(sizes)
         padding_left, padding_top, padding_right, padding_bottom = self.padding
         orientation = self.orientation
@@ -359,39 +364,47 @@ class GlowSplitterLayout(DeclarativeBehavior,
         if orientation == 'horizontal':
             x = padding_left + selfx
             size_y = self.height - padding_y
-            for i, (sh, ((w, h), (_, shh), pos_hint, _, _)) in enumerate(
+            for i, (sh, ((w, h), (_, shh), _, _, _)) in enumerate(
                     zip(reversed(hint), reversed(sizes))):
                 cy = selfy + padding_bottom
                 if sh is not None:
-                    w = max(0., stretch_space * sh)
+                    nw = max(0., stretch_space * sh)
+                else:
+                    nw = w
                 if shh:
-                    h = max(0, shh * size_y)
+                    nh = max(0, shh * size_y)
+                else:
+                    nh = h
 
-                yield len_children - i - 1, x, cy, w, h
+                yield len_children - i - 1, x, cy, nw, nh
                 x += w
 
         else:
             y = padding_bottom + selfy
             size_x = self.width - padding_x
-            for i, (sh, ((w, h), (shw, _), pos_hint, _, _)) in enumerate(
+            for i, (sh, ((w, h), (shw, _), _, _, _)) in enumerate(
                     zip(hint, sizes)):
                 cx = selfx + padding_left
 
                 if sh is not None:
-                    h = max(0., stretch_space * sh)
+                    nh = max(0., stretch_space * sh)
+                else:
+                    nh = h
                 if shw:
-                    w = max(0, shw * size_x)
+                    nw = max(0, shw * size_x)
+                else:
+                    nw = w
 
-                yield i, cx, y, w, h
+                yield i, cx, y, nw, nh
                 y += h
 
         self._stretch_space = stretch_space
 
-    def do_layout(self, *largs):
+    def do_layout(self, *largs) -> None:
         children = self.children
         if not children:
-            l, t, r, b = self.padding
-            self.minimum_size = l + r, t + b
+            left, top, right, bottom = self.padding
+            self.minimum_size = left + right, top + bottom
             return
 
         for i, x, y, w, h in self._iterate_layout(
@@ -403,10 +416,9 @@ class GlowSplitterLayout(DeclarativeBehavior,
             if shw is None:
                 if shh is not None:
                     c.height = (h if w > 0 else 0)
+            elif shh is None:
+                c.width = (w if h > 0 else 0)
             else:
-                if shh is None:
-                    c.width = (w if h > 0 else 0)
-                else:
-                    c.size = (w, h) if (w > 0 and h > 0) else (0, 0)
+                c.size = (w, h) if (w > 0 and h > 0) else (0, 0)
 
         self.dispatch('on_child_resized')

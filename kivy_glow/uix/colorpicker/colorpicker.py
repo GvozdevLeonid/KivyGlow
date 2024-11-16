@@ -1,40 +1,42 @@
 __all__ = ('GlowColorPicker', )
 
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy.input.motionevent import MotionEvent
-from kivy_glow.uix.button import GlowButton
-from kivy.uix.modalview import ModalView
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import dp
 import os
-from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
-    AdaptiveBehavior,
-    StyleBehavior,
-    ThemeBehavior,
-)
+
+from kivy.animation import Animation
+from kivy.clock import Clock
 from kivy.core.window import (
-    WindowBase,
     Window,
+    WindowBase,
 )
-from kivy_glow.colors import (
-    available_palette,
-    available_hue,
-    colors,
-)
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import (
+    ColorProperty,
     NumericProperty,
     OptionProperty,
     StringProperty,
-    ColorProperty,
 )
+from kivy.uix.modalview import ModalView
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.colors import (
+    available_hue,
+    available_palette,
+    colors,
+)
+from kivy_glow.uix.behaviors import (
+    AdaptiveBehavior,
+    DeclarativeBehavior,
+    StyleBehavior,
+    ThemeBehavior,
+)
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.button import GlowButton
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'colorpicker', 'colorpicker.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'colorpicker', 'colorpicker.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -56,35 +58,35 @@ class GlowColorPicker(DeclarativeBehavior,
     classes documentation.
     '''
 
-    default_color = ColorProperty((1, 0, 0, 1))
+    default_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
     '''Initial selected color
 
     :attr:`default_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `(1, 0, 0, 1)`.
     '''
 
-    icon = StringProperty('blank')
+    icon = StringProperty(defaultvalue='blank')
     '''Colorpicker icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    icon_size = NumericProperty('64dp')
+    icon_size = NumericProperty(defaultvalue='64dp')
     '''Colorpicker icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_color = ColorProperty(None, allownone=True)
+    icon_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_position = OptionProperty('center', options=('left', 'center', 'right'))
+    icon_position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Icon position.
     The icon in a colorpicker can be located on the left, center right, above the title
 
@@ -92,49 +94,49 @@ class GlowColorPicker(DeclarativeBehavior,
     and defaults to `center`.
     '''
 
-    title = StringProperty(None, allownone=True)
+    title = StringProperty(defaultvalue=None, allownone=True)
     '''Title colorpicker text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty('center', options=('left', 'center', 'right'))
+    title_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    margin = NumericProperty('48dp')
+    margin = NumericProperty(defaultvalue='48dp')
     """Colorpicker maegin from device width.
 
     :attr:`margin` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `48dp`.
     """
 
-    opening_transition = StringProperty('in_sine')
+    opening_transition = StringProperty(defaultvalue='in_sine')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
@@ -142,11 +144,11 @@ class GlowColorPicker(DeclarativeBehavior,
     '''
 
     _size_hint_y = 0
-    _icon_color = ColorProperty((0, 0, 0, 0))
-    _selected_color = ColorProperty((1, 0, 0, 1))
-    _gradient_color = ColorProperty((1, 0, 0, 1))
+    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _selected_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
+    _gradient_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.bind(icon_color=self.setter('_icon_color'))
         self.bind(default_color=self.setter('_selected_color'))
 
@@ -156,7 +158,7 @@ class GlowColorPicker(DeclarativeBehavior,
 
         self.register_event_type('on_selected_color')
 
-        if self.size_hint[0] == 1 and self.size_hint[1] == 1 and (self.device == "desktop" or self.device == "tablet"):
+        if self.size_hint[0] == 1 and self.size_hint[1] == 1 and self.device in {'desktop', 'tablet'}:
             self.size_hint = (None, None)
             self.width = min(dp(560), Window.width - self.margin)
         elif self.size_hint[0] == 1 and self.size_hint[1] == 1 and self.device == "mobile":
@@ -169,7 +171,7 @@ class GlowColorPicker(DeclarativeBehavior,
         Clock.schedule_once(self.initialize_colorpicker, -1)
         self._update_selected_color()
 
-    def open(self, *args, **kwargs):
+    def open(self, *args, **kwargs) -> None:
         '''Display the colorpicker in the Window.'''
 
         if self._is_open:
@@ -195,7 +197,7 @@ class GlowColorPicker(DeclarativeBehavior,
 
         Clock.schedule_once(self._open)
 
-    def _open(self, *args):
+    def _open(self, *args) -> None:
         '''Open with calculatet colorpicker height.'''
         if self.size_hint_y is None:
             animation_height = Animation(
@@ -220,12 +222,12 @@ class GlowColorPicker(DeclarativeBehavior,
         animation.bind(on_complete=lambda _, __: self._continue_open())
         animation.start(self)
 
-    def _continue_open(self):
+    def _continue_open(self) -> None:
         '''Final step for openning '''
         self.ids.glow_colorpicker_content.opacity = 1
         self.dispatch('on_open')
 
-    def dismiss(self, *args, **kwargs):
+    def dismiss(self, *args, **kwargs) -> None:
         '''Close the colorpicker if it is open.'''
         if not self._is_open:
             return
@@ -260,7 +262,7 @@ class GlowColorPicker(DeclarativeBehavior,
         animation.bind(on_complete=lambda _, __: self._dismiss())
         animation.start(self)
 
-    def _dismiss(self):
+    def _dismiss(self) -> None:
         '''Final step for closing '''
         self.ids.glow_colorpicker_content.opacity = 1
         self._real_remove_widget()
@@ -270,7 +272,7 @@ class GlowColorPicker(DeclarativeBehavior,
 
         self.width = min(dp(560) if self.device != "mobile" else dp(280), window.width - self.margin)
 
-    def initialize_colorpicker(self, *args):
+    def initialize_colorpicker(self, *args) -> None:
         '''Initializing the colorpicker.'''
         self._set_palette(available_palette[0])
 
@@ -280,7 +282,7 @@ class GlowColorPicker(DeclarativeBehavior,
         if self.title is None:
             self.ids.glow_colorpicker_content.remove_widget(self.ids.glow_colorpicker_title)
 
-    def set_default_colors(self, *args):
+    def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
 
         if self.bg_color is None:
@@ -289,14 +291,14 @@ class GlowColorPicker(DeclarativeBehavior,
         if self.icon_color is None:
             self._icon_color = self.theme_cls.primary_color
 
-    def on__selected_color(self, *args):
+    def on__selected_color(self, *args) -> None:
         self._update_selected_color()
 
-    def _update_selected_color(self):
+    def _update_selected_color(self) -> None:
         if 'glow_colorpicker_selected_color' in self.ids:
             self.ids.glow_colorpicker_selected_color.text = self.get_formatted_color(self._selected_color)
 
-    def _set_palette(self, palette):
+    def _set_palette(self, palette: str) -> None:
         self.ids.palette_scroll_view.clear_widgets()
         self.ids.palette_scroll_view.add_widget(
             GlowBoxLayout(
@@ -304,10 +306,10 @@ class GlowColorPicker(DeclarativeBehavior,
                 orientation='vertical',
                 adaptive_height=True,
                 spacing='10dp',
-            )
+            ),
         )
 
-    def get_formatted_color(self, color):
+    def get_formatted_color(self, color: tuple[float, float, float, float]) -> str:
         if 'glow_colorpicker_selected_color_format' in self.ids:
             if self.ids.glow_colorpicker_selected_color_format.selected_item == 'hex':
                 formated_selected_color = f'#{int(color[0] * 255):02x}{int(color[1] * 255):02x}{int(color[2] * 255):02x}{int(color[3] * 255):02x}'
@@ -320,7 +322,7 @@ class GlowColorPicker(DeclarativeBehavior,
 
         return ''
 
-    def get_color_from_gradient(self, value, max_value):
+    def get_color_from_gradient(self, value: int, max_value: int) -> list[tuple[float, float, float, float]]:
         colors = [(1, 0, 0, 1), (1, 1, 0, 1), (0, 1, 0, 1), (0, 1, 1, 1), (0, 0, 1, 1), (1, 0, 1, 1), (1, 0, 0, 1)]
         n = len(colors) - 1
         interval = (value / max_value) * n
@@ -330,11 +332,9 @@ class GlowColorPicker(DeclarativeBehavior,
         color1 = colors[index]
         color2 = colors[min(index + 1, len(colors) - 1)]
 
-        interpolated_color = [color1[i] * (1 - t) + color2[i] * t for i in range(4)]
+        return [color1[i] * (1 - t) + color2[i] * t for i in range(4)]
 
-        return interpolated_color
-
-    def on_select_color_from_gradient(self, instance: Widget, touch: MotionEvent):
+    def on_select_color_from_gradient(self, instance: Widget, touch: MotionEvent) -> bool:
         if instance.collide_point(*touch.pos):
             gradient = instance.export_as_image()
             tx = int(touch.x - instance.x)
@@ -347,5 +347,5 @@ class GlowColorPicker(DeclarativeBehavior,
 
         return False
 
-    def on_selected_color(self, color):
+    def on_selected_color(self, color: tuple[float, float, float, float]) -> None:
         pass

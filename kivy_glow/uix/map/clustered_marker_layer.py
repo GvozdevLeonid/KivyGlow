@@ -1,28 +1,35 @@
 '''Layer that support point clustering'''
+from math import (
+    atan,
+    exp,
+    floor,
+    log,
+    pi,
+    sin,
+    sqrt,
+)
+from typing import (
+    Any,
+    Self,
+)
 
+from kivy.input.motionevent import MotionEvent
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import (
     BooleanProperty,
+    ListProperty,
     NumericProperty,
     ObjectProperty,
     StringProperty,
-    ListProperty,
 )
-from .map import (
-    GlowMapMarker,
-    GlowMapLayer,
-)
-from math import (
-    floor,
-    sqrt,
-    atan,
-    exp,
-    log,
-    sin,
-    pi,
-)
+from kivy.uix.widget import Widget
 
+from .map import (
+    GlowMap,
+    GlowMapLayer,
+    GlowMapMarker,
+)
 
 Builder.load_string(
     '''
@@ -38,19 +45,19 @@ Builder.load_string(
         halign: 'center'
         size: root.size
         pos: root.pos
-'''
+''',
 )
 
 
-def lngX(lng):
+def lngX(lng: float | int) -> float:  # noqa: N802
     return lng / 360.0 + 0.5
 
 
-def latY(lat):
+def latY(lat: float | int) -> float:  # noqa: N802
     try:
-        if lat == 90:
+        if lat == 90:  # noqa: PLR2004
             return 0
-        if lat == -90:
+        if lat == -90:  # noqa: PLR2004
             return 1
         s = sin(lat * pi / 180.0)
         y = 0.5 - 0.25 * log((1 + s) / (1 - s)) / pi
@@ -59,11 +66,11 @@ def latY(lat):
         return .5
 
 
-def xLng(x):
+def xLng(x: float | int) -> float:  # noqa: N802
     return (x - 0.5) * 360
 
 
-def yLat(y):
+def yLat(y: float | int) -> float:  # noqa: N802
     y2 = (180 - y * 360) * pi / 180
     return 360 * atan(exp(y2)) / pi - 90
 
@@ -74,7 +81,7 @@ class KDBush:
     https://github.com/mourner/kdbush/blob/master/src/kdbush.js
     '''
 
-    def __init__(self, points, node_size=64):
+    def __init__(self, points: list, node_size: int = 64) -> None:
         self.points = points
         self.node_size = node_size
 
@@ -87,15 +94,15 @@ class KDBush:
 
         self._sort(ids, coords, node_size, 0, len(ids) - 1, 0)
 
-    def range(self, min_x, min_y, max_x, max_y):
+    def range(self, min_x: float | int, min_y: float | int, max_x: float | int, max_y: float | int) -> float | int:
         return self._range(
-            self.ids, self.coords, min_x, min_y, max_x, max_y, self.node_size
+            self.ids, self.coords, min_x, min_y, max_x, max_y, self.node_size,
         )
 
-    def within(self, x, y, r):
+    def within(self, x: float | int, y: float | int, r: float | int) -> list[int]:
         return self._within(self.ids, self.coords, x, y, r, self.node_size)
 
-    def _sort(self, ids, coords, node_size, left, right, depth):
+    def _sort(self, ids: list[int], coords: list[float | int], node_size: int, left: float | int, right: float | int, depth: float | int) -> None:
         if right - left <= node_size:
             return
         m = int(floor((left + right) / 2.0))
@@ -103,10 +110,10 @@ class KDBush:
         self._sort(ids, coords, node_size, left, m - 1, depth + 1)
         self._sort(ids, coords, node_size, m + 1, right, depth + 1)
 
-    def _select(self, ids, coords, k, left, right, inc):
+    def _select(self, ids: list[int], coords: list[float | int], k: float | int, left: float | int, right: float | int, inc: float | int) -> None:
         swap_item = self._swap_item
         while right > left:
-            if (right - left) > 600:
+            if (right - left) > 600:  # noqa: PLR2004
                 n = float(right - left + 1)
                 m = k - left + 1
                 z = log(n)
@@ -144,18 +151,18 @@ class KDBush:
             if k <= j:
                 right = j - 1
 
-    def _swap_item(self, ids, coords, i, j):
+    def _swap_item(self, ids: list[int], coords: list[float | int], i: int, j: int) -> None:
         swap = self._swap
         swap(ids, i, j)
         swap(coords, 2 * i, 2 * j)
         swap(coords, 2 * i + 1, 2 * j + 1)
 
-    def _swap(self, arr, i, j):
+    def _swap(self, arr: list[float | int], i: int, j: int) -> None:
         tmp = arr[i]
         arr[i] = arr[j]
         arr[j] = tmp
 
-    def _range(self, ids, coords, min_x, min_y, max_x, max_y, node_size):
+    def _range(self, ids: list[int], coords: list[float | int], min_x: float | int, min_y: float | int, max_x: float | int, max_y: float | int, node_size: int) -> list[int]:
         stack = [0, len(ids) - 1, 0]
         result = []
         x = y = 0
@@ -181,20 +188,20 @@ class KDBush:
             if x >= min_x and x <= max_x and y >= min_y and y <= max_y:
                 result.append(ids[m])
 
-            nextAxis = (axis + 1) % 2
+            next_axis = (axis + 1) % 2
 
             if min_x <= x if axis == 0 else min_y <= y:
                 stack.append(left)
                 stack.append(m - 1)
-                stack.append(nextAxis)
+                stack.append(next_axis)
             if max_x >= x if axis == 0 else max_y >= y:
                 stack.append(m + 1)
                 stack.append(right)
-                stack.append(nextAxis)
+                stack.append(next_axis)
 
         return result
 
-    def _within(self, ids, coords, qx, qy, r, node_size):
+    def _within(self, ids: list[int], coords: list[float | int], qx: float | int, qy: float | int, r: float | int, node_size: int) -> list[int]:
         sq_dist = self._sq_dist
         stack = [0, len(ids) - 1, 0]
         result = []
@@ -219,27 +226,27 @@ class KDBush:
             if sq_dist(x, y, qx, qy) <= r2:
                 result.append(ids[m])
 
-            nextAxis = (axis + 1) % 2
+            next_axis = (axis + 1) % 2
 
             if (qx - r <= x) if axis == 0 else (qy - r <= y):
                 stack.append(left)
                 stack.append(m - 1)
-                stack.append(nextAxis)
+                stack.append(next_axis)
             if (qx + r >= x) if axis == 0 else (qy + r >= y):
                 stack.append(m + 1)
                 stack.append(right)
-                stack.append(nextAxis)
+                stack.append(next_axis)
 
         return result
 
-    def _sq_dist(self, ax, ay, bx, by):
+    def _sq_dist(self, ax: float | int, ay: float | int, bx: float | int, by: float | int) -> float | int:
         dx = ax - bx
         dy = ay - by
         return dx * dx + dy * dy
 
 
 class Cluster:
-    def __init__(self, x, y, num_points, id, props):
+    def __init__(self, x: float | int, y: float | int, num_points: int, id: int, props: Any) -> None:  # noqa: A002
         self.x = x
         self.y = y
         self.num_points = num_points
@@ -255,7 +262,7 @@ class Cluster:
 
 
 class Marker:
-    def __init__(self, lon, lat, cls=GlowMapMarker, options=None):
+    def __init__(self, lon: float | int, lat: float | int, cls: object = GlowMapMarker, options: Any = None) -> None:
         self.lon = lon
         self.lat = lat
         self.cls = cls
@@ -271,24 +278,22 @@ class Marker:
         self.parent_id = None
         self.widget = None
 
-    def __repr__(self):
-        return '<Marker lon={} lat={} source={}>'.format(
-            self.lon, self.lat, self.source
-        )
+    def __repr__(self) -> str:
+        return f'<Marker lon={self.lon} lat={self.lat} source={self.source}>'
 
 
 class SuperCluster:
     '''Port of supercluster from mapbox in pure python
     '''
 
-    def __init__(self, min_zoom=0, max_zoom=16, radius=40, extent=512, node_size=64):
+    def __init__(self, min_zoom: int = 0, max_zoom: int = 16, radius: int = 40, extent: int = 512, node_size: int = 64) -> None:
         self.min_zoom = min_zoom
         self.max_zoom = max_zoom
         self.radius = radius
         self.extent = extent
         self.node_size = node_size
 
-    def load(self, points):
+    def load(self, points: list[Marker]) -> None:
         '''Load an array of markers.
         Once loaded, the index is immutable.
         '''
@@ -305,7 +310,7 @@ class SuperCluster:
             clusters = self._cluster(clusters, z)
         self.trees[self.min_zoom] = KDBush(clusters, self.node_size)
 
-    def get_clusters(self, bbox, zoom):
+    def get_clusters(self, bbox: tuple[float | int, float | int, float | int, float | int], zoom: int) -> list[Cluster, int]:
         '''For the given bbox [westLng, southLat, eastLng, northLat], and
         integer zoom, returns an array of clusters and markers
         '''
@@ -320,10 +325,10 @@ class SuperCluster:
                 clusters.append(self.points[c.id])
         return clusters
 
-    def _limit_zoom(self, z):
-        return max(self.min_zoom, min(self.max_zoom + 1, z))
+    def _limit_zoom(self, zoom: int) -> int:
+        return max(self.min_zoom, min(self.max_zoom + 1, zoom))
 
-    def _cluster(self, points, zoom):
+    def _cluster(self, points: list[Marker], zoom: int) -> list[Cluster, Marker]:
         clusters = []
         c_append = clusters.append
         trees = self.trees
@@ -369,21 +374,21 @@ class SuperCluster:
             else:
                 p.parent_id = i
                 c_append(
-                    Cluster(wx / num_points, wy / num_points, num_points, i, props)
+                    Cluster(wx / num_points, wy / num_points, num_points, i, props),
                 )
         return clusters
 
 
 class GlowClusterMapMarker(GlowMapMarker):
-    source = StringProperty('kivy_glow/images/map/cluster.png')
+    source = StringProperty(defaultvalue='kivy_glow/images/map/cluster.png')
     cluster = ObjectProperty()
     num_points = NumericProperty()
-    text_color = ListProperty([0.1, 0.1, 0.1, 1])
+    text_color = ListProperty(defaultvalue=(0.1, 0.1, 0.1, 1))
 
-    def on_cluster(self, instance, cluster):
+    def on_cluster(self, instance: Self, cluster: Cluster) -> None:
         self.num_points = cluster.num_points
 
-    def on_touch_up(self, touch):
+    def on_touch_up(self, touch: MotionEvent) -> bool:
         if touch.grab_current is not self:
             return False
 
@@ -405,7 +410,7 @@ class GlowClusterMapMarker(GlowMapMarker):
 
         return True
 
-    def on_touch_down(self, touch):
+    def on_touch_down(self, touch: MotionEvent) -> bool:
         if self.collide_point(*touch.pos):
             touch.grab(self)
             return True
@@ -414,30 +419,30 @@ class GlowClusterMapMarker(GlowMapMarker):
 
 
 class GlowClusteredMarkerLayer(GlowMapLayer):
-    cluster_cls = ObjectProperty(GlowClusterMapMarker)
-    cluster_min_zoom = NumericProperty(0)
-    cluster_max_zoom = NumericProperty(16)
-    cluster_radius = NumericProperty('40dp')
-    cluster_extent = NumericProperty(512)
-    cluster_node_size = NumericProperty(64)
-    cluster_zoom_on_click = BooleanProperty(False)
+    cluster_cls = ObjectProperty(defaultvalue=GlowClusterMapMarker)
+    cluster_min_zoom = NumericProperty(defaultvalue=0)
+    cluster_max_zoom = NumericProperty(defaultvalue=16)
+    cluster_radius = NumericProperty(defaultvalue='40dp')
+    cluster_extent = NumericProperty(defaultvalue=512)
+    cluster_node_size = NumericProperty(defaultvalue=64)
+    cluster_zoom_on_click = BooleanProperty(defaultvalue=False)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.cluster = None
         self.cluster_markers = []
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
-    def add_marker(self, lon, lat, cls=GlowMapMarker, options=None):
+    def add_marker(self, lon: float | int, lat: float | int, cls: object = GlowMapMarker, options: Any = None) -> Marker:
         if options is None:
             options = {}
         marker = Marker(lon, lat, cls, options)
         self.cluster_markers.append(marker)
         return marker
 
-    def remove_marker(self, marker):
+    def remove_marker(self, marker: Marker) -> None:
         self.cluster_markers.remove(marker)
 
-    def reposition(self):
+    def reposition(self) -> None:
         if self.cluster is None:
             self.build_cluster()
         margin = dp(48)
@@ -453,7 +458,7 @@ class GlowClusteredMarkerLayer(GlowMapLayer):
             set_marker_position(mapview, widget)
             self.add_widget(widget)
 
-    def build_cluster(self):
+    def build_cluster(self) -> None:
         self.cluster = SuperCluster(
             min_zoom=self.cluster_min_zoom,
             max_zoom=self.cluster_max_zoom,
@@ -463,14 +468,14 @@ class GlowClusteredMarkerLayer(GlowMapLayer):
         )
         self.cluster.load(self.cluster_markers)
 
-    def create_widget_for(self, point):
+    def create_widget_for(self, point: Marker) -> Widget:
         if isinstance(point, Marker):
             point.widget = point.cls(lon=point.lon, lat=point.lat, **point.options)
         elif isinstance(point, Cluster):
             point.widget = self.cluster_cls(lon=point.lon, lat=point.lat, cluster=point)
         return point.widget
 
-    def set_marker_position(self, mapview, marker):
+    def set_marker_position(self, mapview: GlowMap, marker: Marker) -> None:
         x, y = mapview.get_window_xy_from(marker.lat, marker.lon, mapview.zoom)
         marker.x = int(x - marker.width * marker.anchor_x)
         marker.y = int(y - marker.height * marker.anchor_y)

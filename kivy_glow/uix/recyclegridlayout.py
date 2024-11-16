@@ -3,8 +3,8 @@ __all__ = ('GlowRecycleGridLayout', )
 from kivy.uix.recyclegridlayout import RecycleGridLayout
 
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )

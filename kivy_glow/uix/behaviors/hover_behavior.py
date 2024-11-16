@@ -1,16 +1,18 @@
 __all__ = ('HoverBehavior', )
 
-from kivy.input.motionevent import MotionEvent
-from kivy.uix.scrollview import ScrollView
-from kivy.event import EventDispatcher
 from typing import Self
+
 from kivy.core.window import (
-    WindowBase,
     Window,
+    WindowBase,
 )
+from kivy.event import EventDispatcher
+from kivy.input.motionevent import MotionEvent
 from kivy.properties import (
     BooleanProperty,
 )
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
 
 
 class HoverBehavior(EventDispatcher):
@@ -26,7 +28,7 @@ class HoverBehavior(EventDispatcher):
            Fired when the mouse exits the widget.
     '''
 
-    hover = BooleanProperty(False)
+    hover = BooleanProperty(defaultvalue=False)
     '''True, if the mouse cursor is within the borders of the widget.
 
     :attr:`hover` is an :class:`~kivy.properties.BooleanProperty`
@@ -42,7 +44,7 @@ class HoverBehavior(EventDispatcher):
 
         super().__init__(*args, **kwargs)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             Window.unbind(on_motion=self._on_window_motion)
         else:
@@ -50,6 +52,7 @@ class HoverBehavior(EventDispatcher):
 
         if hasattr(super(), 'on_parent'):
             return super().on_parent(instance, parent)
+        return None
 
     def _on_window_motion(self, window: WindowBase, etype: str, motionevent: MotionEvent) -> bool:
         '''Fired at the Window motion event.'''
@@ -74,11 +77,10 @@ class HoverBehavior(EventDispatcher):
                         HoverBehavior.hovered_widget = self
                         self.dispatch('on_enter')
 
-                else:
-                    if self.hover:
-                        HoverBehavior.hovered_widget = None
-                        self.hover = False
-                        self.dispatch('on_leave')
+                elif self.hover:
+                    HoverBehavior.hovered_widget = None
+                    self.hover = False
+                    self.dispatch('on_leave')
 
         return False
 

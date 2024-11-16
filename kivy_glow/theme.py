@@ -1,175 +1,184 @@
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.app import App
+from kivy.core.window import Window
+from kivy.event import EventDispatcher
 from kivy.properties import (
-    BooleanProperty,
-    NumericProperty,
-    OptionProperty,
     AliasProperty,
+    BooleanProperty,
     ColorProperty,
     DictProperty,
+    NumericProperty,
+    OptionProperty,
 )
 from kivy.utils import get_color_from_hex
-from kivy.event import EventDispatcher
-from kivy.animation import Animation
-from kivy.core.window import Window
-from kivy.app import App
-from typing import Self
+
 from kivy_glow.colors import (
-    available_palette,
     available_hue,
+    available_palette,
     colors,
 )
 
 
 class ThemeManager(EventDispatcher):
     # Primary color
-    primary_palette = OptionProperty('Indigo', options=available_palette)
-    primary_hue = OptionProperty('500', options=available_hue)
-    primary_light_hue = OptionProperty('300', options=available_hue)
-    primary_dark_hue = OptionProperty('700', options=available_hue)
+    primary_palette = OptionProperty(defaultvalue='Indigo', options=available_palette)
+    primary_hue = OptionProperty(defaultvalue='500', options=available_hue)
+    primary_light_hue = OptionProperty(defaultvalue='300', options=available_hue)
+    primary_dark_hue = OptionProperty(defaultvalue='700', options=available_hue)
 
-    def _get_primary_color(self) -> list:
+    _stub_color = (0, 0, 0, 0)
+
+    def _get_primary_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.primary_palette][self.primary_hue]
+            self.colors[self.primary_palette][self.primary_hue],
         )
 
     primary_color = AliasProperty(
-        _get_primary_color, bind=('primary_palette', 'primary_hue')
+        _get_primary_color, bind=('primary_palette', 'primary_hue'),
     )
 
-    def _get_primary_light_color(self) -> list:
+    def _get_primary_light_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.primary_palette][self.primary_light_hue]
+            self.colors[self.primary_palette][self.primary_light_hue],
         )
 
     primary_light_color = AliasProperty(
-        _get_primary_light_color, bind=('primary_palette', 'primary_light_hue')
+        _get_primary_light_color, bind=('primary_palette', 'primary_light_hue'),
     )
 
-    def _get_primary_dark_color(self) -> list:
+    def _get_primary_dark_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.primary_palette][self.primary_dark_hue]
+            self.colors[self.primary_palette][self.primary_dark_hue],
         )
 
     primary_dark_color = AliasProperty(
-        _get_primary_dark_color, bind=('primary_palette', 'primary_dark_hue')
+        _get_primary_dark_color, bind=('primary_palette', 'primary_dark_hue'),
     )
 
     # Accent color
-    accent_palette = OptionProperty('Orange', options=available_palette)
-    accent_hue = OptionProperty('500', options=available_hue)
-    accent_light_hue = OptionProperty('300', options=available_hue)
-    accent_dark_hue = OptionProperty('700', options=available_hue)
+    accent_palette = OptionProperty(defaultvalue='Orange', options=available_palette)
+    accent_hue = OptionProperty(defaultvalue='500', options=available_hue)
+    accent_light_hue = OptionProperty(defaultvalue='300', options=available_hue)
+    accent_dark_hue = OptionProperty(defaultvalue='700', options=available_hue)
 
-    def _get_accent_color(self) -> list:
+    def _get_accent_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.accent_palette][self.accent_hue]
+            self.colors[self.accent_palette][self.accent_hue],
         )
 
     accent_color = AliasProperty(
-        _get_accent_color, bind=('accent_palette', 'accent_hue')
+        _get_accent_color, bind=('accent_palette', 'accent_hue'),
     )
 
-    def _get_accent_light_color(self) -> list:
+    def _get_accent_light_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.accent_palette][self.accent_light_hue]
+            self.colors[self.accent_palette][self.accent_light_hue],
         )
 
     accent_light_color = AliasProperty(
-        _get_accent_light_color, bind=('accent_palette', 'accent_light_hue')
+        _get_accent_light_color, bind=('accent_palette', 'accent_light_hue'),
     )
 
-    def _get_accent_dark_color(self) -> list:
+    def _get_accent_dark_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
-            self.colors[self.accent_palette][self.accent_dark_hue]
+            self.colors[self.accent_palette][self.accent_dark_hue],
         )
 
     accent_dark_color = AliasProperty(
-        _get_accent_dark_color, bind=('accent_palette', 'accent_dark_hue')
+        _get_accent_dark_color, bind=('accent_palette', 'accent_dark_hue'),
     )
 
     # Background color
     background_palette = OptionProperty('Neutral', options=available_palette)
 
     # Theme
-    theme_style = OptionProperty('Light', options=('Light', 'Dark'))
-    theme_style_switch_animation_duration = NumericProperty(0.2)
-    theme_style_switch_animation = BooleanProperty(False)
+    theme_style = OptionProperty(defaultvalue='Light', options=('Light', 'Dark'))
+    theme_style_switch_animation_duration = NumericProperty(defaultvalue=0.2)
+    theme_style_switch_animation = BooleanProperty(defaultvalue=False)
 
-    def _get_opposite_theme_style(self, theme_style: str):
+    def _get_opposite_theme_style(self, theme_style: str) -> tuple[float, float, float, float]:
         if theme_style == 'Dark':
             return 'Light'
-        elif theme_style == 'Light':
+        if theme_style == 'Light':
             return 'Dark'
+        return ''
 
-    def _get_background_light_color(self, theme_style: str = None) -> list:
+    def _get_background_light_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['50']
+                self.colors[self.background_palette]['50'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['700']
+                self.colors[self.background_palette]['700'],
             )
+        return self._stub_color
 
     background_light_color = AliasProperty(
-        _get_background_light_color, bind=('background_palette', 'theme_style')
+        _get_background_light_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_background_color(self, theme_style: str = None) -> list:
+    def _get_background_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['100']
+                self.colors[self.background_palette]['100'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['800']
+                self.colors[self.background_palette]['800'],
             )
+        return self._stub_color
 
     background_color = AliasProperty(
-        _get_background_color, bind=('background_palette', 'theme_style')
+        _get_background_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_background_dark_color(self, theme_style: str = None) -> list:
+    def _get_background_dark_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['200']
+                self.colors[self.background_palette]['200'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['900']
+                self.colors[self.background_palette]['900'],
             )
+        return self._stub_color
 
     background_dark_color = AliasProperty(
-        _get_background_dark_color, bind=('background_palette', 'theme_style')
+        _get_background_dark_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_background_darkest_color(self, theme_style: str = None) -> list:
+    def _get_background_darkest_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['300']
+                self.colors[self.background_palette]['300'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['950']
+                self.colors[self.background_palette]['950'],
             )
+        return self._stub_color
 
     background_darkest_color = AliasProperty(
-        _get_background_darkest_color, bind=('background_palette', 'theme_style')
+        _get_background_darkest_color, bind=('background_palette', 'theme_style'),
     )
 
     # Text & Devider color
-    def _get_text_color(self, theme_style: str = None, opposite: bool = False):
+    def _get_text_color(self, theme_style: str | None = None, opposite: bool = False) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
@@ -178,28 +187,29 @@ class ThemeManager(EventDispatcher):
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['950']
+                self.colors[self.background_palette]['950'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['50']
+                self.colors[self.background_palette]['50'],
             )
+        return self._stub_color
 
     text_color = AliasProperty(
-        _get_text_color, bind=('background_palette', 'theme_style')
+        _get_text_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_opposite_text_color(self, theme_style: str = None):
+    def _get_opposite_text_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
-        return self._get_text_color(theme_style, True)
+        return self._get_text_color(theme_style, opposite=True)
 
     opposite_text_color = AliasProperty(
-        _get_opposite_text_color, bind=('background_palette', 'theme_style')
+        _get_opposite_text_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_secondary_text_color(self, theme_style: str = None, opposite: bool = False):
+    def _get_secondary_text_color(self, theme_style: str | None = None, opposite: bool = False) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
@@ -208,45 +218,47 @@ class ThemeManager(EventDispatcher):
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['700']
+                self.colors[self.background_palette]['700'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['300']
+                self.colors[self.background_palette]['300'],
             )
+        return self._stub_color
 
     secondary_text_color = AliasProperty(
-        _get_secondary_text_color, bind=('background_palette', 'theme_style')
+        _get_secondary_text_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_opposite_secondary_text_color(self, theme_style: str = None):
+    def _get_opposite_secondary_text_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
-        return self._get_secondary_text_color(theme_style, True)
+        return self._get_secondary_text_color(theme_style, opposite=True)
 
     opposite_secondary_text_color = AliasProperty(
-        _get_opposite_secondary_text_color, bind=('background_palette', 'theme_style')
+        _get_opposite_secondary_text_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_disabled_color(self, theme_style: str = None):
+    def _get_disabled_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['500']
+                self.colors[self.background_palette]['500'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['500']
+                self.colors[self.background_palette]['500'],
             )
+        return self._stub_color
 
     disabled_color = AliasProperty(
-        _get_disabled_color, bind=('background_palette', 'theme_style')
+        _get_disabled_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_divider_color(self, theme_style: str = None, opposite: bool = False):
+    def _get_divider_color(self, theme_style: str | None = None, opposite: bool = False) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
@@ -255,76 +267,80 @@ class ThemeManager(EventDispatcher):
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors[self.background_palette]['600']
+                self.colors[self.background_palette]['600'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors[self.background_palette]['400']
+                self.colors[self.background_palette]['400'],
             )
+        return self._stub_color
 
     divider_color = AliasProperty(
-        _get_divider_color, bind=('background_palette', 'theme_style')
+        _get_divider_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_opposite_divider_color(self, theme_style: str = None):
+    def _get_opposite_divider_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
-        return self._get_divider_color(theme_style, True)
+        return self._get_divider_color(theme_style, opposite=True)
 
     opposite_divider_color = AliasProperty(
-        _get_opposite_divider_color, bind=('background_palette', 'theme_style')
+        _get_opposite_divider_color, bind=('background_palette', 'theme_style'),
     )
 
-    def _get_error_color(self, theme_style: str = None):
+    def _get_error_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors['Red']['600']
+                self.colors['Red']['600'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors['Red']['400']
+                self.colors['Red']['400'],
             )
+        return self._stub_color
 
     error_color = AliasProperty(
-        _get_error_color, bind=('theme_style', )
+        _get_error_color, bind=('theme_style', ),
     )
 
-    def _get_success_color(self, theme_style: str = None):
+    def _get_success_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors['Green']['600']
+                self.colors['Green']['600'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors['Green']['400']
+                self.colors['Green']['400'],
             )
+        return self._stub_color
 
     success_color = AliasProperty(
-        _get_success_color, bind=('theme_style', )
+        _get_success_color, bind=('theme_style', ),
     )
 
-    def _get_warning_color(self, theme_style: str = None):
+    def _get_warning_color(self, theme_style: str | None = None) -> tuple[float, float, float, float]:
         if theme_style is None:
             theme_style = self.theme_style
 
         if theme_style == 'Light':
             return get_color_from_hex(
-                self.colors['Amber']['600']
+                self.colors['Amber']['600'],
             )
-        elif theme_style == 'Dark':
+        if theme_style == 'Dark':
             return get_color_from_hex(
-                self.colors['Amber']['400']
+                self.colors['Amber']['400'],
             )
+        return self._stub_color
 
     warning_color = AliasProperty(
-        _get_warning_color, bind=('theme_style', )
+        _get_warning_color, bind=('theme_style', ),
     )
 
     font_styles = DictProperty(
@@ -504,14 +520,14 @@ class ThemeManager(EventDispatcher):
                 'line_height': 1,
                 'bold': False,
                 'italic': False,
-            }
-        }
+            },
+        },
     )
 
     app_bg_color = ColorProperty(None, allownone=True)
     _app_bg_color = ColorProperty((0, 0, 0, 0))
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         self.bind(app_bg_color=self.setter('_app_bg_color'))
         self.colors = colors
 
@@ -534,18 +550,17 @@ class ThemeManager(EventDispatcher):
                 else:
                     self._app_bg_color = self.background_color
 
-    def on__app_bg_color(self, app, app_bg_color):
+    def on__app_bg_color(self, app: App, app_bg_color: tuple[float, float, float, float]) -> None:
         Window.clearcolor = app_bg_color
 
-    def lighten_color(self, color, factor=0.3):
+    def lighten_color(self, color: tuple[float, float, float, float], factor: float = 0.3) -> tuple[float, float, float, float]:
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
+        elif len(color) == 3:
+            r, g, b = color
         else:
-            if len(color) == 3:
-                r, g, b = color
-            else:
-                r, g, b, a = color
+            r, g, b, a = color
 
         r = min(1, r + r * factor)
         g = min(1, g + g * factor)
@@ -553,15 +568,14 @@ class ThemeManager(EventDispatcher):
 
         return float(r), float(g), float(b), a
 
-    def darken_color(self, color, factor=0.3):
+    def darken_color(self, color: tuple[float, float, float, float], factor: float = 0.3) -> tuple[float, float, float, float]:
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
+        elif len(color) == 3:
+            r, g, b = color
         else:
-            if len(color) == 3:
-                r, g, b = color
-            else:
-                r, g, b, a = color
+            r, g, b, a = color
 
         r = max(0, r - r * factor)
         g = max(0, g - g * factor)
@@ -569,22 +583,20 @@ class ThemeManager(EventDispatcher):
 
         return float(r), float(g), float(b), a
 
-    def darken_or_lighten_color(self, color, factor=0.3):
+    def darken_or_lighten_color(self, color: tuple[float, float, float, float], factor: float = 0.3) -> tuple[float, float, float, float]:
 
-        def normalized_channel(color):
+        def normalized_channel(color: tuple[float, float, float, float]) -> float:
             if color <= 0.03928:
                 return color / 12.92
-            else:
-                return ((color + 0.055) / 1.055) ** 2.4
+            return ((color + 0.055) / 1.055) ** 2.4
 
         r, g, b, a = 0, 0, 0, 0
         if isinstance(color, str):
             r, g, b, a = get_color_from_hex(color)
+        elif len(color) == 3:
+            r, g, b = color
         else:
-            if len(color) == 3:
-                r, g, b = color
-            else:
-                r, g, b, a = color
+            r, g, b, a = color
 
         luminance = 0.2126 * normalized_channel(r) + 0.7152 * normalized_channel(g) + 0.0722 * normalized_channel(b)
         if luminance < .5:

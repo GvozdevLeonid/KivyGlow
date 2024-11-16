@@ -1,22 +1,24 @@
 __all__ = ('GlowPaginator', )
 
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow import kivy_glow_uix_dir
-from kivy.lang import Builder
-from kivy.clock import Clock
 import os
-from kivy.properties import (
-    NumericProperty,
-    BooleanProperty,
-    ListProperty,
-)
 from typing import (
-    Self,
     Any,
+    Self,
 )
 
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import (
+    BooleanProperty,
+    ListProperty,
+    NumericProperty,
+)
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+
 with open(
-    os.path.join(kivy_glow_uix_dir, 'paginator', 'paginator.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'paginator', 'paginator.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -31,21 +33,21 @@ class GlowPaginator(GlowBoxLayout):
             Called when page is changed
     '''
 
-    items_per_page = NumericProperty(10)
+    items_per_page = NumericProperty(defaultvalue=10)
     '''How to split items
 
     :attr:`items_per_page` is an :class:`~kivy.properties.NumericProperty`
     and default to `10`.
     '''
 
-    items = ListProperty(())
+    items = ListProperty(defaultvalue=[])
     '''Any iterable objects
 
     :attr:`items` is an :class:`~kivy.properties.ListProperty`
     and default to `empty`.
     '''
 
-    reset_page = BooleanProperty(True)
+    reset_page = BooleanProperty(defaultvalue=True)
     '''Reset page if :attr:`items` value changed.
 
     The page will still be reset if the current page is larger than the maximum possible.
@@ -57,14 +59,14 @@ class GlowPaginator(GlowBoxLayout):
     _page = 0
     _pages = 0
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.register_event_type('on_page_items_changed')
         self.register_event_type('on_page_changed')
 
         super().__init__(*args, **kwargs)
         Clock.schedule_once(self._update_view)
 
-    def on_items(self, paginator_instance: Self, items: list) -> None:
+    def on_items(self, instance: Self, items: list) -> None:
         '''Fired when the :attr:`items` value changes.'''
         self._pages = 1 + (len(items) - 1) // self.items_per_page
 
@@ -95,19 +97,19 @@ class GlowPaginator(GlowBoxLayout):
         '''Return True if Paginator has previous page.'''
         return self._page > 0
 
-    def on_page_items_changed(self, page_items: Any):
+    def on_page_items_changed(self, page_items: Any) -> None:
         '''Fired at the Paginator page items changed event.'''
         pass
 
-    def on_page_changed(self, page: int):
+    def on_page_changed(self, page: int) -> None:
         '''Fired at the Paginator page changed event.'''
         pass
 
-    def get_page_items(self):
+    def get_page_items(self) -> list[Any]:
         '''Return current page items'''
         return self.items[self._page * self.items_per_page: (self._page + 1) * self.items_per_page]
 
-    def get_from_to(self):
+    def get_from_to(self) -> tuple[int, int]:
         '''Returns the current page indexes in the items.'''
         return self._page * self.items_per_page, min(len(self.items), (self._page + 1) * self.items_per_page)
 

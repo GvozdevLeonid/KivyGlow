@@ -1,19 +1,21 @@
 __all__ = ('GlowNumberField', )
 
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.textfield import GlowTextField
-from kivy_glow.uix.button import GlowButton
+import re
+from typing import Self
+
 from kivy.clock import Clock
 from kivy.metrics import dp
-from typing import Self
-import re
 from kivy.properties import (
+    AliasProperty,
+    ColorProperty,
     NumericProperty,
     OptionProperty,
     StringProperty,
-    AliasProperty,
-    ColorProperty,
 )
+
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.button import GlowButton
+from kivy_glow.uix.textfield import GlowTextField
 
 
 class GlowNumberField(GlowTextField):
@@ -22,69 +24,69 @@ class GlowNumberField(GlowTextField):
     For more information, see in the :class:`~kivy_glow.uix.textfield.GlowTextField` class documentation.
     '''
 
-    minimum = NumericProperty(1)
+    minimum = NumericProperty(defaultvalue=1)
     '''Minimum possible number
 
     :attr:`minimum` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `1`.
     '''
-    maximum = NumericProperty(100)
+    maximum = NumericProperty(defaultvalue=100)
     '''Maximum possible number
 
     :attr:`maximum` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `100`.
     '''
 
-    number_type = OptionProperty('int', options=('int', 'float'))
+    number_type = OptionProperty(defaultvalue='int', options=('int', 'float'))
     '''If you select a float number, you can change the  :attr:`decimals`
 
     :attr:`number_type` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `int`.
     '''
 
-    icon_up = StringProperty('chevron-up')
+    icon_up = StringProperty(defaultvalue='chevron-up')
     '''Icon for button up
 
     :attr:`icon_up` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-up`.
     '''
 
-    icon_down = StringProperty('chevron-down')
+    icon_down = StringProperty(defaultvalue='chevron-down')
     '''Icon for button down
 
     :attr:`icon_down` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-down`.
     '''
 
-    decimals = NumericProperty(2)
+    decimals = NumericProperty(defaultvalue=2)
     '''Number of symbols after comma
 
     :attr:`decimals` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `2`.
     '''
 
-    single_step = NumericProperty(1)
+    single_step = NumericProperty(defaultvalue=1)
     '''Step to change number when clicking buttons
 
     :attr:`single_step` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `1`.
     '''
 
-    button_icon_color = ColorProperty(None, allownonw=True)
+    button_icon_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button icon color
 
     :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    button_border_color = ColorProperty(None, allownonw=True)
+    button_border_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button border color
 
     :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _value = NumericProperty(1)
+    _value = NumericProperty(defaultvalue=1)
 
     def __init__(self, *args, **kwargs) -> None:
         self._format_string = '{}'
@@ -93,7 +95,7 @@ class GlowNumberField(GlowTextField):
         Clock.schedule_once(self.initialize_numberfield, -1)
         self._set_value(self._value)
 
-    def _get_value(self):
+    def _get_value(self) -> float | int | None:
         '''Getter for value'''
 
         if self.text != self._format_string.format(self._value):
@@ -101,7 +103,7 @@ class GlowNumberField(GlowTextField):
 
         return self._value
 
-    def _set_value(self, value):
+    def _set_value(self, value: str | float | int) -> None:
         '''Setter for value'''
         if self.minimum <= value <= self.maximum:
             if self.number_type == 'float':
@@ -130,17 +132,29 @@ class GlowNumberField(GlowTextField):
     and defaults to :attr:`minimum`.
     '''
 
-    def on_minimum(self, numberfield_instance: Self, minimum: int | float) -> None:
+    def on_minimum(self, instance: Self, minimum: int | float) -> None:
         '''Fired when the :attr:`minimum` value changes.'''
         if self._value < minimum:
             self._set_value(minimum)
 
-    def on_maximum(self, numberfield_instance: Self, maximum: int | float) -> None:
+        if hasattr(self, 'button_down'):
+            if self._value == self.minimum:
+                self.button_down.disabled = True
+            elif self._value > self.minimum and self.button_down.disabled:
+                self.button_down.disabled = False
+
+    def on_maximum(self, instance: Self, maximum: int | float) -> None:
         '''Fired when the :attr:`maximum` value changes.'''
         if self._value > maximum:
             self._set_value(maximum)
 
-    def on_decimals(self, numberfield_instance: Self, decimals: int) -> None:
+        if hasattr(self, 'button_up'):
+            if self._value == self.maximum:
+                self.button_up.disabled = True
+            elif self._value < self.maximum and self.button_up.disabled:
+                self.button_up.disabled = False
+
+    def on_decimals(self, instance: Self, decimals: int) -> None:
         '''Fired when the :attr:`decimals` value changes.'''
         if self.number_type == 'int':
             self._format_string = '{}'
@@ -150,7 +164,7 @@ class GlowNumberField(GlowTextField):
 
         self._set_value(self._value)
 
-    def on_number_type(self, numberfield_instance: Self, number_type: str) -> None:
+    def on_number_type(self, instance: Self, number_type: str) -> None:
         '''Fired when the :attr:`number_type` value changes.'''
         if number_type == 'int':
             self._format_string = '{}'
@@ -160,17 +174,17 @@ class GlowNumberField(GlowTextField):
 
         self._set_value(self._value)
 
-    def on_text(self, numberfield_instance: Self, text: str) -> None:
+    def on_text(self, instance: Self, text: str) -> None:
         '''Fired when the :attr:`text` value changes.'''
         self.error = False
         error = True
         number = None
-        if text != '':
+        if text:
             try:
-                if self.number_type == 'int' and text not in ('', '-'):
+                if self.number_type == 'int' and text not in {'', '-'}:
                     number = int(text)
 
-                elif self.number_type == 'float' and text.split('.')[0] not in ('', '-') and text.split('.')[1] not in (''):
+                elif self.number_type == 'float' and text.split('.')[0] not in {'', '-'} and text.split('.')[1] not in (''):
                     number = float(text)
 
                 if self.minimum <= number <= self.maximum:
@@ -183,19 +197,19 @@ class GlowNumberField(GlowTextField):
         if error:
             self.error = True
 
-    def on_focus(self, numberfield_instance: Self, focus: bool) -> None:
+    def on_focus(self, instance: Self, focus: bool) -> None:
         '''Fired when the :attr:`focus` value changes.'''
         super().on_focus(self, focus)
-        if not focus and ((self.text == '' and self.required) or self.error):
+        if not focus and ((self.text and self.required) or self.error):
             self._set_value(self._value)
 
-    def _up(self, button_instance: GlowButton) -> None:
+    def _up(self, instance: GlowButton) -> None:
         '''Increase current number.'''
         if self._value + self.single_step <= self.maximum:
             self._set_value(self._value + self.single_step)
             self._textfield.cursor = (0, 0)
 
-    def _down(self, button_instance: GlowButton) -> None:
+    def _down(self, instance: GlowButton) -> None:
         '''Decrease current number.'''
         if self._value - self.single_step >= self.minimum:
             self._set_value(self._value - self.single_step)
@@ -206,7 +220,7 @@ class GlowNumberField(GlowTextField):
         substring = re.sub(pat, '', substring)
 
         if '-' in substring:
-            if self.text != '':
+            if self.text:
                 cursor_pos = self._textfield.cursor_index()
                 if cursor_pos != 0 or '-' in self.text:
                     substring = substring.replace('-', '')
@@ -239,7 +253,7 @@ class GlowNumberField(GlowTextField):
                                         icon_size=dp(16),
                                         mode='outline',
 
-                                        on_release=self._up,)
+                                        on_release=self._up)
             self.button_down = GlowButton(disabled=True if self._value == self.minimum else False,
                                           border_color=self.button_border_color,
                                           icon_color=self.button_icon_color,
@@ -249,7 +263,7 @@ class GlowNumberField(GlowTextField):
                                           icon_size=dp(16),
                                           mode='outline',
 
-                                          on_release=self._down,)
+                                          on_release=self._down)
 
             self.left_content = self.button_down
             self.right_content = self.button_up
@@ -270,7 +284,7 @@ class GlowNumberField(GlowTextField):
                                         padding=(0, ),
                                         width=dp(20),
 
-                                        on_release=self._up,)
+                                        on_release=self._up)
 
             self.button_down = GlowButton(disabled=True if self._value == self.minimum else False,
                                           border_color=self.button_border_color,
@@ -286,7 +300,7 @@ class GlowNumberField(GlowTextField):
                                           padding=(0, ),
                                           width=dp(20),
 
-                                          on_release=self._down,)
+                                          on_release=self._down)
 
             self.right_content = GlowBoxLayout(
                 self.button_up,

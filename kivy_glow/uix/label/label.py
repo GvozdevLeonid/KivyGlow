@@ -1,53 +1,58 @@
 __all__ = ('GlowLabel', )
 
-from kivy.core.text.markup import MarkupLabel as CoreMarkupLabel
-from kivy.input.motionevent import MotionEvent
-from kivy.core.text import Label as CoreLabel
-from kivy.core.clipboard import Clipboard
-from kivy.utils import get_hex_from_color
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.uix.textinput import Selector
-from kivy.animation import Animation
-from kivy.uix.widget import Widget
-from kivy.uix.bubble import Bubble
-from kivy.uix.label import Label
-from kivy.base import EventLoop
-from kivy.lang import Builder
-from kivy.clock import Clock
-from typing import Self
-from weakref import ref
 import os
-from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
-    AdaptiveBehavior,
-    HoverBehavior,
-    StyleBehavior,
-    ThemeBehavior,
+from typing import (
+    Any,
+    Self,
 )
+from weakref import ref
+
+from kivy.animation import Animation
+from kivy.base import EventLoop
+from kivy.clock import Clock
+from kivy.core.clipboard import Clipboard
+from kivy.core.text import Label as CoreLabel
+from kivy.core.text.markup import MarkupLabel as CoreMarkupLabel
 from kivy.core.window import (
-    WindowBase,
     Window,
-)
-from kivy.properties import (
-    BooleanProperty,
-    ObservableList,
-    StringProperty,
-    OptionProperty,
-    ObjectProperty,
-    ColorProperty,
+    WindowBase,
 )
 from kivy.graphics import (
-    Rectangle,
     Color,
+    Rectangle,
 )
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
 from kivy.metrics import (
     inch,
     sp,
 )
+from kivy.properties import (
+    BooleanProperty,
+    ColorProperty,
+    ObjectProperty,
+    ObservableList,
+    OptionProperty,
+    StringProperty,
+)
+from kivy.uix.bubble import Bubble
+from kivy.uix.label import Label
+from kivy.uix.textinput import Selector
+from kivy.uix.widget import Widget
+from kivy.utils import get_hex_from_color
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.behaviors import (
+    AdaptiveBehavior,
+    DeclarativeBehavior,
+    HoverBehavior,
+    StyleBehavior,
+    ThemeBehavior,
+)
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'label', 'label.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'label', 'label.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -58,22 +63,22 @@ class GlowLabelSelectCopy(Bubble):
     For more information, see in the :class:`~kivy.uix.bubble.Bubble` class documentation.
     '''
 
-    label = ObjectProperty(None)
+    label = ObjectProperty(defaultvalue=None)
     '''
         Holds a reference to the Label this Bubble belongs to.
     '''
-    but_copy = ObjectProperty(None)
+    but_copy = ObjectProperty(defaultvalue=None)
     '''
         Reference to the button copy.
     '''
-    but_selectall = ObjectProperty(None)
+    but_selectall = ObjectProperty(defaultvalue=None)
     '''
         Reference to the button select all.
     '''
 
     _check_parent_ev = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
     def on_touch_up(self, touch: MotionEvent) -> bool:
@@ -142,28 +147,28 @@ class GlowLabel(DeclarativeBehavior,
     classes documentation.
     '''
 
-    color = ColorProperty(None, allownone=True)
+    color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the text
 
     :attr:`color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selection_color = ColorProperty(None, allownone=True)
+    selection_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the background color for highlight selected text.
 
     :attr:`selection_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    allow_selection = BooleanProperty(False)
+    allow_selection = BooleanProperty(defaultvalue=False)
     '''If selection is enabled
 
     :attr:`allow_selection` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    font_style = StringProperty('BodyM')
+    font_style = StringProperty(defaultvalue='BodyM')
     '''Font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
@@ -171,7 +176,7 @@ class GlowLabel(DeclarativeBehavior,
     '''
 
     theme_color = OptionProperty(
-        'Primary',
+        defaultvalue='Primary',
         options=(
             'Primary',
             'Secondary',
@@ -180,7 +185,7 @@ class GlowLabel(DeclarativeBehavior,
             'Warning',
             'Success',
             'Error',
-        )
+        ),
     )
     '''Available standard text color schemes.
 
@@ -188,23 +193,23 @@ class GlowLabel(DeclarativeBehavior,
     and defaults to `Primary`.
     '''
 
-    handle_image_left = StringProperty('atlas://data/images/defaulttheme/selector_left')
+    handle_image_left = StringProperty(defaultvalue='atlas://data/images/defaulttheme/selector_left')
     '''Image used to display the Left handle on the Label for selection.
 
     :attr:`handle_image_left` is an :class:`~kivy.properties.StringProperty`
     and defaults to `atlas://data/images/defaulttheme/selector_left`.
     '''
 
-    handle_image_right = StringProperty('atlas://data/images/defaulttheme/selector_right')
+    handle_image_right = StringProperty(defaultvalue='atlas://data/images/defaulttheme/selector_right')
     '''Image used to display the Right handle on the Label for selection.
 
     :attr:`handle_image_right` is an :class:`~kivy.properties.StringProperty`
     and defaults to `atlas://data/images/defaulttheme/selector_right`.
     '''
 
-    _selection_color = ColorProperty((1, 1, 1, 1))
-    _color = ColorProperty((1, 1, 1, 1))
-    _focus = BooleanProperty(False)
+    _selection_color = ColorProperty(defaultvalue=(1, 1, 1, 1))
+    _color = ColorProperty(defaultvalue=(1, 1, 1, 1))
+    _focus = BooleanProperty(defaultvalue=False)
     _font_properties = ('text', 'font_size', 'font_name', 'font_script_name',
                         'font_direction', 'bold', 'italic',
                         'underline', 'strikethrough', 'font_family', '_color',
@@ -218,7 +223,7 @@ class GlowLabel(DeclarativeBehavior,
                         'base_direction', 'text_language',
                         'limit_render_to_text_bbox')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.bind(color=self.setter('_color'))
         self.bind(selection_color=self.setter('_selection_color'))
 
@@ -266,7 +271,7 @@ class GlowLabel(DeclarativeBehavior,
             else:
                 self._label = CoreLabel(**dkw)
 
-    def _trigger_texture_update(self, name=None, source=None, value=None) -> None:
+    def _trigger_texture_update(self, name: str | None = None, source: Any = None, value: Any = None) -> None:
         '''Modified default function'''
         # check if the label core class need to be switch to a new one
         if name == 'markup':
@@ -310,8 +315,8 @@ class GlowLabel(DeclarativeBehavior,
 
         if (
             not self._label.text
-            or (self.halign == 'justify' or self.strip)
-            and not self._label.text.strip()
+            or ((self.halign == 'justify' or self.strip)
+            and not self._label.text.strip())
         ):
             self.texture_size = (0, 0)
             self.is_shortened = False
@@ -345,7 +350,7 @@ class GlowLabel(DeclarativeBehavior,
                 self.texture_size = list(self.texture.size)
             self.is_shortened = self._label.is_shortened
 
-    def on_font_style(self, label_instance: Self, font_style: str) -> None:
+    def on_font_style(self, instance: Self, font_style: str) -> None:
         '''Fired when the :attr:`font_style` value changes.'''
         if font_style in self.theme_cls.font_styles.keys():
             _font_style = self.theme_cls.font_styles[font_style]
@@ -355,7 +360,7 @@ class GlowLabel(DeclarativeBehavior,
             self.bold = _font_style['bold']
             self.italic = _font_style['italic']
 
-    def on_allow_selection(self, label_instance: Self, allow_selection: bool) -> None:
+    def on_allow_selection(self, instance: Self, allow_selection: bool) -> None:
         '''Fired when the :attr:`allow_selection` value changes.'''
         if allow_selection:
             Window.bind(on_key_down=self._on_keyboard_down,
@@ -364,7 +369,7 @@ class GlowLabel(DeclarativeBehavior,
             Window.unbind(on_key_down=self._on_keyboard_down,
                           on_touch_down=self._on_window_touch_down)
 
-    def on_theme_color(self, label_instance: Self, theme_color: str) -> None:
+    def on_theme_color(self, instance: Self, theme_color: str) -> None:
         '''Fired when the :attr:`theme_color` value changes.'''
 
         if self.color is None:
@@ -416,12 +421,12 @@ class GlowLabel(DeclarativeBehavior,
             else:
                 self._color = new_color
 
-    def on_handle_image_left(self, label_instance: Self, handle_image_left: str) -> None:
+    def on_handle_image_left(self, instance: Self, handle_image_left: str) -> None:
         '''Fired when the :attr:`handle_image_left` value changes.'''
         if self._handle_left:
             self._handle_left.source = handle_image_left
 
-    def on_handle_image_right(self, label_instance: Self, handle_image_right: str) -> None:
+    def on_handle_image_right(self, instance: Self, handle_image_right: str) -> None:
         '''Fired when the :attr:`handle_image_right` value changes.'''
         if self._handle_right:
             self._handle_right.source = handle_image_right
@@ -503,16 +508,14 @@ class GlowLabel(DeclarativeBehavior,
                             HoverBehavior.hovered_widget = self
                             self.dispatch('on_enter')
 
-                    else:
-                        if self.hover:
-                            HoverBehavior.hovered_widget = None
-                            self.hover = False
-                            self.dispatch('on_leave')
-                else:
-                    if self.hover:
+                    elif self.hover:
                         HoverBehavior.hovered_widget = None
                         self.hover = False
                         self.dispatch('on_leave')
+                elif self.hover:
+                    HoverBehavior.hovered_widget = None
+                    self.hover = False
+                    self.dispatch('on_leave')
 
         return False
 
@@ -575,14 +578,14 @@ class GlowLabel(DeclarativeBehavior,
     def _copy(self) -> None:
         '''Copy selected text to clipboard'''
         if self.allow_selection:
-            return Clipboard.copy(self.selected_text)
+            Clipboard.copy(self.selected_text)
 
     def _select_text(self) -> None:
         '''Select all text. Connected to tripple tap.'''
         self._selection_from = (0, 0)
         self._selection_to = len(self._label._cached_lines[-1].words[0].text) if self._label._cached_lines[-1].w > 0 else 0, self._label._cached_lines.index(self._label._cached_lines[-1])
 
-    def _select_word(self, delimiters: str = u' .,:;!?\'"<>()[]{}') -> None:
+    def _select_word(self, delimiters: str = ' .,:;!?\'"<>()[]{}') -> None:
         '''Select word. Connected to double tap.'''
         if self._selection_from is not None and self._selection_to is not None:
             if self._label._cached_lines[self._selection_from[1]].w > 0:
@@ -591,7 +594,7 @@ class GlowLabel(DeclarativeBehavior,
                 start_delimeters = [line[:self._selection_from[0]].rfind(s) + 1 for s in delimiters]
                 end_delimiters = [line[self._selection_from[0]:].find(s) for s in delimiters]
 
-                start = max([0] + start_delimeters)
+                start = max([0, *start_delimeters])
                 end = min([len(line)] + [value + self._selection_from[0] for value in end_delimiters if value > -1])
 
                 self._selection_from = (start, self._selection_from[1])
@@ -664,8 +667,8 @@ class GlowLabel(DeclarativeBehavior,
                         Rectangle(
                             pos=(self.x + line.x + self._label.get_extents(line.words[0].text[:x_start])[0], self.top - (line.y + line.h * self.line_height) - line.h / 2),
                             size=(self._label.get_extents(line.words[0].text[x_start:x_stop])[0], line.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
             elif y_start < y_stop:
                 line_from = self._label._cached_lines[y_start]
@@ -675,24 +678,24 @@ class GlowLabel(DeclarativeBehavior,
                         Rectangle(
                             pos=(self.x + line.x, self.top - (line.y + line.h * self.line_height) - line.h / 2),
                             size=(line.w, line.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
                 if line_from.w > 0:
                     self.canvas.before.add(
                         Rectangle(
                             pos=(self.x + line_from.x + self._label.get_extents(line_from.words[0].text[:x_start])[0], self.top - (line_from.y + line_from.h * self.line_height) - line_from.h / 2),
                             size=(self._label.get_extents(line_from.words[0].text[x_start:])[0], line_from.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
                 if line_to.w > 0:
                     self.canvas.before.add(
                         Rectangle(
                             pos=(self.x + line_to.x, self.top - (line_to.y + line_to.h * self.line_height) - line_to.h / 2),
                             size=(self._label.get_extents(line_to.words[0].text[:x_stop])[0], line_to.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
 
             elif y_start > y_stop:
@@ -703,8 +706,8 @@ class GlowLabel(DeclarativeBehavior,
                         Rectangle(
                             pos=(self.x + line.x, self.top - (line.y + line.h * self.line_height) - line.h / 2),
                             size=(line.w, line.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
 
                 if line_to.w > 0:
@@ -712,21 +715,20 @@ class GlowLabel(DeclarativeBehavior,
                         Rectangle(
                             pos=(self.x + line_to.x + self._label.get_extents(line_to.words[0].text[:x_stop])[0], self.top - (line_to.y + line_to.h * self.line_height) - line_to.h / 2),
                             size=(self._label.get_extents(line_to.words[0].text[x_stop:])[0], line_to.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
                 if line_from.w > 0:
                     self.canvas.before.add(
                         Rectangle(
                             pos=(self.x + line_from.x, self.top - (line_from.y + line_from.h * self.line_height) - line_from.h / 2),
                             size=(self._label.get_extents(line_from.words[0].text[:x_start])[0], line_from.h),
-                            group='selection'
-                        )
+                            group='selection',
+                        ),
                     )
 
-        else:
-            if self.widget_style == 'mobile':
-                self._hide_handles()
+        elif self.widget_style == 'mobile':
+            self._hide_handles()
 
     def _hide_handles(self, win: WindowBase = None) -> None:
         '''Hide selection control handlers.'''
@@ -790,7 +792,7 @@ class GlowLabel(DeclarativeBehavior,
     def _position_handles(self) -> None:
         '''Update handlers positions.'''
         left_handler_x, left_handler_y = 0, 0
-        right_handler_x, right_handler_x = 0, 0
+        right_handler_x, right_handler_y = 0, 0
 
         x = float('inf')
         w = self._label._internal_size[0]
@@ -802,8 +804,6 @@ class GlowLabel(DeclarativeBehavior,
         _from, _to = self._selection_from, self._selection_to
         if _from[1] > _to[1] or (_from[1] == _to[1] and _from[0] > _to[0]):
             _from, _to = _to, _from
-
-        local_x, local_y = self.to_window(self.x, self.y, relative=True)
 
         line_from = self._label._cached_lines[_from[1]]
         line_to = self._label._cached_lines[_to[1]]
@@ -826,11 +826,11 @@ class GlowLabel(DeclarativeBehavior,
         self._handle_left.pos = (left_handler_x - self._handle_left.width, left_handler_y - self._handle_left.height)
         self._handle_right.pos = (right_handler_x, right_handler_y - self._handle_right.height)
 
-    def _handle_pressed(self, handle_instance: Selector) -> None:
+    def _handle_pressed(self, instance: Selector) -> None:
         '''Fired at the handle on_touch_down event.'''
         self._hide_select_copy()
 
-    def _handle_released(self, handle_instance: Selector) -> None:
+    def _handle_released(self, instance: Selector) -> None:
         '''Fired at the handle on_touch_release event.'''
 
         if self._selection_from == self._selection_to:
@@ -839,35 +839,35 @@ class GlowLabel(DeclarativeBehavior,
         x, y = self.to_window(self.x, self.y)
         self._show_select_copy(
             (
-                x + handle_instance.right
-                if handle_instance is self._handle_left
-                else x + handle_instance.x,
-                y + handle_instance.top + self.line_height
+                x + instance.right
+                if instance is self._handle_left
+                else x + instance.x,
+                y + instance.top + self.line_height,
             ),
-            EventLoop.window
+            EventLoop.window,
         )
         return True
 
-    def _handle_move(self, handle_instance: Selector, touch: MotionEvent) -> None:
+    def _handle_move(self, instance: Selector, touch: MotionEvent) -> None:
         '''Fired at the handle on_touch_move event.'''
-        if touch.grab_current != handle_instance:
+        if touch.grab_current != instance:
             return False
 
         x, y = self.to_local(*touch.pos)
-        if handle_instance == self._handle_left:
+        if instance == self._handle_left:
             self._selection_from = self._get_index_at((x, y + self.font_size))
-        elif handle_instance == self._handle_right:
+        elif instance == self._handle_right:
             self._selection_to = self._get_index_at((x, y + self.font_size))
 
         self._update_selection()
         self._position_handles()
         return True
 
-    def _hide_select_copy(self, win: WindowBase = None) -> None:
+    def _hide_select_copy(self, win: WindowBase | None = None) -> None:
         '''Hide bubble with select_all and copy actions.'''
         bubble = self._bubble
         if not bubble:
-            return False
+            return
 
         bubble.hide()
 
@@ -876,9 +876,9 @@ class GlowLabel(DeclarativeBehavior,
         bubble = self._bubble
         if bubble is None:
             self._bubble = bubble = GlowLabelSelectCopy(label=self)
-            self.fbind('parent', self._show_select_copy, pos, win, True)
+            self.fbind('parent', self._show_select_copy, pos, win, True)  # noqa: FBT003
 
-            def hide_(*args):
+            def hide_(*args) -> None:
                 return self._hide_select_copy(win)
             self.bind(
                 _focus=hide_,
@@ -916,22 +916,21 @@ class GlowLabel(DeclarativeBehavior,
                 # bubble above window height
                 bubble_pos = (
                     win_size[0] - bubble_hw,
-                    (t_pos[1]) - (lh + ls + inch(.25))
+                    (t_pos[1]) - (lh + ls + inch(.25)),
                 )
                 bubble.arrow_pos = 'top_right'
             else:
                 bubble_pos = (win_size[0] - bubble_hw, bubble_pos[1])
                 bubble.arrow_pos = 'bottom_right'
+        elif bubble_pos[1] > (win_size[1] - bubble_size[1]):
+            # bubble above window height
+            bubble_pos = (
+                bubble_pos[0],
+                (t_pos[1]) - (lh + ls + inch(.25)),
+            )
+            bubble.arrow_pos = 'top_mid'
         else:
-            if bubble_pos[1] > (win_size[1] - bubble_size[1]):
-                # bubble above window height
-                bubble_pos = (
-                    bubble_pos[0],
-                    (t_pos[1]) - (lh + ls + inch(.25))
-                )
-                bubble.arrow_pos = 'top_mid'
-            else:
-                bubble.arrow_pos = 'bottom_mid'
+            bubble.arrow_pos = 'bottom_mid'
 
         bubble_pos = self.to_local(*bubble_pos)
         bubble.center_x = bubble_pos[0]
@@ -944,6 +943,6 @@ class GlowLabel(DeclarativeBehavior,
         win.add_widget(bubble, canvas='after')
         Animation(opacity=1, d=.225).start(bubble)
 
-    def _remove_bg_color_instruction(self, *args):
+    def _remove_bg_color_instruction(self, *args) -> None:
         '''Remove bg_color_instruction as we have own.'''
         self.canvas.remove_group('bg_color_instruction')

@@ -1,33 +1,36 @@
 __all__ = ('GlowTextField', )
 
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.behaviors import HoverBehavior
-from kivy.input.motionevent import MotionEvent
-from kivy.uix.textinput import TextInput
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.uix.label import Label
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import sp
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
 from kivy.core.window import (
-    WindowBase,
     Window,
+    WindowBase,
 )
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.metrics import sp
 from kivy.properties import (
+    BooleanProperty,
+    ColorProperty,
     NumericProperty,
     ObjectProperty,
     OptionProperty,
     StringProperty,
-    ColorProperty,
-    BooleanProperty
 )
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.behaviors import HoverBehavior
+from kivy_glow.uix.boxlayout import GlowBoxLayout
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'textfield', 'textfield.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'textfield', 'textfield.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -35,67 +38,67 @@ with open(
 class GlowTextField(HoverBehavior,
                     GlowBoxLayout):
 
-    font_size = NumericProperty('16sp')
+    font_size = NumericProperty(defaultvalue='16sp')
 
-    cursor_color = ColorProperty(None, allownone=True)
-    selection_color = ColorProperty(None, allownone=True)
+    cursor_color = ColorProperty(defaultvalue=None, allownone=True)
+    selection_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    focus_border_color = ColorProperty(None, allownone=True)
-    error_color = ColorProperty(None, allownone=True)
+    focus_border_color = ColorProperty(defaultvalue=None, allownone=True)
+    error_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    placeholder_color = ColorProperty(None, allownone=True)
+    placeholder_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    text_color = ColorProperty(None, allownone=True)
-    focus_text_color = ColorProperty(None, allownone=True)
-    disabled_text_color = ColorProperty(None, allownone=True)
+    text_color = ColorProperty(defaultvalue=None, allownone=True)
+    focus_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    disabled_text_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    label_color = ColorProperty(None, allownone=True)
-    focus_label_color = ColorProperty(None, allownone=True)
+    label_color = ColorProperty(defaultvalue=None, allownone=True)
+    focus_label_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    help_text_color = ColorProperty(None, allownone=True)
-    focus_help_text_color = ColorProperty(None, allownone=True)
+    help_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    focus_help_text_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    focus = BooleanProperty(False)
-    password = BooleanProperty(False)
-    error = BooleanProperty(False)
-    readonly = BooleanProperty(False)
-    required = BooleanProperty(False)
-    multiline = BooleanProperty(False)
+    focus = BooleanProperty(defaultvalue=False)
+    password = BooleanProperty(defaultvalue=False)
+    error = BooleanProperty(defaultvalue=False)
+    readonly = BooleanProperty(defaultvalue=False)
+    required = BooleanProperty(defaultvalue=False)
+    multiline = BooleanProperty(defaultvalue=False)
 
-    mode = OptionProperty('overlap', options=('overlap', 'inside', 'outside'))
-    border_style = OptionProperty('full', options=('full', 'underline'))
+    mode = OptionProperty(defaultvalue='overlap', options=('overlap', 'inside', 'outside'))
+    border_style = OptionProperty(defaultvalue='full', options=('full', 'underline'))
 
-    use_handles = BooleanProperty(None, allownone=True)
-    use_bubble = BooleanProperty(None, allownone=True)
+    use_handles = BooleanProperty(defaultvalue=None, allownone=True)
+    use_bubble = BooleanProperty(defaultvalue=None, allownone=True)
 
-    label = StringProperty('')
-    label_position = OptionProperty('left', options=('left', 'right', 'center'))
+    label = StringProperty(defaultvalue='')
+    label_position = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
 
-    help_text = StringProperty('')
-    help_text_position = OptionProperty('left', options=('left', 'right', 'center'))
+    help_text = StringProperty(defaultvalue='')
+    help_text_position = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
     help_text_mode = OptionProperty(
-        'persistent', options=['persistent', 'on_focus', 'on_error']
+        defaultvalue='persistent', options=['persistent', 'on_focus', 'on_error'],
     )
 
-    text = StringProperty('')
-    text_align = OptionProperty('left', options=('left', 'right', 'center'))
+    text = StringProperty(defaultvalue='')
+    text_align = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
 
-    placeholder = StringProperty('')
+    placeholder = StringProperty(defaultvalue='')
 
-    _cursor_color = ColorProperty((0, 0, 0, 0))
-    _selection_color = ColorProperty((0, 0, 0, 0))
-    _focus_border_color = ColorProperty((0, 0, 0, 0))
-    _error_color = ColorProperty((0, 0, 0, 0))
-    _placeholder_color = ColorProperty((0, 0, 0, 0))
-    _text_color = ColorProperty((0, 0, 0, 0))
-    _focus_text_color = ColorProperty((0, 0, 0, 0))
-    _disabled_text_color = ColorProperty((0, 0, 0, 0))
-    _label_color = ColorProperty((0, 0, 0, 0))
-    _focus_label_color = ColorProperty((0, 0, 0, 0))
-    _help_text_color = ColorProperty((0, 0, 0, 0))
-    _focus_help_text_color = ColorProperty((0, 0, 0, 0))
+    _cursor_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _selection_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _focus_border_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _error_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _placeholder_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _focus_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _disabled_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _label_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _focus_label_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _help_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _focus_help_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
-    mask = StringProperty('')
+    mask = StringProperty(defaultvalue='')
     '''
     "L" - Character of the Letter category required, such as A-Z, a-z.
     "l" - Character of the Letter category permitted but not required.
@@ -121,12 +124,12 @@ class GlowTextField(HoverBehavior,
     "b" - Binary character permitted but not required.
 
     \\ - Use \\ to escape the special characters listed above to use them as separators.
-    '''  # noqa W605
+    '''
 
-    left_content = ObjectProperty(None, allownone=True)
-    right_content = ObjectProperty(None, allownone=True)
+    left_content = ObjectProperty(defaultvalue=None, allownone=True)
+    right_content = ObjectProperty(defaultvalue=None, allownone=True)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self._textfield = None
 
         self._mask = []
@@ -153,7 +156,7 @@ class GlowTextField(HoverBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_textfield, -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if self._textfield is not None:
             if parent is None:
                 self._textfield.unbind(focus=self.setter('focus'),
@@ -187,21 +190,20 @@ class GlowTextField(HoverBehavior,
                         self.hover = True
                         self.dispatch('on_enter')
 
-                else:
-                    if self.hover:
-                        HoverBehavior.hovered_widget = None
-                        self.hover = False
-                        self.dispatch('on_leave')
+                elif self.hover:
+                    HoverBehavior.hovered_widget = None
+                    self.hover = False
+                    self.dispatch('on_leave')
 
         return False
 
-    def on_enter(self):
+    def on_enter(self) -> None:
         Window.set_system_cursor('ibeam')
 
-    def on_leave(self):
+    def on_leave(self) -> None:
         Window.set_system_cursor('arrow')
 
-    def initialize_textfield(self, *args):
+    def initialize_textfield(self, *args) -> None:
         self._textfield = self.ids.textfield
 
         self._textfield.bind(focus=self.setter('focus'),
@@ -220,21 +222,21 @@ class GlowTextField(HoverBehavior,
         if self.required:
             self.on_text(self, self.text)
 
-    def on_left_content(self, _, __):
+    def on_left_content(self, instance: Self, value: Widget) -> None:
         if self.left_content is not None:
             self.left_content.pos_hint = {'center_y': 0.5}
             self.left_content.hidden = self.hidden
             Clock.schedule_once(lambda _: self.add_widget(self.left_content, index=2), -1)
             self.bind(hidden=self.left_content.setter('hidden'))
 
-    def on_right_content(self, _, __):
+    def on_right_content(self, instance: Self, value: Widget) -> None:
         if self.right_content is not None:
             self.right_content.pos_hint = {'center_y': 0.5}
             self.right_content.hidden = self.hidden
             Clock.schedule_once(lambda _: self.add_widget(self.right_content, index=0), -1)
             self.bind(hidden=self.right_content.setter('hidden'))
 
-    def set_default_colors(self, *args):
+    def set_default_colors(self, *args) -> None:
         self.background_color = 0, 0, 0, 0
 
         if self.bg_color is None:
@@ -362,7 +364,7 @@ class GlowTextField(HoverBehavior,
         if self.error_color is None:
             self._error_color = self.theme_cls.error_color
 
-    def on_focus(self, _, __):
+    def on_focus(self, instance: Self, value: bool) -> None:
         if not self.error:
             if self.focus:
                 animation = (
@@ -379,7 +381,7 @@ class GlowTextField(HoverBehavior,
                     & Animation(_help_text_color=self.help_text_color if self.help_text_color else self.theme_cls.secondary_text_color, d=.2))
                 animation.start(self)
 
-    def on_error(self, _, __):
+    def on_error(self, instance: Self, value: bool) -> None:
         if self.error:
             animation = (
                 Animation(_border_color=self._error_color, d=.2)
@@ -390,18 +392,18 @@ class GlowTextField(HoverBehavior,
         else:
             self.on_focus(self, self.focus)
 
-    def on_label(self, _, __):
+    def on_label(self, instance: Self, value: str) -> None:
         self._label.text = ' ' + self.label + ' '
 
-    def on_help_text(self, _, __):
+    def on_help_text(self, instance: Self, value: str) -> None:
         self._help_text.text = self.help_text
 
-    def on_placeholder(self, _, __):
+    def on_placeholder(self, instance: Self, value: str) -> None:
         self.ids.textfield.hint_text = self.placeholder
 
-    def _apply_mask(self, text, fill: bool = True):
+    def _apply_mask(self, text: str, fill: bool = True) -> None:
 
-        def get_text_character(text, text_position):
+        def get_text_character(text: str, text_position: int) -> str:
             character = ''
             if text_position < len(text):
                 character = text[text_position]
@@ -428,36 +430,34 @@ class GlowTextField(HoverBehavior,
 
         return masked_text
 
-    def _get_masked_character(self, mask, char):
+    def _get_masked_character(self, mask: str, char: str) -> str:
         if mask[0] == '\\':
             return mask[1]
-        else:
-            if mask in ('L', 'l') and char.isalpha():
-                return char
-            elif mask in ('W', 'w') and (char.isalpha() or char.isdigit()):
-                return char
-            elif mask in ('X', 'x') and char != ' ':
-                return char
-            elif mask in ('9', '0') and char.isdigit():
-                return char
-            elif mask in ('D', 'd') and char.isdigit() and char != '0':
-                return char
-            elif mask == '#' and char in ('+', '-'):
-                return char
-            elif mask in ('H', 'h') and (char.isdigit() or char in ('A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f')):
-                return char
-            elif mask in ('B', 'b') and char in ('0', '1'):
-                return char
-            elif mask in ('l', 'w', 'x', '0', 'd', '#', 'h', 'b'):
-                return 'next'
-            elif mask in ('L', 'W', 'X', '9', 'D', 'H', 'B'):
-                return 'empty'
-            else:
-                return mask
 
-        return ''
+        if mask in {'L', 'l'} and char.isalpha():
+            return char
+        if mask in {'W', 'w'} and (char.isalpha() or char.isdigit()):
+            return char
+        if mask in {'X', 'x'} and char != ' ':
+            return char
+        if mask in {'9', '0'} and char.isdigit():
+            return char
+        if mask in {'D', 'd'} and char.isdigit() and char != '0':
+            return char
+        if mask == '#' and char in {'+', '-'}:
+            return char
+        if mask in {'H', 'h'} and (char.isdigit() or char in {'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f'}):
+            return char
+        if mask in {'B', 'b'} and char in {'0', '1'}:
+            return char
+        if mask in {'l', 'w', 'x', '0', 'd', '#', 'h', 'b'}:
+            return 'next'
+        if mask in {'L', 'W', 'X', '9', 'D', 'H', 'B'}:
+            return 'empty'
 
-    def on_mask(self, _, __):
+        return mask
+
+    def on_mask(self, instance: Self, value: str) -> None:
         mask = list(self.mask)
         self._mask = []
         while len(mask):
@@ -469,17 +469,17 @@ class GlowTextField(HoverBehavior,
 
         self.on_text(self, self.text)
 
-    def on_text(self, _, text):
+    def on_text(self, instance: Self, text: str) -> None:
         if len(self._mask) and not self._mask_is_applied:
             self.text = self._apply_mask(text)
             self._mask_is_applied = False
 
         if self.required:
             if len(self.mask):
-                self.error = self.text != self._apply_mask(self.text, False)
+                self.error = self.text != self._apply_mask(self.text, fill=False)
                 self._mask_is_applied = False
             else:
                 self.error = len(self.text) == 0
 
-    def insert_text(self, substring, from_undo=False):
+    def insert_text(self, substring: str, from_undo: bool = False) -> None:
         return TextInput.insert_text(self.ids.textfield, substring, from_undo=from_undo)

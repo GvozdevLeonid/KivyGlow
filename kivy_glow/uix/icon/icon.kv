@@ -7,7 +7,7 @@
     font_style: ''
     GlowLabel:
         id: glow_icon_badge
-        text: u'{}'.format(icons[root.badge_content]) if root.badge_content in icons.keys() else root.badge_content
+        text: icons[root.badge_content] if root.badge_content in icons.keys() else root.badge_content
         font_name: 'Icons' if root.badge_content in icons.keys() else root.badge_font_name
         hidden: True if root.badge_content == '' else False
         border_radius: root.badge_border_radius

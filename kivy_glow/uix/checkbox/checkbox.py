@@ -1,29 +1,31 @@
 __all__ = ('GlowCheckbox', )
 
-from kivy.uix.behaviors import ToggleButtonBehavior
-from kivy.input.motionevent import MotionEvent
-from kivy_glow.uix.widget import GlowWidget
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.core.window import Window
-from kivy.lang import Builder
-from kivy.clock import Clock
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.properties import (
+    BooleanProperty,
+    ColorProperty,
+    OptionProperty,
+    StringProperty,
+)
+from kivy.uix.behaviors import ToggleButtonBehavior
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
 from kivy_glow.uix.behaviors import (
     HoverBehavior,
     ScaleBehavior,
 )
-from kivy.properties import (
-    BooleanProperty,
-    OptionProperty,
-    StringProperty,
-    ColorProperty,
-)
+from kivy_glow.uix.widget import GlowWidget
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'checkbox', 'checkbox.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'checkbox', 'checkbox.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -44,64 +46,64 @@ class GlowCheckbox(ToggleButtonBehavior,
     classes documentation.
     '''
 
-    active = BooleanProperty(False)
+    active = BooleanProperty(devaultvalue=False)
     '''Checkbox state
 
     :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    checkbox_icon_inactive = StringProperty('checkbox-blank-outline')
+    checkbox_icon_inactive = StringProperty(devaultvalue='checkbox-blank-outline')
     '''inactive checkbox icon
 
     :attr:`checkbox_icon_inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `checkbox-blank-outline`.
     '''
-    checkbox_icon_active = StringProperty('checkbox-marked-outline')
+    checkbox_icon_active = StringProperty(devaultvalue='checkbox-marked-outline')
     '''active checkbox icon
 
     :attr:`checkbox_icon_active` is an :class:`~kivy.properties.StringProperty`
     and defaults to `checkbox-marked-outline`.
     '''
 
-    radio_icon_inactive = StringProperty('radiobox-blank')
+    radio_icon_inactive = StringProperty(devaultvalue='radiobox-blank')
     '''inactive radio icon
 
     :attr:`radio_icon_inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `radiobox-blank`.
     '''
 
-    radio_icon_active = StringProperty('radiobox-marked')
+    radio_icon_active = StringProperty(devaultvalue='radiobox-marked')
     '''inactive radio icon
 
     :attr:`inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `radiobox-marked`.
     '''
 
-    active_color = ColorProperty(None, allownone=True)
+    active_color = ColorProperty(devaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the active checkbox
 
     :attr:`active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    inactive_color = ColorProperty(None, allownone=True)
+    inactive_color = ColorProperty(devaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the inactive checkbox
 
     :attr:`inactive_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    animation = OptionProperty('decrease', options=('decrease', 'increase'))
+    animation = OptionProperty(devaultvalue='decrease', options=('decrease', 'increase'))
     '''Animation option (decrease', increase)
 
     :attr:`animation` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `decrease`.
     '''
-    _active_color = ColorProperty((0, 0, 0, 0), allow_none=True)
-    _inactive_color = ColorProperty((0, 0, 0, 0), allow_none=True)
-    _color = ColorProperty((0, 0, 0, 0))
-    _icon = StringProperty('blank')
+    _active_color = ColorProperty(devaultvalue=(0, 0, 0, 0))
+    _inactive_color = ColorProperty(devaultvalue=(0, 0, 0, 0))
+    _color = ColorProperty(devaultvalue=(0, 0, 0, 0))
+    _icon = StringProperty(devaultvalue='blank')
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))
@@ -129,14 +131,14 @@ class GlowCheckbox(ToggleButtonBehavior,
         '''Fired at the Checkbox hover leave event.'''
         Window.set_system_cursor('arrow')
 
-    def on_active(self, checkbox_instance: Self, active: bool) -> None:
+    def on_active(self, instance: Self, active: bool) -> None:
         '''Fired when the :attr:`active` value changes.'''
         if active:
             self.state = 'down'
         else:
             self.state = 'normal'
 
-    def on_state(self, checkbox_instance: Self, state: str) -> None:
+    def on_state(self, instance: Self, state: str) -> None:
         '''Fired when the :attr:`state` value changes.'''
 
         if state == 'down':
@@ -169,7 +171,7 @@ class GlowCheckbox(ToggleButtonBehavior,
 
             self.active = False
 
-    def on_animation(self, checkbox_instance: Self, animation: str) -> None:
+    def on_animation(self, instance: Self, animation: str) -> None:
         if animation == 'decrease':
             self._animation = (
                 Animation(

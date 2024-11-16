@@ -3,8 +3,8 @@ __all__ = ('GlowScrollView', )
 from kivy.uix.scrollview import ScrollView
 
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )

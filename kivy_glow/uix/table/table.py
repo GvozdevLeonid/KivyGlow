@@ -1,83 +1,88 @@
 __all__ = ('GlowTable', )
 
-from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
-from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from kivy_glow.uix.paginator import GlowPaginator
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.behaviors import HoverBehavior
-import kivy_glow.uix.table.cells as table_cells
-from kivy_glow.uix.checkbox import GlowCheckbox
-from kivy.effects.scroll import ScrollEffect
-from kivy_glow.uix.button import GlowButton
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import dp
-from typing import Self
-import uuid
 import os
+import uuid
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.effects.scroll import ScrollEffect
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import (
-    NumericProperty,
     BooleanProperty,
-    OptionProperty,
-    StringProperty,
-    ObjectProperty,
     ColorProperty,
     ListProperty,
+    NumericProperty,
+    ObjectProperty,
+    OptionProperty,
+    StringProperty,
 )
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from kivy.uix.widget import Widget
+
+import kivy_glow.uix.table.cells as table_cells
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.behaviors import HoverBehavior
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.button import GlowButton
+from kivy_glow.uix.checkbox import GlowCheckbox
+from kivy_glow.uix.paginator import GlowPaginator
+from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
+from kivy_glow.uix.recycleview import GlowRecycleView
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'table', 'table.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'table', 'table.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
 
-def get_cell_property_connection(cell_idx, cell_property, cell_property_type, offset):
+def get_cell_property_connection(cell_idx: int, cell_property: str, cell_property_type: int, offset: int) -> str:
     if cell_property_type == 'str':
         return ' ' * offset + f'{cell_property}: str(root.col_{cell_idx}_{cell_property}) if root.col_{cell_idx}_{cell_property} is not None else ""\n'
-    elif cell_property_type == 'int':
+    if cell_property_type == 'int':
         return ' ' * offset + f'{cell_property}: int(root.col_{cell_idx}_{cell_property}) if root.col_{cell_idx}_{cell_property} is not None else 0\n'
-    elif cell_property_type == 'float':
+    if cell_property_type == 'float':
         return ' ' * offset + f'{cell_property}: float(root.col_{cell_idx}_{cell_property})if root.col_{cell_idx}_{cell_property} is not None else 0.0\n'
-    elif cell_property_type == 'bool':
+    if cell_property_type == 'bool':
         return ' ' * offset + f'{cell_property}: root.col_{cell_idx}_{cell_property}\n'
-    elif cell_property_type == 'tuple':
+    if cell_property_type == 'tuple':
         return ' ' * offset + f'{cell_property}: tuple(root.col_{cell_idx}_{cell_property}) if root.col_{cell_idx}_{cell_property} is not None else ()\n'
-    elif cell_property_type == 'list':
+    if cell_property_type == 'list':
         return ' ' * offset + f'{cell_property}: list(root.col_{cell_idx}_{cell_property}) if root.col_{cell_idx}_{cell_property} is not None else []\n'
-    elif cell_property_type == 'color':
+    if cell_property_type == 'color':
         return ' ' * offset + f'{cell_property}: tuple(root.col_{cell_idx}_{cell_property}) if root.col_{cell_idx}_{cell_property} is not None else (0, 0, 0, 0)\n'
-    elif cell_property_type == 'function':
+    if cell_property_type == 'function':
         return ' ' * offset + f'{cell_property}:\n' \
             + ' ' * (offset + 4) + f'root.col_{cell_idx}_{cell_property}(root.table, self) if root.col_{cell_idx}_{cell_property} is not None and not root.refreshing else None\n'
-    else:
-        return ' ' * offset + f'{cell_property}: root.col_{cell_idx}_{cell_property}\n'
+
+    return ' ' * offset + f'{cell_property}: root.col_{cell_idx}_{cell_property}\n'
 
 
 class GlowTableRow(GlowBoxLayout,
                    HoverBehavior,
                    RecycleDataViewBehavior):
 
-    index = NumericProperty(None, allownone=True)
-    selected = BooleanProperty(False)
+    index = NumericProperty(defaultvalue=None, allownone=True)
+    selected = BooleanProperty(defaultvalue=False)
 
     _clicked = False
     refreshing = False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.size_hint_y = None
 
-    def refresh_view_attrs(self, rv, index, data):
+    def refresh_view_attrs(self, instance: GlowRecycleView, index: int, data: dict) -> None:
         ''' Catch and handle the view changes '''
         self.opacity = 0
         self.refreshing = True
 
-        setattr(self, 'idx', data['idx'])
-        super().refresh_view_attrs(rv, index, data)
+        self.idx = data['idx']
+        super().refresh_view_attrs(instance, index, data)
 
         self.bg_color = self.row_bg_color
         self.index = index
@@ -86,12 +91,12 @@ class GlowTableRow(GlowBoxLayout,
 
         Clock.schedule_once(self._set_visible)
 
-    def _set_visible(self, *args):
+    def _set_visible(self, *args) -> None:
         self.height = max(dp(56), self.minimum_height)
         self.opacity = 1
         self.refreshing = False
 
-    def on_touch_down(self, touch):
+    def on_touch_down(self, touch: MotionEvent) -> bool:
         if not self.collide_point(touch.x, touch.y):
             return False
 
@@ -114,7 +119,7 @@ class GlowTableRow(GlowBoxLayout,
         self.table.dispatch('on_row_press', self)
         return True
 
-    def apply_selection(self, rv, index, is_selected):
+    def apply_selection(self, instance: GlowRecycleView, index: int, is_selected: bool) -> None:
         self.selected = is_selected
         if not self._clicked and 'row_checkbox' in self.ids:
             self.ids.row_checkbox.active = self.selected
@@ -123,10 +128,10 @@ class GlowTableRow(GlowBoxLayout,
 
         self._clicked = False
 
-    def on_enter(self):
+    def on_enter(self) -> None:
         self.bg_color = self.hover_row_bg_color
 
-    def on_leave(self):
+    def on_leave(self) -> None:
         self.bg_color = self.row_bg_color
 
 
@@ -135,12 +140,12 @@ class SelectableRecycleBoxLayout(LayoutSelectionBehavior, GlowRecycleBoxLayout):
 
 
 class GlowTable(GlowBoxLayout):
-    use_pagination = BooleanProperty(False)
+    use_pagination = BooleanProperty(defaultvalue=False)
     pagination_pos = OptionProperty(
-        'right', options=['left', 'center', 'right']
+        defaultvalue='right', options=['left', 'center', 'right'],
     )
 
-    rows_per_page = NumericProperty(10)
+    rows_per_page = NumericProperty(defaultvalue=10)
 
     columns_info = ListProperty()
     '''
@@ -159,39 +164,39 @@ class GlowTable(GlowBoxLayout):
     '''
     table_data = ListProperty()
 
-    use_pagination = BooleanProperty(False)
+    use_pagination = BooleanProperty(defaultvalue=False)
 
-    sorted_on = NumericProperty(None, allownone=True)
+    sorted_on = NumericProperty(defaultvalue=None, allownone=True)
     '''
         By which column is the input data sorted
     '''
-    sorted_order = OptionProperty('ASC', options=['ASC', 'DSC'])
+    sorted_order = OptionProperty(defaultvalue='ASC', options=['ASC', 'DSC'])
 
-    selectable = BooleanProperty(False)
+    selectable = BooleanProperty(defaultvalue=False)
     '''
         Use or not use checkboxes for rows.
     '''
 
-    effect_cls = ObjectProperty(ScrollEffect)
+    effect_cls = ObjectProperty(defaultvalue=ScrollEffect)
 
-    header_color = ColorProperty(None, allownone=True)
-    odd_row_color = ColorProperty(None, allownone=True)
-    even_row_color = ColorProperty(None, allownone=True)
-    hover_row_color = ColorProperty(None, allownone=True)
+    header_color = ColorProperty(defaultvalue=None, allownone=True)
+    odd_row_color = ColorProperty(defaultvalue=None, allownone=True)
+    even_row_color = ColorProperty(defaultvalue=None, allownone=True)
+    hover_row_color = ColorProperty(defaultvalue=None, allownone=True)
 
-    _header_color = ColorProperty((0, 0, 0, 0))
-    _odd_row_color = ColorProperty((0, 0, 0, 0))
-    _even_row_color = ColorProperty((0, 0, 0, 0))
-    _hover_row_color = ColorProperty((0, 0, 0, 0))
+    _header_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _odd_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _even_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hover_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
     _viewclass = StringProperty('GlowTableRow')
-    _cell_viewclasses = []
-    _formatted_table_data = []
+    _cell_viewclasses = []  # noqa: RUF012
+    _formatted_table_data = []  # noqa: RUF012
     _display_table_data = ListProperty()
-    _selected_rows = {}
-    _original_rows = {}
+    _selected_rows = {}  # noqa: RUF012
+    _original_rows = {}  # noqa: RUF012
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self._header = None
         self.paginator = None
         self.table_checkbox = None
@@ -218,7 +223,7 @@ class GlowTable(GlowBoxLayout):
 
         self.orientation = 'vertical'
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             if self._header is not None:
                 self._header.unbind(height=self.ids.glow_table_header.setter('height'),
@@ -247,22 +252,22 @@ class GlowTable(GlowBoxLayout):
         return super().on_parent(instance, parent)
 
     @property
-    def selected_rows(self):
+    def selected_rows(self) -> list[int]:
         return [idx for idx, selected in self._selected_rows.items() if selected]
 
     @property
-    def selected_original_rows(self):
+    def selected_original_rows(self) -> list[int]:
         return [self._original_rows[idx] for idx in self.selected_rows]
 
     @property
-    def selected_rows_data(self):
+    def selected_rows_data(self) -> list[dict]:
         return [self.table_data[idx] for idx in self.selected_original_rows]
 
     @property
-    def selected_original_rows_data(self):
+    def selected_original_rows_data(self) -> list[dict]:
         return [self.table_data[idx] for idx in self.selected_rows]
 
-    def set_default_colors(self, *args):
+    def set_default_colors(self, *args) -> None:
 
         if self.bg_color is None:
             self._bg_color = self.theme_cls.background_darkest_color
@@ -325,7 +330,7 @@ class GlowTable(GlowBoxLayout):
                     child.text_color = self.theme_cls.text_color
                     child.icon_color = self.theme_cls.text_color
 
-    def initialize_table(self, *args):
+    def initialize_table(self, *args) -> None:
         self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
 
         if self.use_pagination:
@@ -336,10 +341,10 @@ class GlowTable(GlowBoxLayout):
                           minimum_width=self._header.setter('size_hint_min_x'))
         self._header.bind(minimum_width=self.ids.glow_table_layout.setter('size_hint_min_x'))
 
-    def on_columns_info(self, _, __):
+    def on_columns_info(self, instance: Self, value: list[dict]) -> None:
         self.__update_table_view()
 
-    def on_sorted_order(self, _, __):
+    def on_sorted_order(self, instance: Self, value: str) -> None:
         if self.selectable:
             columns = self._header.children[::-1][1:]
         else:
@@ -350,7 +355,7 @@ class GlowTable(GlowBoxLayout):
         else:
             columns[self.sorted_on].icon = 'arrow-up'
 
-    def on_sorted_on(self, _, __):
+    def on_sorted_on(self, instance: Self, value: int) -> None:
         if self.selectable:
             columns = self._header.children[::-1][1:]
         else:
@@ -361,14 +366,14 @@ class GlowTable(GlowBoxLayout):
         else:
             columns[self.sorted_on].icon = 'arrow-up'
 
-    def on_table_data(self, _, __):
+    def on_table_data(self, instance: Self, value: list) -> None:
         self.__update_table_data()
 
-    def on_rows_per_page(self, table_instance: Self, rows_per_page: int) -> None:
+    def on_rows_per_page(self, instance: Self, rows_per_page: int) -> None:
         if self.paginator is not None:
             self.paginator.items_per_page = rows_per_page
 
-    def on_use_pagination(self, _, __):
+    def on_use_pagination(self, instance: Self, valie: bool) -> None:
         self.paginator = GlowPaginator(
             items_per_page=self.rows_per_page,
             pos_hint={'right': 1} if self.pagination_pos == 'right' else ({'left': 0} if self.pagination_pos == 'left' else {'center_x': .5}),
@@ -376,7 +381,7 @@ class GlowTable(GlowBoxLayout):
         )
         self.paginator.bind(on_page_changed=self._update_display_table_data)
 
-    def select_all(self, is_selected):
+    def select_all(self, is_selected: bool) -> None:
         '''
             Uncselect or select checkboxes on the entire page.
             If update_selected_rows is False then only the visual representation will be produced
@@ -416,10 +421,10 @@ class GlowTable(GlowBoxLayout):
         for row_idx in table_rows_ids:
             self.select_one(row_idx, is_selected)
 
-    def update_table_data(self):
-        self.__update_table_data(False)
+    def update_table_data(self) -> None:
+        self.__update_table_data(update_selected_rows=False)
 
-    def __on_click_column(self, instance, column: int):
+    def __on_click_column(self, instance: Self, column: int) -> None:
         sorting_function = self.columns_info[column].get('sorting_function', None)
 
         if sorting_function is not None:
@@ -467,16 +472,16 @@ class GlowTable(GlowBoxLayout):
                     if selected:
                         self.ids.glow_table_layout.select_node(idx)
 
-    def _on_click_table_checkbox(self, checkbox_instance: GlowCheckbox, active):
+    def _on_click_table_checkbox(self, instance: GlowCheckbox, active: bool) -> None:
         self.select_all(active)
 
-    def __update_table_view(self):
+    def __update_table_view(self) -> None:
         if self._header is None:
             self._header = GlowBoxLayout(
                 adaptive_height=True,
                 orientation='horizontal',
                 bg_color=self._header_color,
-                padding=['10dp', ],
+                padding=['10dp'],
                 spacing='5dp',
             )
             self.bind(_header_color=self._header.setter('bg_color'))
@@ -528,8 +533,8 @@ class GlowTable(GlowBoxLayout):
                     anchor_x='left',
                     padding=(0, ),
                     mode='text',
-                    on_press=lambda button, column=cell_idx: self.__on_click_column(button, column)
-                )
+                    on_press=lambda button, column=cell_idx: self.__on_click_column(button, column),
+                ),
             )
 
             cell_viewclass = getattr(table_cells, cell_viewclass_name)
@@ -577,7 +582,7 @@ class GlowTable(GlowBoxLayout):
 
                     formatted_cell_properties.append(cell_property)
                 elif cell_property == 'value':
-                    cell_property, cell_property_type = cell_viewclass.value_property
+                    cell_property, cell_property_type = cell_viewclass.value_property  # noqa: PLW2901
                     view_body += get_cell_property_connection(cell_idx, cell_property, cell_property_type, offset)
 
                 if cell_property_type != 'function':
@@ -597,10 +602,10 @@ class GlowTable(GlowBoxLayout):
         self._viewclass = f'{viewclass}'
         self._cell_viewclasses = _cell_viewclasses
 
-    def __update_table_data(self, update_selected_rows: bool = True):
+    def __update_table_data(self, update_selected_rows: bool = True) -> None:
         if update_selected_rows:
-            self.select_all(False)
-            self._selected_rows = {i: False for i in range(len(self.table_data))}
+            self.select_all(is_selected=False)
+            self._selected_rows = dict.fromkeys(range(len(self.table_data)), False)
             self._original_rows = {i: i for i in range(len(self.table_data))}
         formatted_table_data = []
 
@@ -634,7 +639,7 @@ class GlowTable(GlowBoxLayout):
         else:
             self._display_table_data = self._formatted_table_data
 
-    def update_table_row_data(self, row_idx: int, row_data):
+    def update_table_row_data(self, row_idx: int, row_data: list) -> None:
         formatted_row_data = {}
         for cell_idx, cell_data in enumerate(row_data):
             if isinstance(cell_data, dict):
@@ -660,7 +665,7 @@ class GlowTable(GlowBoxLayout):
         else:
             self._display_table_data = self._formatted_table_data
 
-    def __update_colors(self, *args):
+    def __update_colors(self, *args) -> None:
         for row_idx, row_data in enumerate(self._formatted_table_data):
             if row_idx % 2 == 0:
                 row_data['row_bg_color'] = self._even_row_color
@@ -671,7 +676,7 @@ class GlowTable(GlowBoxLayout):
 
         self.ids.glow_table_view.refresh_from_data()
 
-    def _update_display_table_data(self, _, page):
+    def _update_display_table_data(self, instance: GlowPaginator, page: int) -> None:
         self._display_table_data = self.paginator.get_page_items()
         item_from, item_to = self.paginator.get_from_to()
 
@@ -684,10 +689,10 @@ class GlowTable(GlowBoxLayout):
             self.table_checkbox.active = False
         self._selected_rows = selected_rows
 
-    def on_row_press(self, row_instance: GlowTableRow) -> None:
+    def on_row_press(self, instance: GlowTableRow) -> None:
         '''Called when a table row is clicked.'''
         pass
 
-    def on_row_selected(self, row_instance: GlowTableRow) -> None:
+    def on_row_selected(self, instance: GlowTableRow) -> None:
         '''Called when the row is checked.'''
         pass

@@ -7452,7 +7452,7 @@ icons = {
     'zodiac-sagittarius': '\U000F0A85',
     'zodiac-scorpio': '\U000F0A86',
     'zodiac-taurus': '\U000F0A87',
-    'zodiac-virgo': '\U000F0A88'
+    'zodiac-virgo': '\U000F0A88',
 }
 
 '''

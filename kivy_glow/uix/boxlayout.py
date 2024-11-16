@@ -3,8 +3,8 @@ __all__ = ('GlowBoxLayout', )
 from kivy.uix.boxlayout import BoxLayout
 
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )

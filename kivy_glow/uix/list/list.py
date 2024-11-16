@@ -1,32 +1,34 @@
-__all__ = ('GlowList', 'GlowSelectableListItem', 'GlowListItem')
+__all__ = ('GlowList', 'GlowListItem', 'GlowSelectableListItem')
 
-from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
-from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from kivy_glow.uix.recycleview import GlowRecycleView
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy_glow.uix.behaviors import HoverBehavior
-from kivy.input.motionevent import MotionEvent
-from kivy.effects.scroll import ScrollEffect
-from kivy_glow.theme import ThemeManager
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import dp
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.effects.scroll import ScrollEffect
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import (
-    NumericProperty,
     BooleanProperty,
-    StringProperty,
-    ObjectProperty,
     ColorProperty,
     ListProperty,
+    NumericProperty,
+    ObjectProperty,
+    StringProperty,
 )
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.behaviors import HoverBehavior
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.recycleboxlayout import GlowRecycleBoxLayout
+from kivy_glow.uix.recycleview import GlowRecycleView
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'list', 'list.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'list', 'list.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -85,7 +87,7 @@ class GlowSelectableListItem(GlowBoxLayout,
     classes documentation.
     '''
 
-    selected = BooleanProperty(False)
+    selected = BooleanProperty(defaultvalue=False)
     '''If item is selected.
 
     You cannot change this value, the checkbox will still be enabled.
@@ -94,21 +96,21 @@ class GlowSelectableListItem(GlowBoxLayout,
     and defaults to `False`.
     '''
 
-    _index = NumericProperty(None, allownone=True)
+    _index = NumericProperty(defaultvalue=None, allownone=True)
     _clicked = False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.size_hint_y = None
         Clock.schedule_once(self.initialize_selectablelistitem, -1)
 
-    def refresh_view_attrs(self, recycleview_instance: GlowRecycleView, index: int, data: dict) -> None:
+    def refresh_view_attrs(self, instance: GlowRecycleView, index: int, data: dict) -> None:
         '''Catch and handle the view changes.'''
 
-        setattr(self, 'idx', data['idx'])
+        self.idx = data['idx']
         self.opacity = 0
 
-        super().refresh_view_attrs(recycleview_instance, index, data)
+        super().refresh_view_attrs(instance, index, data)
 
         self.bg_color = self.item_bg_color
         self._index = index
@@ -139,7 +141,7 @@ class GlowSelectableListItem(GlowBoxLayout,
         self.list.dispatch('on_item_press', self)
         return True
 
-    def apply_selection(self, recycleview_instance: GlowRecycleView, index: int, is_selected: bool) -> None:
+    def apply_selection(self, instance: GlowRecycleView, index: int, is_selected: bool) -> None:
         '''Internal item selection processing function.'''
         self.selected = is_selected
         if not self._clicked and 'item_checkbox' in self.ids:
@@ -199,17 +201,17 @@ class GlowListItem(GlowBoxLayout,
     :class:`~kivy.uix.recycleview.views.RecycleDataViewBehavior`
     classes documentation.
     '''
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.size_hint_y = None
 
-    def refresh_view_attrs(self, recycleview_instance: GlowRecycleView, index: int, data: dict) -> None:
+    def refresh_view_attrs(self, instance: GlowRecycleView, index: int, data: dict) -> None:
         ''' Catch and handle the view changes.'''
 
-        setattr(self, 'idx', data['idx'])
+        self.idx = data['idx']
         self.opacity = 0
 
-        super().refresh_view_attrs(recycleview_instance, index, data)
+        super().refresh_view_attrs(instance, index, data)
         self.bg_color = self.item_bg_color
         self.do_layout()
 
@@ -254,7 +256,7 @@ class GlowList(GlowBoxLayout):
     :attr:`list_data` is an :class:`~kivy.properties.list_data`
     '''
 
-    item_properties = ListProperty(None, allownone=True)
+    item_properties = ListProperty(defaultvalue=None, allownone=True)
     '''Properties list item. They will be applied in the same order as the values in the :attr:`list_data`
 
     Example:
@@ -272,47 +274,47 @@ class GlowList(GlowBoxLayout):
     and defaults to `None`.
     '''
 
-    viewclass = StringProperty('GlowSelectableListItem')
+    viewclass = StringProperty(defaultvalue='GlowSelectableListItem')
     '''List item view class
 
     :attr:`viewclass` is an :class:`~kivy.properties.StringProperty`
     and defaults to `GlowSelectableListItem`.
     '''
 
-    effect_cls = ObjectProperty(ScrollEffect)
+    effect_cls = ObjectProperty(defaultvalue=ScrollEffect)
     '''Effect applied to sroll
 
     :attr:`effect_cls` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `ScrollEffect`.
     '''
 
-    odd_item_color = ColorProperty(None, allownone=True)
+    odd_item_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the odd item
 
     :attr:`odd_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    even_item_color = ColorProperty(None, allownone=True)
+    even_item_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the even item
 
     :attr:`even_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hover_item_color = ColorProperty(None, allownone=True)
+    hover_item_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hover item
 
     :attr:`hover_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _odd_item_color = ColorProperty((0, 0, 0, 0))
-    _even_item_color = ColorProperty((0, 0, 0, 0))
-    _hover_item_color = ColorProperty((0, 0, 0, 0))
+    _odd_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _even_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hover_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
     _formatted_list_data = ListProperty()
-    _selected_items = {}
+    _selected_items: dict = {}  # noqa: RUF012
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(odd_item_color=self.setter('_odd_item_color'))
@@ -342,27 +344,27 @@ class GlowList(GlowBoxLayout):
         '''Returns selected items data.'''
         return [self.list_data[idx] for idx in self.selected_items]
 
-    def on_list_data(self, list_instance: Self, list_data: list[str | tuple | list | dict]) -> None:
+    def on_list_data(self, instance: Self, list_data: list[str | tuple | list | dict]) -> None:
         '''Fired when the :attr:`list_data` value changes.'''
         self.__update_list_data()
 
-    def on_item_properties(self, list_instance: Self, item_properties: list[str]) -> None:
+    def on_item_properties(self, instance: Self, item_properties: list[str]) -> None:
         '''Fired when the :attr:`item_properties` value changes.'''
         self.__update_list_data()
 
-    def on_item_press(self, item_instance: GlowSelectableListItem | GlowListItem) -> None:
+    def on_item_press(self, instance: GlowSelectableListItem | GlowListItem) -> None:
         '''Fired at the item on_touch_down event.'''
         pass
 
-    def on_item_selected(self, item_instance: GlowSelectableListItem | GlowListItem) -> None:
+    def on_item_selected(self, instance: GlowSelectableListItem | GlowListItem) -> None:
         '''Fired at the item selected event.'''
         pass
 
     def update_list_data(self) -> None:
         '''Updating display data.'''
-        self.__update_list_data(False)
+        self.__update_list_data(update_selected_items=False)
 
-    def update_list_item_data(self, item_idx: int, item_data) -> None:
+    def update_list_item_data(self, item_idx: int, item_data: dict | str) -> None:
         '''Updating display data for item.'''
         formated_item_data = {}
         if isinstance(item_data, dict):
@@ -411,20 +413,19 @@ class GlowList(GlowBoxLayout):
     def __update_list_data(self, update_selected_items: bool = True) -> None:
         '''Inner funciton for updating display data.'''
         if update_selected_items:
-            self.select_all(False)
-            self._selected_items = {i: False for i in range(len(self.list_data))}
+            self.select_all(is_selected=False)
+            self._selected_items = dict.fromkeys(range(len(self.list_data)), False)
         formatted_list_data = []
 
         for item_idx, item_data in enumerate(self.list_data):
             formated_item_data = {}
             if isinstance(item_data, dict):
                 formated_item_data = item_data.copy()
+            elif self.item_properties is not None:
+                for item_property, value in (zip(self.item_properties, item_data)):
+                    formated_item_data[item_property] = value
             else:
-                if self.item_properties is not None:
-                    for item_property, value in (zip(self.item_properties, item_data)):
-                        formated_item_data[item_property] = value
-                else:
-                    formated_item_data['text'] = item_data
+                formated_item_data['text'] = item_data
 
             formated_item_data['idx'] = item_idx
             if item_idx % 2 == 0:

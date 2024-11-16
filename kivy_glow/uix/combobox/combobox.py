@@ -1,20 +1,23 @@
 __all__ = ('GlowComboBox', )
 
-from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
-from kivy_glow.uix.textfield import GlowTextField
-from kivy_glow.uix.button import GlowButton
-from kivy_glow.theme import ThemeManager
+from typing import Self
+
 from kivy.clock import Clock
 from kivy.metrics import dp
-from typing import Self
 from kivy.properties import (
     BooleanProperty,
-    NumericProperty,
-    StringProperty,
-    OptionProperty,
     ColorProperty,
-    ListProperty
+    ListProperty,
+    NumericProperty,
+    OptionProperty,
+    StringProperty,
 )
+from kivy.uix.widget import Widget
+
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.button import GlowButton
+from kivy_glow.uix.dropdowncontainer import GlowDropDownContainer
+from kivy_glow.uix.textfield import GlowTextField
 
 
 class GlowComboBox(GlowTextField):
@@ -34,120 +37,120 @@ class GlowComboBox(GlowTextField):
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
 
-    selected_item = StringProperty(None)
+    selected_item = StringProperty(defaultvalue=None)
     '''Current selected item
 
     :attr:`active` is an :class:`~kivy.properties.StringProperty`
     '''
 
-    direction = OptionProperty('down', options=('down', 'up'))
+    direction = OptionProperty(defaultvalue='down', options=('down', 'up'))
     '''Expansion direction
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
     '''
 
-    use_separator = BooleanProperty(True)
+    use_separator = BooleanProperty(defaultvalue=True)
     '''Whether to add a separator between elements
 
     :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`.
     and default to `True`.
     '''
 
-    icon = StringProperty('unfold-more-horizontal')
+    icon = StringProperty(defaultvalue='unfold-more-horizontal')
     '''Combobox icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and default to `unfold-more-horizontal`.
     '''
 
-    selected_item_icon = StringProperty('check')
+    selected_item_icon = StringProperty(defaultvalue='check')
     '''Icon for selected item
 
     :attr:`selected_item_icon` is an :class:`~kivy.properties.StringProperty`
     and default to `check`.
     '''
 
-    item_text_color = ColorProperty(None, allownone=True)
+    item_text_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the item text
 
     :attr:`item_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selected_item_icon_color = ColorProperty(None, allownone=True)
+    selected_item_icon_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the selected item icon
 
     :attr:`selected_item_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selected_item_text_color = ColorProperty(None, allownone=True)
+    selected_item_text_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the selected item text
 
     :attr:`selected_item_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    max_height = NumericProperty(None, allownone=True)
+    max_height = NumericProperty(defaultvalue=None, allownone=True)
     '''Maximum expansion height
 
     :attr:`max_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    opening_transition = StringProperty('out_cubic')
+    opening_transition = StringProperty(defaultvalue='out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    button_icon_color = ColorProperty(None, allownonw=True)
+    button_icon_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button icon color
 
     :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    button_border_color = ColorProperty(None, allownonw=True)
+    button_border_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button border color
 
     :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    dropdown_bg_color = ColorProperty(None, allownonw=True)
+    dropdown_bg_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Dropdown bg color
 
     :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _item_text_color = ColorProperty((0, 0, 0, 0))
-    _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
-    _selected_item_text_color = ColorProperty((0, 0, 0, 0))
+    _item_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _selected_item_icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _selected_item_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -164,7 +167,7 @@ class GlowComboBox(GlowTextField):
 
         Clock.schedule_once(self.initialize_combobox, -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if self.dropdown_container is not None:
             if parent is None:
                 self.unbind(width=self.dropdown_container.setter('min_width'))
@@ -267,7 +270,7 @@ class GlowComboBox(GlowTextField):
         if self.selected_item_text_color is None:
             self._selected_item_text_color = self.theme_cls.primary_color
 
-    def on_pre_open(self):
+    def on_pre_open(self) -> None:
         '''Fires before the ComboVox is opened.'''
         pass
 

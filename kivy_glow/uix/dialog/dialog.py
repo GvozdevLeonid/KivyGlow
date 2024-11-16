@@ -1,36 +1,39 @@
 __all__ = ('GlowDialog', )
 
-from kivy_glow.uix.label import GlowLabel
-from kivy.uix.modalview import ModalView
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.metrics import dp
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.core.window import (
+    Window,
+    WindowBase,
+)
+from kivy.lang import Builder
+from kivy.metrics import dp
+from kivy.properties import (
+    BooleanProperty,
+    ColorProperty,
+    ListProperty,
+    NumericProperty,
+    ObjectProperty,
+    OptionProperty,
+    StringProperty,
+)
+from kivy.uix.modalview import ModalView
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
 from kivy_glow.uix.behaviors import (
-    DeclarativeBehavior,
     AdaptiveBehavior,
+    DeclarativeBehavior,
     StyleBehavior,
     ThemeBehavior,
 )
-from kivy.core.window import (
-    WindowBase,
-    Window,
-)
-from kivy.properties import (
-    NumericProperty,
-    BooleanProperty,
-    OptionProperty,
-    StringProperty,
-    ObjectProperty,
-    ColorProperty,
-    ListProperty,
-)
+from kivy_glow.uix.label import GlowLabel
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'dialog', 'dialog.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'dialog', 'dialog.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -52,28 +55,28 @@ class GlowDialog(DeclarativeBehavior,
     classes documentation.
     '''
 
-    icon = StringProperty('blank')
+    icon = StringProperty(defaultvalue='blank')
     '''Dialog icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    icon_size = NumericProperty('64dp')
+    icon_size = NumericProperty(defaultvalue='64dp')
     '''Dialog icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_color = ColorProperty(None, allownone=True)
+    icon_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_position = OptionProperty('center', options=('left', 'center', 'right'))
+    icon_position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Icon position.
     The icon in a dialog can be located on the left, center right, above the title
 
@@ -81,84 +84,84 @@ class GlowDialog(DeclarativeBehavior,
     and defaults to `center`.
     '''
 
-    title = StringProperty(None, allownone=True)
+    title = StringProperty(defaultvalue=None, allownone=True)
     '''Title dialog text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty('center', options=('left', 'center', 'right'))
+    title_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    text = StringProperty(None, allownone=True)
+    text = StringProperty(defaultvalue=None, allownone=True)
     '''Body dialog text
 
     :attr:`text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    text_halign = OptionProperty('center', options=('left', 'center', 'right'))
+    text_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Text horizontal aligh.
 
     :attr:`text_halign` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    use_separator = BooleanProperty(False)
+    use_separator = BooleanProperty(defaultvalue=False)
     '''Show separators after title and before buttons
 
     :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    content = ObjectProperty(None, allownone=True)
+    content = ObjectProperty(defaultvalue=None, allownone=True)
     '''Body dialog content
 
     :attr:`content` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `None`.
     '''
 
-    buttons = ListProperty(None, allownone=True)
+    buttons = ListProperty(defaultvalue=None, allownone=True)
     '''Dialog buttons
 
     :attr:`content` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    margin = NumericProperty('48dp')
+    margin = NumericProperty(defaultvalue='48dp')
     """Dialog maegin from device width.
 
     :attr:`margin` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `48dp`.
     """
 
-    content_height = NumericProperty('300dp')
+    content_height = NumericProperty(defaultvalue='300dp')
     """Content scroll height
 
     :attr:`content_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `300dp`.
     """
 
-    adaptive_height_content = BooleanProperty(True)
+    adaptive_height_content = BooleanProperty(defaultvalue=True)
     """Adjust the height according to the content
 
     :attr:`adaptive_height_content` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     """
 
-    stretch_content_height = BooleanProperty(False)
+    stretch_content_height = BooleanProperty(defaultvalue=False)
     """Adjust the height according to the Dialog free space
 
     :attr:`stretch_content_height` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     """
 
-    mode = OptionProperty(None, options=('warning', 'error', 'success'), allownone=True)
+    mode = OptionProperty(defaultvalue=None, options=('warning', 'error', 'success'), allownone=True)
     '''Dialog mode.
         .. code-block:: kv
         warning:
@@ -177,28 +180,28 @@ class GlowDialog(DeclarativeBehavior,
     and defaults to `None`.
     '''
 
-    opening_transition = StringProperty('in_sine')
+    opening_transition = StringProperty(defaultvalue='in_sine')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
@@ -206,16 +209,16 @@ class GlowDialog(DeclarativeBehavior,
     '''
 
     _size_hint_y = 0
-    _icon_color = ColorProperty((0, 0, 0, 0))
+    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.bind(icon_color=self.setter('_icon_color'))
 
         super().__init__(*args, **kwargs)
         self.background = ''
         self.background_color = (0, 0, 0, 0)
 
-        if self.size_hint[0] == 1 and self.size_hint[1] == 1 and (self.device == "desktop" or self.device == "tablet"):
+        if self.size_hint[0] == 1 and self.size_hint[1] == 1 and self.device in {'desktop', 'tablet'}:
             self.size_hint = (None, None)
             self.width = min(dp(560), Window.width - self.margin)
         elif self.size_hint[0] == 1 and self.size_hint[1] == 1 and self.device == "mobile":
@@ -227,7 +230,7 @@ class GlowDialog(DeclarativeBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_dialog, -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             Window.unbind(on_resize=self._on_window_resize)
 
@@ -240,7 +243,7 @@ class GlowDialog(DeclarativeBehavior,
 
         return super().on_parent(instance, parent)
 
-    def open(self, *args, **kwargs):
+    def open(self, *args, **kwargs) -> None:
         '''Display the dialog in the Window.'''
 
         if self._is_open:
@@ -266,7 +269,7 @@ class GlowDialog(DeclarativeBehavior,
 
         Clock.schedule_once(self._open)
 
-    def _open(self, *args):
+    def _open(self, *args) -> None:
         '''Open with calculatet dialog height.'''
         if self.size_hint_y is None:
             animation_height = Animation(
@@ -291,12 +294,12 @@ class GlowDialog(DeclarativeBehavior,
         animation.bind(on_complete=lambda _, __: self._continue_open())
         animation.start(self)
 
-    def _continue_open(self):
+    def _continue_open(self) -> None:
         '''Final step for openning '''
         self.ids.glow_dialog_content.opacity = 1
         self.dispatch('on_open')
 
-    def dismiss(self, *args, **kwargs):
+    def dismiss(self, *args, **kwargs) -> None:
         '''Close the dialog if it is open.'''
         if not self._is_open:
             return
@@ -331,7 +334,7 @@ class GlowDialog(DeclarativeBehavior,
         animation.bind(on_complete=lambda _, __: self._dismiss())
         animation.start(self)
 
-    def _dismiss(self):
+    def _dismiss(self) -> None:
         '''Final step for closing '''
         self.ids.glow_dialog_content.opacity = 1
         self._real_remove_widget()
@@ -341,7 +344,7 @@ class GlowDialog(DeclarativeBehavior,
 
         self.width = min(dp(560) if self.device != "mobile" else dp(280), window.width - self.margin)
 
-    def initialize_dialog(self, *args):
+    def initialize_dialog(self, *args) -> None:
         '''Initializing the Dialog.'''
         if self.text is not None:
             self.content = GlowLabel(
@@ -374,7 +377,7 @@ class GlowDialog(DeclarativeBehavior,
         else:
             self.ids.glow_dialog_content_container.height = 0
 
-    def set_default_colors(self, *args):
+    def set_default_colors(self, *args) -> None:
         '''Set defaults colors.'''
 
         if self.bg_color is None:
@@ -401,7 +404,7 @@ class GlowDialog(DeclarativeBehavior,
         elif self.mode is None and self.icon_color is None:
             self._icon_color = self.theme_cls.primary_color
 
-    def _add_content_ids(self):
+    def _add_content_ids(self) -> None:
         '''Add content ids to dialog.'''
         if hasattr(self.content, 'id'):
             self.ids[self.content.id] = self.content

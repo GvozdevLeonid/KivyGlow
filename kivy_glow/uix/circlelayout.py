@@ -1,34 +1,37 @@
 __all__ = ('GlowCircleLayout', )
 
 
-from kivy_glow.uix.floatlayout import GlowFloatLayout
+from math import (
+    atan2,
+    cos,
+    degrees,
+    radians,
+    sin,
+)
+
 from kivy.properties import (
     BooleanProperty,
     NumericProperty,
 )
-from math import (
-    degrees,
-    radians,
-    atan2,
-    cos,
-    sin,
-)
+from kivy.uix.widget import Widget
+
+from kivy_glow.uix.floatlayout import GlowFloatLayout
 
 
 class GlowCircleLayout(GlowFloatLayout):
-    degree_spacing = NumericProperty(30)
-    circular_radius = NumericProperty(None, allownone=True)
-    start_from = NumericProperty(0)
+    degree_spacing = NumericProperty(defaultvalue=30)
+    circular_radius = NumericProperty(defaultvalue=None, allownone=True)
+    start_from = NumericProperty(defaultvalue=0)
 
-    max_degree = NumericProperty(360)
-    circular_padding = NumericProperty('25dp')
+    max_degree = NumericProperty(defaultvalue=360)
+    circular_padding = NumericProperty(defaultvalue='25dp')
 
-    row_spacing = NumericProperty('50dp')
+    row_spacing = NumericProperty(defaultvalue='50dp')
 
-    clockwise = BooleanProperty(True)
+    clockwise = BooleanProperty(defaultvalue=True)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.bind(
             row_spacing=self._update_layout,
         )
@@ -42,18 +45,18 @@ class GlowCircleLayout(GlowFloatLayout):
         angle += 180
         return angle
 
-    def remove_widget(self, widget, **kwargs):
+    def remove_widget(self, widget: Widget, **kwargs) -> None:
         super().remove_widget(widget, **kwargs)
         self._update_layout()
 
-    def do_layout(self, *largs, **kwargs):
+    def do_layout(self, *largs, **kwargs) -> None:
         self._update_layout()
         return super().do_layout(*largs, **kwargs)
 
-    def _max_per_row(self):
+    def _max_per_row(self) -> int:
         return int(self.max_degree / self.degree_spacing)
 
-    def _update_layout(self, *args):
+    def _update_layout(self, *args) -> None:
         for index, child in enumerate(reversed(self.children)):
             pos = self._point_on_circle(
                 self._calculate_radius(index),
@@ -61,7 +64,7 @@ class GlowCircleLayout(GlowFloatLayout):
             )
             child.center = pos
 
-    def _calculate_radius(self, index):
+    def _calculate_radius(self, index: int) -> float | int:
         '''Calculates the radius for given index.'''
 
         idx = int(index / self._max_per_row())
@@ -79,7 +82,7 @@ class GlowCircleLayout(GlowFloatLayout):
 
         return init_radius
 
-    def _calculate_degree(self, index):
+    def _calculate_degree(self, index: int) -> float | int:
         '''Calculates the angle for given index.'''
 
         if self.clockwise:
@@ -89,9 +92,9 @@ class GlowCircleLayout(GlowFloatLayout):
 
         return degree
 
-    def _point_on_circle(self, radius, degree):
+    def _point_on_circle(self, radius: float | int, degree: float | int) -> tuple[float | int, float | int]:
         angle = radians(degree)
         center = [self.pos[0] + self.width / 2, self.pos[1] + self.height / 2]
         x = center[0] + (radius * cos(angle))
         y = center[1] + (radius * sin(angle))
-        return [x, y]
+        return x, y

@@ -1,12 +1,14 @@
-try:
-    from ConfigParser import ConfigParser as PythonConfigParser
-except ImportError:
-    from configparser import RawConfigParser as PythonConfigParser
-
-from collections import OrderedDict
+# ruff: noqa: PLR2004
 from ast import literal_eval
-from weakref import ref
+from collections import OrderedDict
+from configparser import RawConfigParser as PythonConfigParser
 from os import environ
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+)
+from weakref import ref
 
 try:
     from kivy.logger import Logger
@@ -17,26 +19,28 @@ except ImportError:
 
 class ConfigParser(PythonConfigParser):
 
-    def getdefault(self, section, option, defaultvalue, valuetype: str = None):
+    def getdefault(self, section: str, option: str, defaultvalue: float | int | str | bool | list | tuple | dict, valuetype: str | None = None) -> float | int | str | bool | list | tuple | dict:  # noqa: FBT001
         '''Get the value of an option in the specified section. If not found,
         it will return the default value.
         '''
         if not self.has_section(section) or not self.has_option(section, option):
             return defaultvalue
 
-        if valuetype == 'int':
-            return self.getint(section, option)
-        elif valuetype == 'float':
-            return self.getfloat(section, option)
-        elif valuetype == 'boolean':
-            return self.getboolean(section, option)
-        elif valuetype == 'list':
-            return self.getlist(section, option)
-        elif valuetype == 'dictionary':
-            return self.getdictionary(section, option)
+        valuetype_options: dict[str, Callable] = {
+            'int': self.getint,
+            'float': self.getfloat,
+            'boolean': self.getboolean,
+            'list': self.getlist,
+            'tuple': self.gettuple,
+            'dictionary': self.getdictionary,
+        }
+
+        if valuetype in valuetype_options:
+            return valuetype_options[valuetype](section, option)
+
         return self.get(section, option)
 
-    def getdefaultint(self, section, option, defaultvalue):
+    def getdefaultint(self, section: str, option: str, defaultvalue: int) -> int:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an integer.
@@ -44,7 +48,7 @@ class ConfigParser(PythonConfigParser):
         '''
         return self.getdefault(section, option, defaultvalue, 'int')
 
-    def getdefaultfloat(self, section, option, defaultvalue):
+    def getdefaultfloat(self, section: str, option: str, defaultvalue: float) -> float:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an float.
@@ -52,7 +56,7 @@ class ConfigParser(PythonConfigParser):
         '''
         return self.getdefault(section, option, defaultvalue, 'float')
 
-    def getdefaultboolean(self, section, option, defaultvalue):
+    def getdefaultboolean(self, section: str, option: str, defaultvalue: bool) -> bool:  # noqa: FBT001
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an boolean.
@@ -60,10 +64,10 @@ class ConfigParser(PythonConfigParser):
         '''
         return self.getdefault(section, option, defaultvalue, 'boolean')
 
-    def getlist(self, section, option):
+    def getlist(self, section: str, option: str) -> list:
         return list(literal_eval(self.get(section, option)))
 
-    def getdefaultlist(self, section, option, defaultvalue):
+    def getdefaultlist(self, section: str, option: str, defaultvalue: list) -> list:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an list.
@@ -71,10 +75,21 @@ class ConfigParser(PythonConfigParser):
         '''
         return self.getdefault(section, option, defaultvalue, 'list')
 
-    def getdictionary(self, section, option):
+    def gettuple(self, section: str, option: str) -> tuple:
+        return tuple(literal_eval(self.get(section, option)))
+
+    def getdefaulttuple(self, section: str, option: str, defaultvalue: tuple) -> tuple:
+        '''Get the value of an option in the specified section. If not found,
+        it will return the default value. The value will always be
+        returned as an tuple.
+
+        '''
+        return self.getdefault(section, option, defaultvalue, 'tuple')
+
+    def getdictionary(self, section: str, option: str) -> dict:
         return dict(literal_eval(self.get(section, option)))
 
-    def getdefaultdictionary(self, section, option, defaultvalue):
+    def getdefaultdictionary(self, section: str, option: str, defaultvalue: dict) -> dict:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an dict.
@@ -84,38 +99,36 @@ class ConfigParser(PythonConfigParser):
 
 
 class ExtendedKivyConfigParser(ConfigParser):
-    def __init__(self, name='', **kwargs):
+    def __init__(self, name: str = '', **kwargs) -> None:
         ConfigParser.__init__(self, **kwargs)
-        self._sections = OrderedDict()
+        self._sections: dict = OrderedDict()
+        self._callbacks: list = []
         self.filename = None
-        self._callbacks = []
         self.name = name
 
-    def add_callback(self, callback, section=None, key=None):
+    def add_callback(self, callback: Callable, section: str, key: str | None = None) -> None:
         if section is None and key is not None:
             raise Exception('You cannot specify a key without a section')
         self._callbacks.append((callback, section, key))
 
-    def remove_callback(self, callback, section=None, key=None):
+    def remove_callback(self, callback: Callable, section: str, key: str | None = None) -> None:
         self._callbacks.remove((callback, section, key))
 
-    def _do_callbacks(self, section, key, value):
+    def _do_callbacks(self, section: str, key: str, value: Any) -> None:
         for callback, csection, ckey in self._callbacks:
-            if csection is not None and csection != section:
+            if csection != section:
                 continue
-            elif ckey is not None and ckey != key:
+            if ckey is not None and ckey != key:
                 continue
             callback(section, key, value)
 
-    def read(self, filename):
+    def read(self, filename: str | None, encoding: str = 'utf-8-sig') -> None:  # type: ignore
         if not isinstance(filename, str):
-            raise Exception('Only one filename is accepted ({})'.format(
-                str.__name__))
+            raise Exception(f'Only one filename is accepted ({str.__name__})')
         self.filename = filename
 
-        old_vals = {sect: {k: v for k, v in self.items(sect)} for sect in
-                    self.sections()}
-        ConfigParser.read(self, filename, encoding='utf-8-sig')
+        old_vals = {sect: dict(self.items(sect)) for sect in self.sections()}
+        ConfigParser.read(self, filename, encoding=encoding)
 
         f = self._do_callbacks
         for section in self.sections():
@@ -129,52 +142,52 @@ class ExtendedKivyConfigParser(ConfigParser):
                 if k not in old_keys or v != old_keys[k]:
                     f(section, k, v)
 
-    def set(self, section, option, value):
+    def set(self, section: str, option: str, value: Any) -> None:  # type: ignore
         e_value = value
         if not isinstance(value, str):
             e_value = str(value)
-        ret = ConfigParser.set(self, section, option, e_value)
+        ConfigParser.set(self, section, option, e_value)
         self._do_callbacks(section, option, value)
-        return ret
 
-    def setall(self, section, keyvalues):
+    def setall(self, section: str, keyvalues: dict[str, Any]) -> None:
         for key, value in keyvalues.items():
             self.set(section, key, value)
 
-    def get(self, section, option, **kwargs):
-        value = ConfigParser.get(self, section, option, **kwargs)
-        return value
+    def get(self, section: str, option: str, **kwargs) -> str:  # type: ignore
+        return ConfigParser.get(self, section, option, **kwargs)
 
-    def setdefaults(self, section, keyvalues):
+    def setdefaults(self, section: str, keyvalues: dict[str, Any]) -> None:
         self.adddefaultsection(section)
         for key, value in keyvalues.items():
             self.setdefault(section, key, value)
 
-    def setdefault(self, section, option, value):
+    def setdefault(self, section: str, option: str, value: Any) -> None:  # type: ignore
         if self.has_option(section, option):
             return
         self.set(section, option, value)
 
-    def adddefaultsection(self, section):
+    def adddefaultsection(self, section: str) -> None:
         '''Add a section if the section is missing.
         '''
-        assert '_' not in section
+        if '_' in section:
+            raise ValueError('Section can\'t contain "_" symbol')
+
         if self.has_section(section):
             return
         self.add_section(section)
 
-    def write(self):
+    def write(self) -> bool:  # type: ignore
         if self.filename is None:
             return False
         try:
             with open(self.filename, 'w', encoding='utf-8') as fd:
                 ConfigParser.write(self, fd)
-        except IOError:
-            Logger.exception('Unable to write the config <%s>' % self.filename)
+        except OSError:
+            Logger.exception(f'Unable to write the config <{self.filename}>')
             return False
         return True
 
-    def update_config(self, filename, overwrite=False):
+    def update_config(self, filename: str, overwrite: bool = False) -> None:  # noqa: FBT001, FBT002
         pcp = ConfigParser()
         pcp.read(filename)
         confset = self.setall if overwrite else self.setdefaults
@@ -183,7 +196,7 @@ class ExtendedKivyConfigParser(ConfigParser):
         self.write()
 
     @staticmethod
-    def _register_named_property(name, widget_ref, *largs):
+    def _register_named_property(name: str, widget_ref: list, *args) -> None:
         configs = ExtendedKivyConfigParser._named_configs
         try:
             config, props = configs[name]
@@ -200,26 +213,28 @@ class ExtendedKivyConfigParser(ConfigParser):
             widget.property(widget_ref[1]).set_config(config)
 
     @staticmethod
-    def get_configparser(name):
+    def get_configparser(name: str) -> ConfigParser | None:
         try:
             config = ExtendedKivyConfigParser._named_configs[name][0]
             if config is not None:
                 config = config()
                 if config is not None:
                     return config
+
             del ExtendedKivyConfigParser._named_configs[name]
         except KeyError:
-            return None
+            pass
+        return None
 
-    _named_configs = {}
-    _name = ''
+    _named_configs: ClassVar[dict] = {}
+    _name: str = ''
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @name.setter
-    def name(self, value):
+    def name(self, value: str) -> None:
         old_name = self._name
         if value is old_name:
             return
@@ -229,9 +244,9 @@ class ExtendedKivyConfigParser(ConfigParser):
         if old_name:
             _, props = configs.get(old_name, (None, []))
             for widget, prop in props:
-                widget = widget()
-                if widget:
-                    widget.property(prop).set_config(None)
+                _widget = widget()
+                if _widget:
+                    _widget.property(prop).set_config(None)
             configs[old_name] = (None, props)
 
         if not value:
@@ -244,11 +259,11 @@ class ExtendedKivyConfigParser(ConfigParser):
             return
 
         if config is not None and config() is not None:
-            raise ValueError('A parser named {} already exists'.format(value))
+            raise ValueError(f'A parser named {value} already exists')
         for widget, prop in props:
-            widget = widget()
-            if widget:
-                widget.property(prop).set_config(self)
+            _widget = widget()
+            if _widget:
+                _widget.property(prop).set_config(self)
         configs[value] = (ref(self), props)
 
 
@@ -256,6 +271,7 @@ try:
     import kivy.config
     if not environ.get('KIVY_DOC_INCLUDE'):
         from os.path import exists
+
         from kivy import kivy_config_fn
         from kivy.logger import logger_config_update
         from kivy.utils import platform
@@ -291,13 +307,12 @@ try:
         # Upgrade default configuration until we have the current version
         need_save = False
         if version != KIVY_CONFIG_VERSION and 'KIVY_NO_CONFIG' not in environ:
-            Logger.warning('Config: Older configuration version detected'
-                           ' ({0} instead of {1})'.format(version, KIVY_CONFIG_VERSION))
+            Logger.warning(f'Config: Older configuration version detected ({version} instead of {KIVY_CONFIG_VERSION})')
             Logger.warning('Config: Upgrading configuration in progress.')
             need_save = True
 
         while version < KIVY_CONFIG_VERSION:
-            Logger.debug('Config: Upgrading from %d to %d' % (version, version + 1))
+            Logger.debug(f'Config: Upgrading from {version} to {version + 1}')
 
             if version == 0:
 
@@ -392,7 +407,7 @@ try:
 
             elif version == 7:
                 # desktop bool indicating whether to use desktop specific features
-                is_desktop = int(platform in ('win', 'macosx', 'linux'))
+                is_desktop = int(platform in {'win', 'macosx', 'linux'})
                 kivy.config.Config.setdefault('kivy', 'desktop', is_desktop)
                 kivy.config.Config.setdefault('postproc', 'triple_tap_distance', '20')
                 kivy.config.Config.setdefault('postproc', 'triple_tap_time', '375')
@@ -442,7 +457,7 @@ try:
                 kivy.config.Config.setdefault('graphics', 'shaped', '0')
                 kivy.config.Config.setdefault(
                     'kivy', 'window_shape',
-                    'data/images/defaultshape.png'
+                    'data/images/defaultshape.png',
                 )
 
             elif version == 20:
@@ -499,17 +514,13 @@ try:
                 try:
                     _, section, name = key.split("_", 2)
                 except ValueError:
-                    Logger.warning((
-                        "Config: Environ `{}` invalid format, "
-                        "must be KCFG_section_name").format(key))
+                    Logger.warning(f"Config: Environ `{key}` invalid format, must be KCFG_section_name")
                     continue
 
                 # extract and check section
                 section = section.lower()
                 if not kivy.config.Config.has_section(section):
-                    Logger.warning(
-                        "Config: Environ `{}`: unknown section `{}`".format(
-                            key, section))
+                    Logger.warning(f"Config: Environ `{key}`: unknown section `{section}`")
                     continue
 
                 # extract and check the option name
@@ -518,10 +529,7 @@ try:
                     "kivy", "graphics", "widgets", "postproc", "network"}
                 if (section in sections_to_check and
                         not kivy.config.Config.has_option(section, name)):
-                    Logger.warning((
-                        "Config: Environ `{}` unknown `{}` "
-                        "option in `{}` section.").format(
-                            key, name, section))
+                    Logger.warning(f"Config: Environ `{key}` unknown `{name}` option in `{section}` section.")
                     # we don't avoid to set an unknown option, because maybe
                     # an external modules or widgets (in garden?) may want to
                     # save its own configuration here.

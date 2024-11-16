@@ -1,28 +1,31 @@
 __all__ = ('GlowButton', )
 
-from kivy_glow.uix.anchorlayout import GlowAnchorLayout
-from kivy_glow.uix.behaviors import HoverBehavior
-from kivy.input.motionevent import MotionEvent
-from kivy.uix.behaviors import ButtonBehavior
-from kivy_glow.theme import ThemeManager
-from kivy_glow.uix.icon import GlowIcon
-from kivy_glow import kivy_glow_uix_dir
-from kivy.animation import Animation
-from kivy.core.window import Window
-from kivy.lang import Builder
-from kivy.clock import Clock
-from typing import Self
 import os
+from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
 from kivy.properties import (
-    ReferenceListProperty,
+    ColorProperty,
     NumericProperty,
     OptionProperty,
+    ReferenceListProperty,
     StringProperty,
-    ColorProperty,
 )
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.anchorlayout import GlowAnchorLayout
+from kivy_glow.uix.behaviors import HoverBehavior
+from kivy_glow.uix.icon import GlowIcon
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'button', 'button.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'button', 'button.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
@@ -39,7 +42,7 @@ class GlowButton(HoverBehavior,
     classes documentation.
     '''
 
-    text = StringProperty(None, allownone=True)
+    text = StringProperty(defaltvalue=None, allownone=True)
     '''Button text
 
     If text is `None` then label will be removed from the button
@@ -48,49 +51,49 @@ class GlowButton(HoverBehavior,
     and defaults to `None`.
     '''
 
-    icon = StringProperty('blank')
+    icon = StringProperty(defaltvalue='blank')
     '''Button icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    text_color = ColorProperty(None, allownone=True)
+    text_color = ColorProperty(defaltvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the text
 
     :attr:`text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_color = ColorProperty(None, allownone=True)
+    icon_color = ColorProperty(defaltvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    font_style = StringProperty('BodyL')
+    font_style = StringProperty(defaltvalue='BodyL')
     '''Font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
     and defaults to `BodyL`.
     '''
 
-    mode = OptionProperty('filled', options=('filled', 'outline', 'soft', 'soft-outline', 'text'))
+    mode = OptionProperty(defaltvalue='filled', options=('filled', 'outline', 'soft', 'soft-outline', 'text'))
     '''Various button display options
 
     :attr:`mode` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `filled`.
     '''
 
-    icon_size = NumericProperty('24dp')
+    icon_size = NumericProperty(defaltvalue='24dp')
     '''Icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_position = OptionProperty('left', options=('left', 'right', 'top', 'bottom'))
+    icon_position = OptionProperty(defaltvalue='left', options=('left', 'right', 'top', 'bottom'))
     '''Icon position.
     The icon in a button can be located on the left, right, above and below the text
 
@@ -98,21 +101,21 @@ class GlowButton(HoverBehavior,
     and defaults to `left`.
     '''
 
-    spacing = NumericProperty('5dp')
+    spacing = NumericProperty(defaltvalue='5dp')
     '''Spacing between text and icon
 
     :attr:`spacing` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `5dp`.
     '''
 
-    minimum_width = NumericProperty(0)
+    minimum_width = NumericProperty(defaltvalue=0)
     '''Minimum button width
 
     :attr:`minimum_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `0`.
     '''
 
-    minimum_height = NumericProperty(0)
+    minimum_height = NumericProperty(defaltvalue=0)
     '''Minimum button height
 
     :attr:`minimum_height` is an :class:`~kivy.properties.NumericProperty`
@@ -125,8 +128,8 @@ class GlowButton(HoverBehavior,
     :attr:`minimum_size` is an :class:`~kivy.properties.ReferenceListProperty`
     '''
 
-    _text_color = ColorProperty((0, 0, 0, 0))
-    _icon_color = ColorProperty((0, 0, 0, 0))
+    _text_color = ColorProperty(defaltvalue=(0, 0, 0, 0))
+    _icon_color = ColorProperty(defaltvalue=(0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(text_color=self.setter('_text_color'))
@@ -147,7 +150,7 @@ class GlowButton(HoverBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(lambda _: self.children[0].fbind('size', update), -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if self.glow_icon is not None:
             if parent is None:
                 self.unbind(icon_size=self.glow_icon.setter('font_size'),
@@ -168,14 +171,14 @@ class GlowButton(HoverBehavior,
         '''Fired at the Button hover leave event.'''
         Window.set_system_cursor('arrow')
 
-    def on_icon(self, button_instance: Self, icon: str) -> None:
+    def on_icon(self, instance: Self, icon: str) -> None:
         Clock.schedule_once(self._set_icon, -1)
 
-    def on_mode(self, Self, mode: str) -> None:
+    def on_mode(self, instance: Self, mode: str) -> None:
         '''Fired when the :attr:`mode` value changes.'''
         self.set_default_colors()
 
-    def on_disabled(self, button_instance: Self, disabled: bool) -> None:
+    def on_disabled(self, instance: Self, disabled: bool) -> None:
         '''Fired when the :attr:`disabled` value changes.'''
         Clock.schedule_once(self.set_disabled_colors, -1)
 
@@ -189,28 +192,28 @@ class GlowButton(HoverBehavior,
                 if self.mode == 'filled':
                     self._animation = Animation(
                         _border_color=self.theme_cls.darken_or_lighten_color(self._border_color),
-                        d=.01
+                        d=.01,
                     )
                 elif self.mode == 'outline':
                     self._animation = Animation(
                         _border_color=self.theme_cls.darken_or_lighten_color(self._border_color),
-                        d=.01
+                        d=.01,
                     )
                 elif self.mode == 'soft':
                     self._animation = Animation(
                         _border_color=self._border_color[:3] + [1],
-                        d=.01
+                        d=.01,
                     )
                 elif self.mode == 'soft-outline':
                     self._animation = Animation(
                         _border_color=self._border_color[:3] + [0],
-                        d=.01
+                        d=.01,
                     )
                 elif self.mode == 'text':
                     self._animation = Animation(
                         _text_color=self.theme_cls.darken_or_lighten_color(self._text_color),
                         _icon_color=self.theme_cls.darken_or_lighten_color(self._icon_color),
-                        d=.01
+                        d=.01,
                     )
 
                 self._animation.start(self)
@@ -221,7 +224,7 @@ class GlowButton(HoverBehavior,
 
     def on_touch_up(self, touch: MotionEvent) -> bool:
         '''Fired at the Button on_touch_up event.'''
-        def update_colors():
+        def update_colors() -> None:
             if not self.disabled:
                 if self.mode == 'filled':
                     self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
@@ -319,17 +322,16 @@ class GlowButton(HoverBehavior,
             elif self.mode == 'soft-outline':
                 self._bg_color = self.theme_cls.disabled_color[:3] + [.3]
                 self._border_color = self.theme_cls.disabled_color
-        else:
-            if self.mode == 'filled':
-                self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color
-                self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
-            elif self.mode == 'outline':
-                self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
-            elif self.mode == 'soft':
-                self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color[:3] + [.3]
-            elif self.mode == 'soft-outline':
-                self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color[:3] + [.3]
-                self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
+        elif self.mode == 'filled':
+            self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color
+            self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
+        elif self.mode == 'outline':
+            self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
+        elif self.mode == 'soft':
+            self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color[:3] + [.3]
+        elif self.mode == 'soft-outline':
+            self._bg_color = self.bg_color if self.bg_color else self.theme_cls.primary_color[:3] + [.3]
+            self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
 
     def on_theme_style(self, theme_manager: ThemeManager, theme_style: str) -> None:
         '''Fired when the app :attr:`theme_style` value changes.'''
@@ -399,12 +401,12 @@ class GlowButton(HoverBehavior,
                       _icon_color=self.glow_icon.setter('color'),
                       icon_size=self.glow_icon.setter('font_size'))
 
-            if self.icon_position in ('left', 'top'):
+            if self.icon_position in {'left', 'top'}:
                 self.ids.glow_button_container.add_widget(self.glow_icon, index=1)
-            elif self.icon_position in ('right', 'bottom'):
+            elif self.icon_position in {'right', 'bottom'}:
                 self.ids.glow_button_container.add_widget(self.glow_icon)
 
-            if self.icon_position in ('top', 'bottom'):
+            if self.icon_position in {'top', 'bottom'}:
                 self.ids.glow_button_container.orientation = 'vertical'
 
             if self.text is None:
@@ -414,10 +416,10 @@ class GlowButton(HoverBehavior,
 
     def _update_minimum_size(self, *args) -> None:
         '''Calculate miminum Buttom size'''
-        l, t, r, b = self.padding
+        left, top, right, bottom = self.padding
         try:
-            self.minimum_size = (l + r + self.ids.glow_button_container.width,
-                                 t + b + self.ids.glow_button_container.height)
+            self.minimum_size = (left + right + self.ids.glow_button_container.width,
+                                 top + bottom + self.ids.glow_button_container.height)
         except Exception:
             self.minimum_size = 0, 0
 

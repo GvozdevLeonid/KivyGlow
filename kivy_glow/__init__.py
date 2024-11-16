@@ -19,9 +19,9 @@ kivy_glow_images_dir = os.path.join(kivy_glow_assets_dir, f'images{os.sep}')
 
 _log_message = (
     f'KivyGlow: KivyGlow version: <{__version__}>'
-    + f' (installed at "{kivy_glow_base_dir}")'
+    f' (installed at "{kivy_glow_base_dir}")'
 )
 Logger.info(_log_message)
 
-import kivy_glow.factory_registers  # noqa F401
-import kivy_glow.fonts  # noqa F401
+import kivy_glow.factory_registers
+import kivy_glow.fonts  # noqa: F401

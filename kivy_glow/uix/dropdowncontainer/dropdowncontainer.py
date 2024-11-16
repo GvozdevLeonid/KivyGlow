@@ -1,28 +1,30 @@
 __all__ = ('GlowDropDownContainer', )
 
-from kivy_glow.uix.scrollview import GlowScrollView
-from kivy_glow.uix.boxlayout import GlowBoxLayout
-from kivy.input.motionevent import MotionEvent
-from kivy_glow.uix.widget import GlowWidget
-from kivy_glow.theme import ThemeManager
-from kivy.animation import Animation
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.metrics import dp
 from typing import Self
+
+from kivy.animation import Animation
+from kivy.clock import Clock
 from kivy.core.window import (
-    WindowBase,
     Window,
+    WindowBase,
 )
+from kivy.input.motionevent import MotionEvent
+from kivy.metrics import dp
 from kivy.properties import (
-    VariableListProperty,
     BooleanProperty,
+    ListProperty,
     NumericProperty,
     ObservableList,
     OptionProperty,
     StringProperty,
-    ListProperty,
+    VariableListProperty,
 )
+from kivy.uix.widget import Widget
+
+from kivy_glow.theme import ThemeManager
+from kivy_glow.uix.boxlayout import GlowBoxLayout
+from kivy_glow.uix.scrollview import GlowScrollView
+from kivy_glow.uix.widget import GlowWidget
 
 
 class GlowDropDownException(Exception):
@@ -63,77 +65,77 @@ class GlowDropDownContainer(GlowBoxLayout):
 
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
-    direction = OptionProperty('down', options=('down', 'up'))
+    direction = OptionProperty(defaultvalue='down', options=('down', 'up'))
     '''Expansion direction
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
     '''
 
-    position = OptionProperty('center', options=('left', 'center', 'right'))
+    position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Expansion position
 
     :attr:`position` is an :class:`~kivy.properties.OptionProperty`
     and default to `center`.
     '''
 
-    use_separator = BooleanProperty(True)
+    use_separator = BooleanProperty(defaultvalue=True)
     '''Whether to add a separator between elements
 
     :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`.
     and default to `True`.
     '''
 
-    min_width = NumericProperty(None, allownone=True)
+    min_width = NumericProperty(defaultvalue=None, allownone=True)
     '''Mimimum expansion width
 
     :attr:`min_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    max_height = NumericProperty(None, allownone=True)
+    max_height = NumericProperty(defaultvalue=None, allownone=True)
     '''Maximum expansion height
 
     :attr:`max_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    auto_dismiss = BooleanProperty(True)
+    auto_dismiss = BooleanProperty(defaultvalue=True)
     '''Hide expandable panel when clicking outside of element (even if new element is not selected)
 
     :attr:`max_height` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     '''
 
-    opening_transition = StringProperty('out_cubic')
+    opening_transition = StringProperty(defaultvalue='out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    border_radius = VariableListProperty(['10dp', ], length=4)
+    border_radius = VariableListProperty(defaultvalue=['10dp'], length=4)
     '''Canvas radius.
 
     :attr:`border_radius` is an :class:`~kivy.properties.VariableListProperty`
@@ -172,7 +174,7 @@ class GlowDropDownContainer(GlowBoxLayout):
 
         Clock.schedule_once(self.set_default_colors, -1)
 
-    def on_parent(self, instance: Self, parent) -> None:
+    def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             Window.unbind(
                 on_key_down=self._on_keyboard_down,
@@ -186,17 +188,17 @@ class GlowDropDownContainer(GlowBoxLayout):
 
         return super().on_parent(instance, parent)
 
-    def on_min_width(self, dropdowncontainer_instance: Self, min_width: int | float) -> None:
+    def on_min_width(self, instance: Self, min_width: int | float) -> None:
         '''Fired when the :attr:`min_width` value changes.'''
         self.width = self._get_width()
 
-    def on_items(self, dropdowncontainer_instance: Self, items: list) -> None:
+    def on_items(self, instance: Self, items: list) -> None:
         '''Fired when the :attr:`items` value changes.'''
         self.container.clear_widgets()
         for item in items:
             self.container.add_widget(item)
 
-    def open(self, attach_to: Widget = None, attach_to_pos: tuple = None) -> None:
+    def open(self, attach_to: Widget = None, attach_to_pos: tuple[float | int, float | int] | None = None) -> None:
         '''Open DropDownContainer.'''
         if self._state == 'closed' and not self._anim_playing:
             self._state = 'opened'
@@ -399,15 +401,11 @@ class GlowDropDownContainer(GlowBoxLayout):
             elif self.position == 'right':
                 self.right = self._attach_to_pos[0]
 
-        if self.x < 0:
-            self.x = 0
-        if self.y < 0:
-            self.y = 0
+        self.x = max(self.x, 0)
+        self.y = max(self.y, 0)
 
-        if self.top > Window.height:
-            self.top = Window.height
-        if self.right > Window.width:
-            self.right = Window.width
+        self.top = min(self.top, Window.height)
+        self.right = min(self.right, Window.width)
 
     def _add_separator(self) -> None:
         '''Add separator between items.'''
@@ -422,7 +420,7 @@ class GlowDropDownContainer(GlowBoxLayout):
                 ),
                 index=i * 2 + 1)
 
-    def add_widget(self, widget: Widget, index: int = 0, canvas=None) -> None:
+    def add_widget(self, widget: Widget, index: int = 0, canvas: str | None = None) -> None:
         '''Modified default function'''
         if widget != self.scroll:
             self.container.add_widget(widget)

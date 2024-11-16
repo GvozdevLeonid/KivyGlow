@@ -1,17 +1,18 @@
 __all__ = ('ThemeBehavior', )
 
-from kivy_glow.theme import ThemeManager
-from kivy.event import EventDispatcher
-from kivy.core.window import Window
-from kivy.utils import platform
-from kivy.clock import Clock
-from kivy.metrics import dp
 from kivy.app import App
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.event import EventDispatcher
+from kivy.metrics import dp
 from kivy.properties import (
     NumericProperty,
     ObjectProperty,
     OptionProperty,
 )
+from kivy.utils import platform
+
+from kivy_glow.theme import ThemeManager
 
 
 class ThemeBehavior(EventDispatcher):
@@ -21,7 +22,7 @@ class ThemeBehavior(EventDispatcher):
 
     :attr:`theme_cls` is an :class:`~kivy.properties.ObjectProperty`.
     '''
-    widget_style = OptionProperty(None, options=('desktop', 'mobile'), allownone=True)
+    widget_style = OptionProperty(defaltvalue=None, options=('desktop', 'mobile'), allownone=True)
     '''Allows to set one of the two style properties for the widget:
     `'desktop'`, `'mobile'`.
 
@@ -31,10 +32,10 @@ class ThemeBehavior(EventDispatcher):
     '''
     device = 'unonknow'
 
-    row = NumericProperty(0)
-    col = NumericProperty(0)
-    rowspan = NumericProperty(1)
-    colspan = NumericProperty(1)
+    row = NumericProperty(defaltvalue=0)
+    col = NumericProperty(defaltvalue=0)
+    rowspan = NumericProperty(defaltvalue=1)
+    colspan = NumericProperty(defaltvalue=1)
     '''
     Support for GlowTableLayout
     '''
@@ -52,14 +53,14 @@ class ThemeBehavior(EventDispatcher):
     def set_default_widget_style(self, *args) -> None:
         '''Set default widget style. Based on kivy.utils.platform.'''
         if self.widget_style is None:
-            if platform in ('android', 'ios'):
+            if platform in {'android', 'ios'}:
                 self.widget_style = 'mobile'
             else:
                 self.widget_style = 'desktop'
 
     def set_device(self, *args) -> None:
         '''Set device type. Based on kivy.utils.platform.'''
-        if platform not in ('android', 'ios'):
+        if platform not in {'android', 'ios'}:
             self.device = 'desktop'
         elif Window.width >= dp(600) and Window.height >= dp(600):
             self.device = 'tablet'

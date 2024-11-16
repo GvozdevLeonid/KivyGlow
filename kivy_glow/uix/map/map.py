@@ -4,46 +4,56 @@ https://github.com/kivy-garden/mapview
 '''
 
 
-__all__ = ('GlowMap', 'GlowMapMarker', 'GlowMapMarkerPopup', 'GlowMapLayer', 'GlowMarkerMapLayer')
+__all__ = ('GlowMap', 'GlowMapLayer', 'GlowMapMarker', 'GlowMapMarkerPopup', 'GlowMarkerMapLayer')
 
 
-from kivy.graphics.transformation import Matrix
-from kivy.uix.behaviors import ButtonBehavior
-from kivy_glow.uix.widget import GlowWidget
-from kivy_glow.uix.label import GlowLabel
-from kivy_glow import kivy_glow_uix_dir
-from kivy.uix.scatter import Scatter
-from kivy.compat import string_types
-from collections import namedtuple
-from .mapsource import MapSource
-from kivy.uix.image import Image
-from itertools import takewhile
-from kivy.lang import Builder
-from kivy.clock import Clock
-from math import ceil
-import webbrowser
 import os
+import webbrowser
+from collections import namedtuple
+from itertools import takewhile
+from math import ceil
+from typing import (
+    Any,
+    Self,
+)
+
+from kivy.base import EventLoop
+from kivy.clock import Clock
+from kivy.compat import string_types
+from kivy.graphics import (
+    Canvas,
+    Color,
+    Rectangle,
+)
+from kivy.graphics.transformation import Matrix
+from kivy.input.motionevent import MotionEvent
+from kivy.lang import Builder
 from kivy.properties import (
+    AliasProperty,
     BooleanProperty,
+    ListProperty,
     NumericProperty,
     ObjectProperty,
     StringProperty,
-    AliasProperty,
-    ListProperty,
 )
-from kivy.graphics import (
-    Rectangle,
-    Canvas,
-    Color,
-)
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
+from kivy.uix.scatter import Scatter
+from kivy.uix.widget import Widget
+
+from kivy_glow import kivy_glow_uix_dir
+from kivy_glow.uix.label import GlowLabel
+from kivy_glow.uix.widget import GlowWidget
+
+from .mapsource import MapSource
 
 with open(
-    os.path.join(kivy_glow_uix_dir, 'map', 'map.kv'), encoding='utf-8'
+    os.path.join(kivy_glow_uix_dir, 'map', 'map.kv'), encoding='utf-8',
 ) as kv_file:
     Builder.load_string(kv_file.read())
 
 
-def clamp(x, minimum, maximum):
+def clamp(x: float | int, minimum: float | int, maximum: float | int) -> float | int:
     return max(minimum, min(x, maximum))
 
 
@@ -51,7 +61,7 @@ Coordinate = namedtuple('Coordinate', ['lat', 'lon'])
 
 
 class Bbox(tuple):
-    def collide(self, *args):
+    def collide(self, *args) -> bool:
         if isinstance(args[0], Coordinate):
             coord = args[0]
             lat = coord.lat
@@ -73,25 +83,25 @@ class Bbox(tuple):
 
 
 class AttributionLabel(GlowLabel):
-    def on_ref_press(self, *args):
+    def on_ref_press(self, *args) -> None:
         webbrowser.open(str(args[0]), new=2)
 
 
 class Tile(Rectangle):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.cache_dir = kwargs.get('cache_dir', 'map_cache')
 
     @property
-    def cache_fn(self):
+    def cache_fn(self) -> str:
         map_source = self.map_source
         fn = map_source.cache_fmt.format(
             cache_key=map_source.cache_key,
-            **self.__dict__
+            **self.__dict__,
         )
         return os.path.join(self.cache_dir, fn)
 
-    def set_source(self, cache_fn):
+    def set_source(self, cache_fn: str) -> None:
         self.source = cache_fn
         self.state = 'need-animation'
 
@@ -99,45 +109,45 @@ class Tile(Rectangle):
 class GlowMapMarker(ButtonBehavior, GlowWidget, Image):
     '''A marker on a map, that must be used on a :class:`GlowMapMarker`'''
 
-    anchor_x = NumericProperty(0.5)
+    anchor_x = NumericProperty(defaultvalue=0.5)
     '''Anchor of the marker on the X axis. Defaults to 0.5, mean the anchor will
     be at the X center of the image.
     '''
 
-    anchor_y = NumericProperty(0)
+    anchor_y = NumericProperty(defaultvalue=0)
     '''Anchor of the marker on the Y axis. Defaults to 0, mean the anchor will
     be at the Y bottom of the image.
     '''
 
-    lat = NumericProperty(0)
+    lat = NumericProperty(defaultvalue=0)
     '''Latitude of the marker'''
 
-    lon = NumericProperty(0)
+    lon = NumericProperty(defaultvalue=0)
     '''Longitude of the marker'''
 
-    source = StringProperty('kivy_glow/images/map/marker.png')
+    source = StringProperty(defaultvalue='kivy_glow/images/map/marker.png')
     '''Source of the marker, defaults to our own marker.png'''
 
     _layer = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.texture_update()
 
         if 'texture_size' in kwargs.keys():
             self.texture_size = kwargs['texture_size']
 
-    def detach(self):
+    def detach(self) -> None:
         if self._layer:
             self._layer.remove_widget(self)
             self._layer = None
 
 
 class GlowMapMarkerPopup(GlowMapMarker):
-    is_open = BooleanProperty(False)
-    placeholder = ObjectProperty(None)
+    is_open = BooleanProperty(defaultvalue=False)
+    placeholder = ObjectProperty(defaultvalue=None)
 
-    def add_widget(self, widget):
+    def add_widget(self, widget: Widget) -> None:
         if not self.placeholder:
             self.placeholder = widget
             if self.is_open:
@@ -145,19 +155,19 @@ class GlowMapMarkerPopup(GlowMapMarker):
         else:
             self.placeholder.add_widget(widget)
 
-    def remove_widget(self, widget):
+    def remove_widget(self, widget: Widget) -> None:
         if widget is not self.placeholder:
             self.placeholder.remove_widget(widget)
         else:
             super().remove_widget(widget)
 
-    def on_is_open(self, *args):
+    def on_is_open(self, *args) -> None:
         self.refresh_open_status()
 
-    def on_release(self, *args):
+    def on_release(self, *args) -> None:
         self.is_open = not self.is_open
 
-    def refresh_open_status(self):
+    def refresh_open_status(self) -> None:
         if not self.is_open and self.placeholder.parent:
             super().remove_widget(self.placeholder)
         elif self.is_open and not self.placeholder.parent:
@@ -169,16 +179,16 @@ class GlowMapLayer(GlowWidget):
     moved.
     '''
 
-    viewport_x = NumericProperty(0)
-    viewport_y = NumericProperty(0)
+    viewport_x = NumericProperty(defaultvalue=0)
+    viewport_y = NumericProperty(defaultvalue=0)
 
-    def reposition(self):
+    def reposition(self) -> None:
         '''Function called when :class:`MapView` is moved. You must recalculate
         the position of your children.
         '''
         pass
 
-    def unload(self):
+    def unload(self) -> None:
         '''Called when the view want to completly unload the layer.'''
         pass
 
@@ -186,34 +196,34 @@ class GlowMapLayer(GlowWidget):
 class GlowMarkerMapLayer(GlowMapLayer):
     '''A map layer for :class:`GlowMapMarker`'''
 
-    order_marker_by_latitude = BooleanProperty(True)
+    order_marker_by_latitude = BooleanProperty(defaultvalue=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.markers = []
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
-    def insert_marker(self, marker, **kwargs):
+    def insert_marker(self, marker: GlowMapMarker | GlowMapMarkerPopup, **kwargs) -> None:
         if self.order_marker_by_latitude:
             before = list(
-                takewhile(lambda i_m: i_m[1].lat < marker.lat, enumerate(self.children))
+                takewhile(lambda i_m: i_m[1].lat < marker.lat, enumerate(self.children)),
             )
             if before:
                 kwargs['index'] = before[-1][0] + 1
 
         super().add_widget(marker, **kwargs)
 
-    def add_widget(self, marker):
+    def add_widget(self, marker: GlowMapMarker | GlowMapMarkerPopup) -> None:
         marker._layer = self
         self.markers.append(marker)
         self.insert_marker(marker)
 
-    def remove_widget(self, marker):
+    def remove_widget(self, marker: GlowMapMarker | GlowMapMarkerPopup) -> None:
         marker._layer = None
         if marker in self.markers:
             self.markers.remove(marker)
         super().remove_widget(marker)
 
-    def reposition(self):
+    def reposition(self) -> None:
         if not self.markers:
             return
         mapview = self.parent
@@ -221,7 +231,7 @@ class GlowMarkerMapLayer(GlowMapLayer):
         bbox = None
         # reposition the markers depending the latitude
         markers = sorted(self.markers, key=lambda x: -x.lat)
-        margin = max((max(marker.size) for marker in markers))
+        margin = max(max(marker.size) for marker in markers)
         bbox = mapview.get_bbox(margin)
         for marker in markers:
             if bbox.collide(marker.lat, marker.lon):
@@ -231,22 +241,22 @@ class GlowMarkerMapLayer(GlowMapLayer):
             else:
                 super().remove_widget(marker)
 
-    def set_marker_position(self, mapview, marker):
+    def set_marker_position(self, mapview: Widget, marker: GlowMapMarker | GlowMapMarkerPopup) -> None:
         x, y = mapview.get_window_xy_from(marker.lat, marker.lon, mapview.zoom)
         marker.x = int(x - marker.width * marker.anchor_x)
         marker.y = int(y - marker.height * marker.anchor_y)
 
-    def unload(self):
+    def unload(self) -> None:
         self.clear_widgets()
         del self.markers[:]
 
 
 class GlowMapViewScatter(GlowWidget, Scatter):
-    def on_transform(self, *args):
+    def on_transform(self, *args) -> None:
         super().on_transform(*args)
         self.parent.on_transform(self.transform)
 
-    def collide_point(self, x, y):
+    def collide_point(self, x: float | int, y: float | int) -> bool:
         return True
 
 
@@ -263,62 +273,62 @@ class GlowMap(GlowWidget):
     '''Latitude at the center of the widget
     '''
 
-    zoom = NumericProperty(0)
+    zoom = NumericProperty(defaultvalue=0)
     '''Zoom of the widget. Must be between :meth:`MapSource.get_min_zoom` and
     :meth:`MapSource.get_max_zoom`. Default to 0.
     '''
 
-    map_source = ObjectProperty(MapSource())
+    map_source = ObjectProperty(defaultvalue=MapSource())
     '''Provider of the map, default to a empty :class:`MapSource`.
     '''
 
-    double_tap_zoom = BooleanProperty(False)
+    double_tap_zoom = BooleanProperty(defaultvalue=False)
     '''If True, this will activate the double-tap to zoom.
     '''
 
-    pause_on_action = BooleanProperty(True)
+    pause_on_action = BooleanProperty(defaultvalue=True)
     '''Pause any map loading / tiles loading when an action is done.
     This allow better performance on mobile, but can be safely deactivated on
     desktop.
     '''
 
-    snap_to_zoom = BooleanProperty(True)
+    snap_to_zoom = BooleanProperty(defaultvalue=True)
     '''When the user initiate a zoom, it will snap to the closest zoom for
     better graphics. The map can be blur if the map is scaled between 2 zoom.
     Default to True, even if it doesn't fully working yet.
     '''
 
-    animation_duration = NumericProperty(100)
+    animation_duration = NumericProperty(defaultvalue=100)
     '''Duration to animate Tiles alpha from 0 to 1 when it's ready to show.
     Default to 100 as 100ms. Use 0 to deactivate.
     '''
 
-    delta_x = NumericProperty(0)
-    delta_y = NumericProperty(0)
-    background_color = ListProperty([181 / 255.0, 208 / 255.0, 208 / 255.0, 1])
-    cache_dir = StringProperty('map_cache')
-    _zoom = NumericProperty(0)
-    _pause = BooleanProperty(False)
+    delta_x = NumericProperty(defaultvalue=0)
+    delta_y = NumericProperty(defaultvalue=0)
+    background_color = ListProperty(defaultvalue=[181 / 255.0, 208 / 255.0, 208 / 255.0, 1])
+    cache_dir = StringProperty(defaultvalue='map_cache')
+    _zoom = NumericProperty(defaultvalue=0)
+    _pause = BooleanProperty(defaultvalue=False)
     _scale = 1.0
     _disabled_count = 0
 
-    __events__ = ['on_map_relocated']
+    __events__ = ('on_map_relocated', )
 
     # Public API
 
     @property
-    def viewport_pos(self):
+    def viewport_pos(self) -> tuple[float | int, float | int]:
         vx, vy = self._scatter.to_local(self.x, self.y)
         return vx - self.delta_x, vy - self.delta_y
 
     @property
-    def scale(self):
+    def scale(self) -> float:
         if self._invalid_scale:
             self._invalid_scale = False
             self._scale = self._scatter.scale
         return self._scale
 
-    def get_bbox(self, margin=0):
+    def get_bbox(self, margin: float | int = 0) -> Bbox:
         '''Returns the bounding box from the bottom/left (lat1, lon1) to
         top/right (lat2, lon2).'''
         x1, y1 = self.to_local(0 - margin, 0 - margin)
@@ -330,27 +340,23 @@ class GlowMap(GlowWidget):
 
     bbox = AliasProperty(get_bbox, None, bind=['lat', 'lon', '_zoom'])
 
-    def unload(self):
+    def unload(self) -> None:
         '''Unload the view and all the layers.
         It also cancel all the remaining downloads.
         '''
         self.remove_all_tiles()
 
-    def get_window_xy_from(self, lat, lon, zoom):
+    def get_window_xy_from(self, lat: float | int, lon: float | int, zoom: int) -> tuple[float | int, float | int]:
         '''Returns the x/y position in the widget absolute coordinates
         from a lat/lon'''
         scale = self.scale
         vx, vy = self.viewport_pos
         ms = self.map_source
-        x = ms.get_x(zoom, lon) - vx
-        y = ms.get_y(zoom, lat) - vy
-        x *= scale
-        y *= scale
-        x = x + self.pos[0]
-        y = y + self.pos[1]
-        return x, y
+        nx = (ms.get_x(zoom, lon) - vx) * scale + self.pos[0]
+        ny = (ms.get_y(zoom, lat) - vy) * scale + self.pos[1]
+        return nx, ny
 
-    def center_on(self, *args):
+    def center_on(self, *args) -> None:
         '''Center the map on the coordinate :class:`Coordinate`, or a (lat, lon)
         '''
         map_source = self.map_source
@@ -360,7 +366,7 @@ class GlowMap(GlowWidget):
             coord = args[0]
             lat = coord.lat
             lon = coord.lon
-        elif len(args) == 2:
+        elif len(args) == 2:  # noqa: PLR2004
             lat, lon = args
         else:
             raise Exception('Invalid argument for center_on')
@@ -375,19 +381,19 @@ class GlowMap(GlowWidget):
         self.lon = lon
         self.lat = lat
         self._scatter.pos = 0, 0
-        self.trigger_update(True)
+        self.trigger_update(full=True)
 
-    def set_zoom_at(self, zoom, x, y, scale=None):
+    def set_zoom_at(self, zoom: int, x: float | int, y: float | int, scale: float | None = None) -> None:
         '''Sets the zoom level, leaving the (x, y) at the exact same point
         in the view.
         '''
         zoom = clamp(
-            zoom, self.map_source.get_min_zoom(), self.map_source.get_max_zoom()
+            zoom, self.map_source.get_min_zoom(), self.map_source.get_max_zoom(),
         )
         if int(zoom) == int(self._zoom):
             if scale is None:
                 return
-            elif scale == self.scale:
+            if scale == self.scale:
                 return
         scale = scale or 1.0
 
@@ -411,14 +417,14 @@ class GlowMap(GlowWidget):
             self.delta_y = scatter.y + self.delta_y * f
             # back to 0 every time
             scatter.apply_transform(
-                Matrix().translate(-scatter.x, -scatter.y, 0), post_multiply=True
+                Matrix().translate(-scatter.x, -scatter.y, 0), post_multiply=True,
             )
 
         # avoid triggering zoom changes.
         self._zoom = zoom
         self.zoom = self._zoom
 
-    def on_zoom(self, instance, zoom):
+    def on_zoom(self, instance: Self, zoom: int) -> None:
         if zoom == self._zoom:
             return
 
@@ -428,12 +434,12 @@ class GlowMap(GlowWidget):
         self.center_on(self.lat, self.lon)
 
         if zoom == self.map_source.min_zoom:
-            self.trigger_update(True)
+            self.trigger_update(full=True)
             self._scatter.scale = 1
             self.center_on(0, 0)
             self._scale = 1
 
-    def get_latlon_at(self, x, y, zoom=None):
+    def get_latlon_at(self, x: int | float, y: int | float, zoom: int | None = None) -> Coordinate:
         '''Return the current :class:`Coordinate` within the (x, y) widget
         coordinate.
         '''
@@ -446,7 +452,7 @@ class GlowMap(GlowWidget):
             lon=self.map_source.get_lon(zoom, x / scale + vx),
         )
 
-    def add_marker(self, marker, layer=None):
+    def add_marker(self, marker: GlowMapMarker | GlowMapMarkerPopup, layer: GlowMarkerMapLayer | None = None) -> None:
         '''Add a marker into the layer. If layer is None, it will be added in
         the default marker layer. If there is no default marker layer, a new
         one will be automatically created
@@ -460,12 +466,12 @@ class GlowMap(GlowWidget):
         layer.add_widget(marker)
         layer.set_marker_position(self, marker)
 
-    def remove_marker(self, marker):
+    def remove_marker(self, marker: GlowMapMarker | GlowMapMarkerPopup) -> None:
         '''Remove a marker from its layer
         '''
         marker.detach()
 
-    def add_layer(self, layer, mode='window'):
+    def add_layer(self, layer: GlowMarkerMapLayer, mode: str = 'window') -> None:
         '''Add a new layer to update at the same time the base tile layer.
         mode can be either 'scatter' or 'window'. If 'scatter', it means the
         layer will be within the scatter transformation. It's perfect if you
@@ -474,7 +480,9 @@ class GlowMap(GlowWidget):
         widget yourself: think as Z-sprite / billboard.
         Defaults to 'window'.
         '''
-        assert mode in ('scatter', 'window')
+        if mode not in {'scatter', 'window'}:
+            raise ValueError('mode should be in (`scatter`, `window`)')
+
         if self._default_marker_layer is None and isinstance(layer, GlowMarkerMapLayer):
             self._default_marker_layer = layer
         self._layers.append(layer)
@@ -487,7 +495,7 @@ class GlowMap(GlowWidget):
         super().add_widget(layer)
         self.canvas = c
 
-    def remove_layer(self, layer):
+    def remove_layer(self, layer: GlowMarkerMapLayer) -> None:
         '''Remove the layer
         '''
         c = self.canvas
@@ -496,7 +504,7 @@ class GlowMap(GlowWidget):
         super().remove_widget(layer)
         self.canvas = c
 
-    def sync_to(self, other):
+    def sync_to(self, other: Self) -> None:
         '''Reflect the lat/lon/zoom of the other MapView to the current one.
         '''
         if self._zoom != other._zoom:
@@ -505,8 +513,7 @@ class GlowMap(GlowWidget):
 
     # Private API
 
-    def __init__(self, *args, **kwargs):
-        from kivy.base import EventLoop
+    def __init__(self, *args, **kwargs) -> None:
 
         EventLoop.ensure_window()
         self._invalid_scale = True
@@ -517,7 +524,7 @@ class GlowMap(GlowWidget):
         self._default_marker_layer = None
         self._need_redraw_full = True
         self._transform_lock = False
-        self.trigger_update(True)
+        self.trigger_update(full=True)
         self.canvas = Canvas()
         self._scatter = GlowMapViewScatter()
         self.add_widget(self._scatter)
@@ -537,7 +544,7 @@ class GlowMap(GlowWidget):
 
         super().__init__(*args, **kwargs)
 
-    def _animate_color(self, dt):
+    def _animate_color(self, dt: float | int) -> None:
         # fast path
         d = self.animation_duration
         if d == 0:
@@ -550,7 +557,7 @@ class GlowMap(GlowWidget):
                     tile.g_color.a = 1.0
                     tile.state = 'animated'
         else:
-            d = d / 1000.0
+            d /= 1000.0
             for tile in self._tiles:
                 if tile.state != 'need-animation':
                     continue
@@ -564,7 +571,7 @@ class GlowMap(GlowWidget):
                 if tile.g_color.a >= 1:
                     tile.state = 'animated'
 
-    def add_widget(self, widget):
+    def add_widget(self, widget: Widget) -> None:
         if isinstance(widget, GlowMapMarker):
             self.add_marker(widget)
         elif isinstance(widget, GlowMapLayer):
@@ -572,7 +579,7 @@ class GlowMap(GlowWidget):
         else:
             super().add_widget(widget)
 
-    def remove_widget(self, widget):
+    def remove_widget(self, widget: Widget) -> None:
         if isinstance(widget, GlowMapMarker):
             self.remove_marker(widget)
         elif isinstance(widget, GlowMapLayer):
@@ -580,10 +587,10 @@ class GlowMap(GlowWidget):
         else:
             super().remove_widget(widget)
 
-    def on_map_relocated(self, zoom, coord):
+    def on_map_relocated(self, zoom: int, coord: Coordinate) -> None:
         pass
 
-    def animated_diff_scale_at(self, d, x, y):
+    def animated_diff_scale_at(self, d: float, x: float | int, y: float | int) -> None:
         self._scale_target_time = 1.0
         self._scale_target_pos = x, y
         if self._scale_target_anim is False:
@@ -594,9 +601,9 @@ class GlowMap(GlowWidget):
         Clock.unschedule(self._animate_scale)
         Clock.schedule_interval(self._animate_scale, 1 / 60.0)
 
-    def _animate_scale(self, dt):
+    def _animate_scale(self, dt: float) -> bool:
         diff = self._scale_target / 3.0
-        if abs(diff) < 0.01:
+        if abs(diff) < 0.01:  # noqa: PLR2004
             diff = self._scale_target
             self._scale_target = 0
         else:
@@ -608,12 +615,12 @@ class GlowMap(GlowWidget):
             self._pause = False
         return ret
 
-    def diff_scale_at(self, d, x, y):
+    def diff_scale_at(self, d: float, x: float | int, y: float | int) -> None:
         scatter = self._scatter
         scale = scatter.scale * (2 ** d)
         self.scale_at(scale, x, y)
 
-    def scale_at(self, scale, x, y):
+    def scale_at(self, scale: float, x: float | int, y: float | int) -> None:
         scatter = self._scatter
         scale = clamp(scale, scatter.scale_min, scatter.scale_max)
         rescale = scale * 1.0 / scatter.scale
@@ -623,18 +630,19 @@ class GlowMap(GlowWidget):
             anchor=scatter.to_local(x, y),
         )
 
-    def on_touch_down(self, touch):
+    def on_touch_down(self, touch: MotionEvent) -> bool:
         if not self.collide_point(*touch.pos):
-            return
+            return False
+
         if self.pause_on_action:
             self._pause = True
-        if 'button' in touch.profile and touch.button in ('scrolldown', 'scrollup'):
+        if 'button' in touch.profile and touch.button in {'scrolldown', 'scrollup'}:
 
             d = 1 if touch.button == 'scrolldown' else -1
             self.animated_diff_scale_at(d, *touch.pos)
             return True
 
-        elif touch.is_double_tap and self.double_tap_zoom:
+        if touch.is_double_tap and self.double_tap_zoom:
             self.animated_diff_scale_at(1, *touch.pos)
             return True
 
@@ -644,7 +652,7 @@ class GlowMap(GlowWidget):
             self._touch_zoom = (self.zoom, self._scale)
         return super().on_touch_down(touch)
 
-    def on_touch_up(self, touch):
+    def on_touch_up(self, touch: MotionEvent) -> bool:
         if touch.grab_current == self:
             touch.ungrab(self)
             self._touch_count -= 1
@@ -666,7 +674,7 @@ class GlowMap(GlowWidget):
 
         return super().on_touch_up(touch)
 
-    def on_transform(self, *args):
+    def on_transform(self, *args) -> None:
         self._invalid_scale = True
         if self._transform_lock:
             return
@@ -677,24 +685,23 @@ class GlowMap(GlowWidget):
         scatter = self._scatter
         scale = scatter.scale
 
-        if (scale - 2.0) > 0.01:
+        if (scale - 2.0) > 0.01:  # noqa: PLR2004
             zoom += 1
             scale /= 2.0
-        elif (scale - 1.0) < -0.01:
+        elif (scale - 1.0) < -0.01:  # noqa: PLR2004
             zoom -= 1
             scale *= 2.0
 
         zoom = clamp(zoom, map_source.min_zoom, map_source.max_zoom)
         if zoom != self._zoom:
             self.set_zoom_at(zoom, scatter.x, scatter.y, scale=scale)
-            self.trigger_update(True)
+            self.trigger_update(full=True)
+        elif zoom == map_source.min_zoom and scatter.scale < 1:
+            scatter.scale = 1
+            self.center_on(0, 0)
+            self.trigger_update(full=True)
         else:
-            if zoom == map_source.min_zoom and scatter.scale < 1:
-                scatter.scale = 1
-                self.center_on(0, 0)
-                self.trigger_update(True)
-            else:
-                self.trigger_update(False)
+            self.trigger_update(full=False)
 
         if map_source.bounds:
             self._apply_bounds()
@@ -702,7 +709,7 @@ class GlowMap(GlowWidget):
         self._transform_lock = False
         self._scale = self._scatter.scale
 
-    def _apply_bounds(self):
+    def _apply_bounds(self) -> None:
         # if the map_source have any constraints, apply them here.
         map_source = self.map_source
         zoom = self._zoom
@@ -730,23 +737,23 @@ class GlowMap(GlowWidget):
         if cymax > ymax:
             self._scatter.y -= (ymax - cymax) * s
 
-    def on__pause(self, instance, value):
+    def on__pause(self, instance: Self, value: bool) -> None:
         if not value:
-            self.trigger_update(True)
+            self.trigger_update(full=True)
 
-    def trigger_update(self, full):
+    def trigger_update(self, full: bool) -> None:
         self._need_redraw_full = full or self._need_redraw_full
         Clock.unschedule(self.do_update)
         Clock.schedule_once(self.do_update, -1)
 
-    def do_update(self, dt):
+    def do_update(self, *args) -> None:
         zoom = self._zoom
         scale = self._scale
         self.lon = self.map_source.get_lon(
-            zoom, (self.center_x - self._scatter.x) / scale - self.delta_x
+            zoom, (self.center_x - self._scatter.x) / scale - self.delta_x,
         )
         self.lat = self.map_source.get_lat(
-            zoom, (self.center_y - self._scatter.y) / scale - self.delta_y
+            zoom, (self.center_y - self._scatter.y) / scale - self.delta_y,
         )
         self._scatter.size = self.size
 
@@ -761,7 +768,7 @@ class GlowMap(GlowWidget):
         else:
             self.load_visible_tiles()
 
-    def bbox_for_zoom(self, vx, vy, w, h, zoom):
+    def bbox_for_zoom(self, vx: float | int, vy: float | int, w: float | int, h: float | int, zoom: int) -> tuple[int, int, int, int, int, int]:
         # return a tile-bbox for the zoom
         map_source = self.map_source
         size = map_source.dp_tile_size
@@ -784,7 +791,7 @@ class GlowMap(GlowWidget):
         y_count = tile_y_last - tile_y_first
         return (tile_x_first, tile_y_first, tile_x_last, tile_y_last, x_count, y_count)
 
-    def load_visible_tiles(self):
+    def load_visible_tiles(self) -> None:
         map_source = self.map_source
         vx, vy = self.viewport_pos
         zoom = self._zoom
@@ -846,7 +853,7 @@ class GlowMap(GlowWidget):
                 or tile_y >= tile_y_last
             ):
                 tile.state = 'done'
-                self.tile_map_set(tile_x, tile_y, False)
+                self.tile_map_set(tile_x, tile_y, value=False)
                 self._tiles.remove(tile)
                 self.canvas_map.remove(tile)
                 self.canvas_map.remove(tile.g_color)
@@ -861,7 +868,7 @@ class GlowMap(GlowWidget):
         arm_size = 1
         turn = 0
         while arm_size < arm_max:
-            for i in range(arm_size):
+            for _ in range(arm_size):
                 if (
                     not self.tile_in_tile_map(x, y)
                     and y >= tile_y_first
@@ -879,14 +886,14 @@ class GlowMap(GlowWidget):
 
             turn += 1
 
-    def load_tile(self, x, y, size, zoom):
+    def load_tile(self, x: float | int, y: float | int, size: int, zoom: int) -> None:
         if self.tile_in_tile_map(x, y) or zoom != self._zoom:
             return
         self.load_tile_for_source(self.map_source, 1.0, size, x, y, zoom)
         # XXX do overlay support
-        self.tile_map_set(x, y, True)
+        self.tile_map_set(x, y, value=True)
 
-    def load_tile_for_source(self, map_source, opacity, size, x, y, zoom):
+    def load_tile_for_source(self, map_source: MapSource, opacity: float, size: int, x: float | int, y: float | int, zoom: int) -> None:
         tile = Tile(size=(size, size), cache_dir=self.cache_dir)
         tile.g_color = Color(1, 1, 1, 0)
         tile.tile_x = x
@@ -901,7 +908,7 @@ class GlowMap(GlowWidget):
         self.canvas_map.add(tile)
         self._tiles.append(tile)
 
-    def move_tiles_to_background(self):
+    def move_tiles_to_background(self) -> None:
         # remove all the tiles of the main map to the background map
         # retain only the one who are on the current zoom level
         # for all the tile in the background, stop the download if not yet started.
@@ -936,12 +943,12 @@ class GlowMap(GlowWidget):
                 tile.size = tile_size, tile_size
                 canvas_map.add(tile.g_color)
                 canvas_map.add(tile)
-                self.tile_map_set(tile.tile_x, tile.tile_y, True)
+                self.tile_map_set(tile.tile_x, tile.tile_y, value=True)
                 continue
             canvas_map.before.add(tile.g_color)
             canvas_map.before.add(tile)
 
-    def remove_all_tiles(self):
+    def remove_all_tiles(self) -> None:
         # clear the map of all tiles.
         self.canvas_map.clear()
         self.canvas_map.before.clear()
@@ -951,28 +958,28 @@ class GlowMap(GlowWidget):
         del self._tiles_bg[:]
         self._tilemap = {}
 
-    def tile_map_set(self, tile_x, tile_y, value):
+    def tile_map_set(self, tile_x: float | int, tile_y: float | int, value: bool) -> None:
         key = tile_y * self.map_source.get_col_count(self._zoom) + tile_x
         if value:
             self._tilemap[key] = value
         else:
             self._tilemap.pop(key, None)
 
-    def tile_in_tile_map(self, tile_x, tile_y):
+    def tile_in_tile_map(self, tile_x: float | int, tile_y: float | int) -> bool:
         key = tile_y * self.map_source.get_col_count(self._zoom) + tile_x
         return key in self._tilemap
 
-    def on_size(self, instance, size):
+    def on_size(self, instance: Self, size: tuple[float | int, float | int]) -> None:
         for layer in self._layers:
             layer.size = size
         self.center_on(self.lat, self.lon)
-        self.trigger_update(True)
+        self.trigger_update(full=True)
 
-    def on_pos(self, instance, pos):
+    def on_pos(self, instance: Self, pos: tuple[float | int, float | int]) -> None:
         self.center_on(self.lat, self.lon)
-        self.trigger_update(True)
+        self.trigger_update(full=True)
 
-    def on_map_source(self, instance, source):
+    def on_map_source(self, instance: Self, source: Any) -> None:
         if isinstance(source, string_types):
             self.map_source = MapSource(source)
         elif isinstance(source, MapSource):
@@ -982,4 +989,4 @@ class GlowMap(GlowWidget):
 
         self.zoom = clamp(self.zoom, self.map_source.min_zoom, self.map_source.max_zoom)
         self.remove_all_tiles()
-        self.trigger_update(True)
+        self.trigger_update(full=True)
