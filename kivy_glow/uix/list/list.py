@@ -87,7 +87,7 @@ class GlowSelectableListItem(GlowBoxLayout,
     classes documentation.
     '''
 
-    selected = BooleanProperty(defaultvalue=False)
+    selected = BooleanProperty(False)
     '''If item is selected.
 
     You cannot change this value, the checkbox will still be enabled.
@@ -96,7 +96,7 @@ class GlowSelectableListItem(GlowBoxLayout,
     and defaults to `False`.
     '''
 
-    _index = NumericProperty(defaultvalue=None, allownone=True)
+    _index = NumericProperty(None, allownone=True)
     _clicked = False
 
     def __init__(self, *args, **kwargs) -> None:
@@ -256,7 +256,7 @@ class GlowList(GlowBoxLayout):
     :attr:`list_data` is an :class:`~kivy.properties.list_data`
     '''
 
-    item_properties = ListProperty(defaultvalue=None, allownone=True)
+    item_properties = ListProperty(None, allownone=True)
     '''Properties list item. They will be applied in the same order as the values in the :attr:`list_data`
 
     Example:
@@ -274,44 +274,44 @@ class GlowList(GlowBoxLayout):
     and defaults to `None`.
     '''
 
-    viewclass = StringProperty(defaultvalue='GlowSelectableListItem')
+    viewclass = StringProperty('GlowSelectableListItem')
     '''List item view class
 
     :attr:`viewclass` is an :class:`~kivy.properties.StringProperty`
     and defaults to `GlowSelectableListItem`.
     '''
 
-    effect_cls = ObjectProperty(defaultvalue=ScrollEffect)
+    effect_cls = ObjectProperty(ScrollEffect)
     '''Effect applied to sroll
 
     :attr:`effect_cls` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `ScrollEffect`.
     '''
 
-    odd_item_color = ColorProperty(defaultvalue=None, allownone=True)
+    odd_item_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the odd item
 
     :attr:`odd_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    even_item_color = ColorProperty(defaultvalue=None, allownone=True)
+    even_item_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the even item
 
     :attr:`even_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hover_item_color = ColorProperty(defaultvalue=None, allownone=True)
+    hover_item_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hover item
 
     :attr:`hover_item_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _odd_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _even_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _hover_item_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _odd_item_color = ColorProperty((0, 0, 0, 0))
+    _even_item_color = ColorProperty((0, 0, 0, 0))
+    _hover_item_color = ColorProperty((0, 0, 0, 0))
 
     _formatted_list_data = ListProperty()
     _selected_items: dict = {}  # noqa: RUF012

@@ -41,7 +41,7 @@ class AdaptiveBehavior(EventDispatcher):
     '''
 
     breakpoints = DictProperty(
-        defaultvalue={
+        {
             'xs': 480,
             'sm': 768,
             'md': 976,
@@ -56,7 +56,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `{ 'xs': 480, 'sm': 768, 'md': 976, 'lg': 1440, 'xl': ∞}`.
     '''
 
-    adaptive_width = BooleanProperty(defaultvalue=False)
+    adaptive_width = BooleanProperty(False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -67,7 +67,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    adaptive_height = BooleanProperty(defaultvalue=False)
+    adaptive_height = BooleanProperty(False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -78,7 +78,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    adaptive_size = BooleanProperty(defaultvalue=False)
+    adaptive_size = BooleanProperty(False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv
@@ -89,7 +89,7 @@ class AdaptiveBehavior(EventDispatcher):
     and defaults to `False`.
     '''
 
-    hidden = BooleanProperty(defaultvalue=False)
+    hidden = BooleanProperty(False)
     '''If `True`, the following properties will be applied to the widget:
 
         .. code-block:: kv

@@ -380,10 +380,10 @@ class SuperCluster:
 
 
 class GlowClusterMapMarker(GlowMapMarker):
-    source = StringProperty(defaultvalue='kivy_glow/images/map/cluster.png')
+    source = StringProperty('kivy_glow/images/map/cluster.png')
     cluster = ObjectProperty()
     num_points = NumericProperty()
-    text_color = ListProperty(defaultvalue=(0.1, 0.1, 0.1, 1))
+    text_color = ListProperty((0.1, 0.1, 0.1, 1))
 
     def on_cluster(self, instance: Self, cluster: Cluster) -> None:
         self.num_points = cluster.num_points
@@ -419,13 +419,13 @@ class GlowClusterMapMarker(GlowMapMarker):
 
 
 class GlowClusteredMarkerLayer(GlowMapLayer):
-    cluster_cls = ObjectProperty(defaultvalue=GlowClusterMapMarker)
-    cluster_min_zoom = NumericProperty(defaultvalue=0)
-    cluster_max_zoom = NumericProperty(defaultvalue=16)
-    cluster_radius = NumericProperty(defaultvalue='40dp')
-    cluster_extent = NumericProperty(defaultvalue=512)
-    cluster_node_size = NumericProperty(defaultvalue=64)
-    cluster_zoom_on_click = BooleanProperty(defaultvalue=False)
+    cluster_cls = ObjectProperty(GlowClusterMapMarker)
+    cluster_min_zoom = NumericProperty(0)
+    cluster_max_zoom = NumericProperty(16)
+    cluster_radius = NumericProperty('40dp')
+    cluster_extent = NumericProperty(512)
+    cluster_node_size = NumericProperty(64)
+    cluster_zoom_on_click = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs) -> None:
         self.cluster = None

@@ -22,7 +22,7 @@ class ThemeBehavior(EventDispatcher):
 
     :attr:`theme_cls` is an :class:`~kivy.properties.ObjectProperty`.
     '''
-    widget_style = OptionProperty(defaltvalue=None, options=('desktop', 'mobile'), allownone=True)
+    widget_style = OptionProperty(None, options=('desktop', 'mobile'), allownone=True)
     '''Allows to set one of the two style properties for the widget:
     `'desktop'`, `'mobile'`.
 
@@ -32,10 +32,10 @@ class ThemeBehavior(EventDispatcher):
     '''
     device = 'unonknow'
 
-    row = NumericProperty(defaltvalue=0)
-    col = NumericProperty(defaltvalue=0)
-    rowspan = NumericProperty(defaltvalue=1)
-    colspan = NumericProperty(defaltvalue=1)
+    row = NumericProperty(0)
+    col = NumericProperty(0)
+    rowspan = NumericProperty(1)
+    colspan = NumericProperty(1)
     '''
     Support for GlowTableLayout
     '''

@@ -26,42 +26,42 @@ with open(
 
 class GlowToolBar(GlowBoxLayout):
 
-    title = StringProperty(defaultvalue=None, allownone=True)
+    title = StringProperty(None, allownone=True)
     '''Title toolbar text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty(defaultvalue='left', options=('left', 'center', 'right'))
+    title_halign = OptionProperty('left', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    title_font_style = StringProperty(defaultvalue='DisplayM')
+    title_font_style = StringProperty('DisplayM')
     '''Title font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
     and defaults to `DisplayM`.
     '''
 
-    left_buttons = ListProperty(defaultvalue=None, allownone=True)
+    left_buttons = ListProperty(None, allownone=True)
     '''Toolbar left buttons.
 
     :attr:`left_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    right_buttons = ListProperty(defaultvalue=None, allownone=True)
+    right_buttons = ListProperty(None, allownone=True)
     '''Toolbar right buttons.
 
     :attr:`right_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    use_overflow = BooleanProperty(defaultvalue=False)
+    use_overflow = BooleanProperty(False)
     '''If yoolbar is resized, buttons move to the overflow menu from right
     to left.
 
@@ -69,21 +69,21 @@ class GlowToolBar(GlowBoxLayout):
     and defaults to `False`.
     '''
 
-    overflow_buttons = ListProperty(defaultvalue=[])
+    overflow_buttons = ListProperty([])
     '''Toolbar overflow buttons.
 
     :attr:`overflow_buttons` is an :class:`~kivy.properties.ListProperty`
     and defaults to `empty`.
     '''
 
-    overflow_button_icon = StringProperty(defaultvalue='dots-vertical')
+    overflow_button_icon = StringProperty('dots-vertical')
     '''Toolbar overflow button icon.
 
     :attr:`overflow_button_icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `dots-vertical`.
     '''
 
-    is_overflow = BooleanProperty(defaultvalue=False)
+    is_overflow = BooleanProperty(False)
     _width = 0
 
     def __init__(self, *args, **kwargs) -> None:

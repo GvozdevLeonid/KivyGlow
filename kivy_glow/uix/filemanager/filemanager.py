@@ -111,7 +111,7 @@ class GlowFileManager(DeclarativeBehavior,
                       ThemeBehavior,
                       ModalView):
 
-    selector = OptionProperty(defaultvalue='file', options=['file', 'files', 'folder'])
+    selector = OptionProperty('file', options=['file', 'files', 'folder'])
     '''File manager mode.
 
     `file` - single file selection
@@ -129,49 +129,49 @@ class GlowFileManager(DeclarativeBehavior,
     and defaults to `empty`.
     '''
 
-    show_hidden = BooleanProperty(defaultvalue=False)
+    show_hidden = BooleanProperty(False)
     '''Show hidden files
 
     :attr:`show_hidden` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    sort_by = OptionProperty(defaultvalue='name', options=['name', 'date', 'size', 'type'], allownone=True)
+    sort_by = OptionProperty('name', options=['name', 'date', 'size', 'type'], allownone=True)
     '''Option for sorting files and folders
 
     :attr:`sort_by` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `name`.
     '''
 
-    sort_reverse = BooleanProperty(defaultvalue=False)
+    sort_reverse = BooleanProperty(False)
     '''Reverse sorting
 
     :attr:`sort_reverse` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    current_path = StringProperty(defaultvalue=os.path.expanduser('~'))
+    current_path = StringProperty(os.path.expanduser('~'))
     '''The path that is currently shown
 
     :attr:`current_path` is an :class:`~kivy.properties.StringProperty`
     and defaults to `os.path.expanduser("~")`.
     '''
 
-    dismiss_manager = ObjectProperty(defaultvalue=lambda x: None)
+    dismiss_manager = ObjectProperty(lambda x: None)
     '''Function called when the user reaches directory tree root or closed manager.
 
     :attr:`exit_manager` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `lambda x: None`.
     '''
 
-    select_path = ObjectProperty(defaultvalue=lambda x: None)
+    select_path = ObjectProperty(lambda x: None)
     '''Function, called when selecting a file/directory.
 
     :attr:`select_path` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `lambda x: None`.
     '''
 
-    _content = ListProperty(defaultvalue=[])
+    _content = ListProperty([])
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

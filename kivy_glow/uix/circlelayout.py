@@ -19,16 +19,16 @@ from kivy_glow.uix.floatlayout import GlowFloatLayout
 
 
 class GlowCircleLayout(GlowFloatLayout):
-    degree_spacing = NumericProperty(defaultvalue=30)
-    circular_radius = NumericProperty(defaultvalue=None, allownone=True)
-    start_from = NumericProperty(defaultvalue=0)
+    degree_spacing = NumericProperty(30)
+    circular_radius = NumericProperty(None, allownone=True)
+    start_from = NumericProperty(0)
 
-    max_degree = NumericProperty(defaultvalue=360)
-    circular_padding = NumericProperty(defaultvalue='25dp')
+    max_degree = NumericProperty(360)
+    circular_padding = NumericProperty('25dp')
 
-    row_spacing = NumericProperty(defaultvalue='50dp')
+    row_spacing = NumericProperty('50dp')
 
-    clockwise = BooleanProperty(defaultvalue=True)
+    clockwise = BooleanProperty(True)
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

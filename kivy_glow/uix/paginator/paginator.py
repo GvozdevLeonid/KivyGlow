@@ -33,21 +33,21 @@ class GlowPaginator(GlowBoxLayout):
             Called when page is changed
     '''
 
-    items_per_page = NumericProperty(defaultvalue=10)
+    items_per_page = NumericProperty(10)
     '''How to split items
 
     :attr:`items_per_page` is an :class:`~kivy.properties.NumericProperty`
     and default to `10`.
     '''
 
-    items = ListProperty(defaultvalue=[])
+    items = ListProperty([])
     '''Any iterable objects
 
     :attr:`items` is an :class:`~kivy.properties.ListProperty`
     and default to `empty`.
     '''
 
-    reset_page = BooleanProperty(defaultvalue=True)
+    reset_page = BooleanProperty(True)
     '''Reset page if :attr:`items` value changed.
 
     The page will still be reset if the current page is larger than the maximum possible.

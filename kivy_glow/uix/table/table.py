@@ -66,8 +66,8 @@ class GlowTableRow(GlowBoxLayout,
                    HoverBehavior,
                    RecycleDataViewBehavior):
 
-    index = NumericProperty(defaultvalue=None, allownone=True)
-    selected = BooleanProperty(defaultvalue=False)
+    index = NumericProperty(None, allownone=True)
+    selected = BooleanProperty(False)
 
     _clicked = False
     refreshing = False
@@ -140,12 +140,12 @@ class SelectableRecycleBoxLayout(LayoutSelectionBehavior, GlowRecycleBoxLayout):
 
 
 class GlowTable(GlowBoxLayout):
-    use_pagination = BooleanProperty(defaultvalue=False)
+    use_pagination = BooleanProperty(False)
     pagination_pos = OptionProperty(
-        defaultvalue='right', options=['left', 'center', 'right'],
+        'right', options=['left', 'center', 'right'],
     )
 
-    rows_per_page = NumericProperty(defaultvalue=10)
+    rows_per_page = NumericProperty(10)
 
     columns_info = ListProperty()
     '''
@@ -164,30 +164,30 @@ class GlowTable(GlowBoxLayout):
     '''
     table_data = ListProperty()
 
-    use_pagination = BooleanProperty(defaultvalue=False)
+    use_pagination = BooleanProperty(False)
 
-    sorted_on = NumericProperty(defaultvalue=None, allownone=True)
+    sorted_on = NumericProperty(None, allownone=True)
     '''
         By which column is the input data sorted
     '''
-    sorted_order = OptionProperty(defaultvalue='ASC', options=['ASC', 'DSC'])
+    sorted_order = OptionProperty('ASC', options=['ASC', 'DSC'])
 
-    selectable = BooleanProperty(defaultvalue=False)
+    selectable = BooleanProperty(False)
     '''
         Use or not use checkboxes for rows.
     '''
 
-    effect_cls = ObjectProperty(defaultvalue=ScrollEffect)
+    effect_cls = ObjectProperty(ScrollEffect)
 
-    header_color = ColorProperty(defaultvalue=None, allownone=True)
-    odd_row_color = ColorProperty(defaultvalue=None, allownone=True)
-    even_row_color = ColorProperty(defaultvalue=None, allownone=True)
-    hover_row_color = ColorProperty(defaultvalue=None, allownone=True)
+    header_color = ColorProperty(None, allownone=True)
+    odd_row_color = ColorProperty(None, allownone=True)
+    even_row_color = ColorProperty(None, allownone=True)
+    hover_row_color = ColorProperty(None, allownone=True)
 
-    _header_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _odd_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _even_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _hover_row_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _header_color = ColorProperty((0, 0, 0, 0))
+    _odd_row_color = ColorProperty((0, 0, 0, 0))
+    _even_row_color = ColorProperty((0, 0, 0, 0))
+    _hover_row_color = ColorProperty((0, 0, 0, 0))
 
     _viewclass = StringProperty('GlowTableRow')
     _cell_viewclasses = []  # noqa: RUF012

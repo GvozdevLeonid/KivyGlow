@@ -55,28 +55,28 @@ class GlowDialog(DeclarativeBehavior,
     classes documentation.
     '''
 
-    icon = StringProperty(defaultvalue='blank')
+    icon = StringProperty('blank')
     '''Dialog icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    icon_size = NumericProperty(defaultvalue='64dp')
+    icon_size = NumericProperty('64dp')
     '''Dialog icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_color = ColorProperty(defaultvalue=None, allownone=True)
+    icon_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
+    icon_position = OptionProperty('center', options=('left', 'center', 'right'))
     '''Icon position.
     The icon in a dialog can be located on the left, center right, above the title
 
@@ -84,84 +84,84 @@ class GlowDialog(DeclarativeBehavior,
     and defaults to `center`.
     '''
 
-    title = StringProperty(defaultvalue=None, allownone=True)
+    title = StringProperty(None, allownone=True)
     '''Title dialog text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
+    title_halign = OptionProperty('center', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    text = StringProperty(defaultvalue=None, allownone=True)
+    text = StringProperty(None, allownone=True)
     '''Body dialog text
 
     :attr:`text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    text_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
+    text_halign = OptionProperty('center', options=('left', 'center', 'right'))
     '''Text horizontal aligh.
 
     :attr:`text_halign` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    use_separator = BooleanProperty(defaultvalue=False)
+    use_separator = BooleanProperty(False)
     '''Show separators after title and before buttons
 
     :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    content = ObjectProperty(defaultvalue=None, allownone=True)
+    content = ObjectProperty(None, allownone=True)
     '''Body dialog content
 
     :attr:`content` is an :class:`~kivy.properties.ObjectProperty`
     and defaults to `None`.
     '''
 
-    buttons = ListProperty(defaultvalue=None, allownone=True)
+    buttons = ListProperty(None, allownone=True)
     '''Dialog buttons
 
     :attr:`content` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    margin = NumericProperty(defaultvalue='48dp')
+    margin = NumericProperty('48dp')
     """Dialog maegin from device width.
 
     :attr:`margin` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `48dp`.
     """
 
-    content_height = NumericProperty(defaultvalue='300dp')
+    content_height = NumericProperty('300dp')
     """Content scroll height
 
     :attr:`content_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `300dp`.
     """
 
-    adaptive_height_content = BooleanProperty(defaultvalue=True)
+    adaptive_height_content = BooleanProperty(True)
     """Adjust the height according to the content
 
     :attr:`adaptive_height_content` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     """
 
-    stretch_content_height = BooleanProperty(defaultvalue=False)
+    stretch_content_height = BooleanProperty(False)
     """Adjust the height according to the Dialog free space
 
     :attr:`stretch_content_height` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     """
 
-    mode = OptionProperty(defaultvalue=None, options=('warning', 'error', 'success'), allownone=True)
+    mode = OptionProperty(None, options=('warning', 'error', 'success'), allownone=True)
     '''Dialog mode.
         .. code-block:: kv
         warning:
@@ -180,28 +180,28 @@ class GlowDialog(DeclarativeBehavior,
     and defaults to `None`.
     '''
 
-    opening_transition = StringProperty(defaultvalue='in_sine')
+    opening_transition = StringProperty('in_sine')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(defaultvalue=.2)
+    opening_time = NumericProperty(.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty(defaultvalue='out_sine')
+    closing_transition = StringProperty('out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(defaultvalue=.2)
+    closing_time = NumericProperty(.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
@@ -209,7 +209,7 @@ class GlowDialog(DeclarativeBehavior,
     '''
 
     _size_hint_y = 0
-    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _icon_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(icon_color=self.setter('_icon_color'))

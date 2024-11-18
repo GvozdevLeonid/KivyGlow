@@ -46,64 +46,64 @@ class GlowCheckbox(ToggleButtonBehavior,
     classes documentation.
     '''
 
-    active = BooleanProperty(devaultvalue=False)
+    active = BooleanProperty(False)
     '''Checkbox state
 
     :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    checkbox_icon_inactive = StringProperty(devaultvalue='checkbox-blank-outline')
+    checkbox_icon_inactive = StringProperty('checkbox-blank-outline')
     '''inactive checkbox icon
 
     :attr:`checkbox_icon_inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `checkbox-blank-outline`.
     '''
-    checkbox_icon_active = StringProperty(devaultvalue='checkbox-marked-outline')
+    checkbox_icon_active = StringProperty('checkbox-marked-outline')
     '''active checkbox icon
 
     :attr:`checkbox_icon_active` is an :class:`~kivy.properties.StringProperty`
     and defaults to `checkbox-marked-outline`.
     '''
 
-    radio_icon_inactive = StringProperty(devaultvalue='radiobox-blank')
+    radio_icon_inactive = StringProperty('radiobox-blank')
     '''inactive radio icon
 
     :attr:`radio_icon_inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `radiobox-blank`.
     '''
 
-    radio_icon_active = StringProperty(devaultvalue='radiobox-marked')
+    radio_icon_active = StringProperty('radiobox-marked')
     '''inactive radio icon
 
     :attr:`inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `radiobox-marked`.
     '''
 
-    active_color = ColorProperty(devaultvalue=None, allownone=True)
+    active_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the active checkbox
 
     :attr:`active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    inactive_color = ColorProperty(devaultvalue=None, allownone=True)
+    inactive_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the inactive checkbox
 
     :attr:`inactive_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    animation = OptionProperty(devaultvalue='decrease', options=('decrease', 'increase'))
+    animation = OptionProperty('decrease', options=('decrease', 'increase'))
     '''Animation option (decrease', increase)
 
     :attr:`animation` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `decrease`.
     '''
-    _active_color = ColorProperty(devaultvalue=(0, 0, 0, 0))
-    _inactive_color = ColorProperty(devaultvalue=(0, 0, 0, 0))
-    _color = ColorProperty(devaultvalue=(0, 0, 0, 0))
-    _icon = StringProperty(devaultvalue='blank')
+    _active_color = ColorProperty((0, 0, 0, 0))
+    _inactive_color = ColorProperty((0, 0, 0, 0))
+    _color = ColorProperty((0, 0, 0, 0))
+    _icon = StringProperty('blank')
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))

@@ -42,7 +42,7 @@ class GlowButton(HoverBehavior,
     classes documentation.
     '''
 
-    text = StringProperty(defaltvalue=None, allownone=True)
+    text = StringProperty(None, allownone=True)
     '''Button text
 
     If text is `None` then label will be removed from the button
@@ -51,49 +51,49 @@ class GlowButton(HoverBehavior,
     and defaults to `None`.
     '''
 
-    icon = StringProperty(defaltvalue='blank')
+    icon = StringProperty('blank')
     '''Button icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    text_color = ColorProperty(defaltvalue=None, allownone=True)
+    text_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the text
 
     :attr:`text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_color = ColorProperty(defaltvalue=None, allownone=True)
+    icon_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    font_style = StringProperty(defaltvalue='BodyL')
+    font_style = StringProperty('BodyL')
     '''Font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
     and defaults to `BodyL`.
     '''
 
-    mode = OptionProperty(defaltvalue='filled', options=('filled', 'outline', 'soft', 'soft-outline', 'text'))
+    mode = OptionProperty('filled', options=('filled', 'outline', 'soft', 'soft-outline', 'text'))
     '''Various button display options
 
     :attr:`mode` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `filled`.
     '''
 
-    icon_size = NumericProperty(defaltvalue='24dp')
+    icon_size = NumericProperty('24dp')
     '''Icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_position = OptionProperty(defaltvalue='left', options=('left', 'right', 'top', 'bottom'))
+    icon_position = OptionProperty('left', options=('left', 'right', 'top', 'bottom'))
     '''Icon position.
     The icon in a button can be located on the left, right, above and below the text
 
@@ -101,21 +101,21 @@ class GlowButton(HoverBehavior,
     and defaults to `left`.
     '''
 
-    spacing = NumericProperty(defaltvalue='5dp')
+    spacing = NumericProperty('5dp')
     '''Spacing between text and icon
 
     :attr:`spacing` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `5dp`.
     '''
 
-    minimum_width = NumericProperty(defaltvalue=0)
+    minimum_width = NumericProperty(0)
     '''Minimum button width
 
     :attr:`minimum_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `0`.
     '''
 
-    minimum_height = NumericProperty(defaltvalue=0)
+    minimum_height = NumericProperty(0)
     '''Minimum button height
 
     :attr:`minimum_height` is an :class:`~kivy.properties.NumericProperty`
@@ -128,8 +128,8 @@ class GlowButton(HoverBehavior,
     :attr:`minimum_size` is an :class:`~kivy.properties.ReferenceListProperty`
     '''
 
-    _text_color = ColorProperty(defaltvalue=(0, 0, 0, 0))
-    _icon_color = ColorProperty(defaltvalue=(0, 0, 0, 0))
+    _text_color = ColorProperty((0, 0, 0, 0))
+    _icon_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(text_color=self.setter('_text_color'))

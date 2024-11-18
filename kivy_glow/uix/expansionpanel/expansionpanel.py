@@ -43,27 +43,27 @@ class GlowExpansionPanel(GlowTableLayout):
     This panel has a custom title and can hide or show content when you click on the expand/hide button
     '''
 
-    icon_opened = StringProperty(defaultvalue='chevron-up')
+    icon_opened = StringProperty('chevron-up')
     '''Icon for opened state
 
     :attr:`icon_opened` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-up`.
     '''
 
-    icon_closed = StringProperty(defaultvalue='chevron-down')
+    icon_closed = StringProperty('chevron-down')
     '''Icon for closed state
 
     :attr:`icon_closed` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-down`.
     '''
 
-    header = StringProperty(defaultvalue='')
+    header = StringProperty('')
     '''Simple text title
 
     :attr:`header` is an :class:`~kivy.properties.StringProperty`
     and defaults to `empty`.
     '''
-    header_content = ObjectProperty(defaultvalue=None, allownone=True)
+    header_content = ObjectProperty(None, allownone=True)
     '''Your custom header content.
     You should inherit your header from GlowExpansionPanelHeader class.
 
@@ -71,7 +71,7 @@ class GlowExpansionPanel(GlowTableLayout):
     and defaults to `None`.
     '''
 
-    expandable_content = ObjectProperty(defaultvalue=None, allownone=True)
+    expandable_content = ObjectProperty(None, allownone=True)
     '''Your expandable content.
     You can use any widget for your content.
 
@@ -79,49 +79,49 @@ class GlowExpansionPanel(GlowTableLayout):
     and defaults to `None`.
     '''
 
-    state = OptionProperty(defaultvalue='closed', options=('opened', 'closed'))
+    state = OptionProperty('closed', options=('opened', 'closed'))
     '''Current panel state
 
     :attr:`state` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `slosed`.
     '''
 
-    opening_transition = StringProperty(defaultvalue='out_cubic')
+    opening_transition = StringProperty('out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(defaultvalue=.2)
+    opening_time = NumericProperty(.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty(defaultvalue='out_sine')
+    closing_transition = StringProperty('out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(defaultvalue=.2)
+    closing_time = NumericProperty(.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    button_icon_color = ColorProperty(defaultvalue=None, allownonw=True)
+    button_icon_color = ColorProperty(None, allownonw=True)
     '''Button icon color
 
     :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    button_border_color = ColorProperty(defaultvalue=None, allownonw=True)
+    button_border_color = ColorProperty(None, allownonw=True)
     '''Button border color
 
     :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`

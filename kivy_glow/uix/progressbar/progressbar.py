@@ -35,50 +35,50 @@ class GlowProgressBar(DeclarativeBehavior,
                       ProgressBar,
                       ):
 
-    min = NumericProperty(defaultvalue=0.)
+    min = NumericProperty(0.)
     '''Minimum value allowed for :attr:`value`.
 
     :attr:`min` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `0`.
     '''
 
-    padding = NumericProperty(defaultvalue='16dp')
+    padding = NumericProperty('16dp')
     '''Padding for progress bar. One size all borders.
 
     :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(16)`.
     '''
 
-    active_color = ColorProperty(defaultvalue=None, allownone=True)
+    active_color = ColorProperty(None, allownone=True)
     '''Padding for progress bar. One size all borders.
 
     :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(16)`.
     '''
 
-    inactive_color = ColorProperty(defaultvalue=None, allownone=True)
+    inactive_color = ColorProperty(None, allownone=True)
     '''Padding for progress bar. One size all borders.
 
     :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(16)`.
     '''
 
-    line_width = NumericProperty(defaultvalue='4dp')
+    line_width = NumericProperty('4dp')
     '''Padding for progress bar. One size all borders.
 
     :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(16)`.
     '''
 
-    mode = OptionProperty(defaultvalue='line', options=('line', 'circle'))
+    mode = OptionProperty('line', options=('line', 'circle'))
     '''Padding for progress bar. One size all borders.
 
     :attr:`padding` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(16)`.
     '''
 
-    _active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _active_color = ColorProperty((0, 0, 0, 0))
+    _inactive_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))

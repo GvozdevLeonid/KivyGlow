@@ -38,67 +38,67 @@ with open(
 class GlowTextField(HoverBehavior,
                     GlowBoxLayout):
 
-    font_size = NumericProperty(defaultvalue='16sp')
+    font_size = NumericProperty('16sp')
 
-    cursor_color = ColorProperty(defaultvalue=None, allownone=True)
-    selection_color = ColorProperty(defaultvalue=None, allownone=True)
+    cursor_color = ColorProperty(None, allownone=True)
+    selection_color = ColorProperty(None, allownone=True)
 
-    focus_border_color = ColorProperty(defaultvalue=None, allownone=True)
-    error_color = ColorProperty(defaultvalue=None, allownone=True)
+    focus_border_color = ColorProperty(None, allownone=True)
+    error_color = ColorProperty(None, allownone=True)
 
-    placeholder_color = ColorProperty(defaultvalue=None, allownone=True)
+    placeholder_color = ColorProperty(None, allownone=True)
 
-    text_color = ColorProperty(defaultvalue=None, allownone=True)
-    focus_text_color = ColorProperty(defaultvalue=None, allownone=True)
-    disabled_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    text_color = ColorProperty(None, allownone=True)
+    focus_text_color = ColorProperty(None, allownone=True)
+    disabled_text_color = ColorProperty(None, allownone=True)
 
-    label_color = ColorProperty(defaultvalue=None, allownone=True)
-    focus_label_color = ColorProperty(defaultvalue=None, allownone=True)
+    label_color = ColorProperty(None, allownone=True)
+    focus_label_color = ColorProperty(None, allownone=True)
 
-    help_text_color = ColorProperty(defaultvalue=None, allownone=True)
-    focus_help_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    help_text_color = ColorProperty(None, allownone=True)
+    focus_help_text_color = ColorProperty(None, allownone=True)
 
-    focus = BooleanProperty(defaultvalue=False)
-    password = BooleanProperty(defaultvalue=False)
-    error = BooleanProperty(defaultvalue=False)
-    readonly = BooleanProperty(defaultvalue=False)
-    required = BooleanProperty(defaultvalue=False)
-    multiline = BooleanProperty(defaultvalue=False)
+    focus = BooleanProperty(False)
+    password = BooleanProperty(False)
+    error = BooleanProperty(False)
+    readonly = BooleanProperty(False)
+    required = BooleanProperty(False)
+    multiline = BooleanProperty(False)
 
-    mode = OptionProperty(defaultvalue='overlap', options=('overlap', 'inside', 'outside'))
-    border_style = OptionProperty(defaultvalue='full', options=('full', 'underline'))
+    mode = OptionProperty('overlap', options=('overlap', 'inside', 'outside'))
+    border_style = OptionProperty('full', options=('full', 'underline'))
 
-    use_handles = BooleanProperty(defaultvalue=None, allownone=True)
-    use_bubble = BooleanProperty(defaultvalue=None, allownone=True)
+    use_handles = BooleanProperty(None, allownone=True)
+    use_bubble = BooleanProperty(None, allownone=True)
 
-    label = StringProperty(defaultvalue='')
-    label_position = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
+    label = StringProperty('')
+    label_position = OptionProperty('left', options=('left', 'right', 'center'))
 
-    help_text = StringProperty(defaultvalue='')
-    help_text_position = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
+    help_text = StringProperty('')
+    help_text_position = OptionProperty('left', options=('left', 'right', 'center'))
     help_text_mode = OptionProperty(
-        defaultvalue='persistent', options=['persistent', 'on_focus', 'on_error'],
+        'persistent', options=['persistent', 'on_focus', 'on_error'],
     )
 
-    text = StringProperty(defaultvalue='')
-    text_align = OptionProperty(defaultvalue='left', options=('left', 'right', 'center'))
+    text = StringProperty('')
+    text_align = OptionProperty('left', options=('left', 'right', 'center'))
 
-    placeholder = StringProperty(defaultvalue='')
+    placeholder = StringProperty('')
 
-    _cursor_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _selection_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _focus_border_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _error_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _placeholder_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _focus_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _disabled_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _label_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _focus_label_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _help_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _focus_help_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _cursor_color = ColorProperty((0, 0, 0, 0))
+    _selection_color = ColorProperty((0, 0, 0, 0))
+    _focus_border_color = ColorProperty((0, 0, 0, 0))
+    _error_color = ColorProperty((0, 0, 0, 0))
+    _placeholder_color = ColorProperty((0, 0, 0, 0))
+    _text_color = ColorProperty((0, 0, 0, 0))
+    _focus_text_color = ColorProperty((0, 0, 0, 0))
+    _disabled_text_color = ColorProperty((0, 0, 0, 0))
+    _label_color = ColorProperty((0, 0, 0, 0))
+    _focus_label_color = ColorProperty((0, 0, 0, 0))
+    _help_text_color = ColorProperty((0, 0, 0, 0))
+    _focus_help_text_color = ColorProperty((0, 0, 0, 0))
 
-    mask = StringProperty(defaultvalue='')
+    mask = StringProperty('')
     '''
     "L" - Character of the Letter category required, such as A-Z, a-z.
     "l" - Character of the Letter category permitted but not required.
@@ -126,8 +126,8 @@ class GlowTextField(HoverBehavior,
     \\ - Use \\ to escape the special characters listed above to use them as separators.
     '''
 
-    left_content = ObjectProperty(defaultvalue=None, allownone=True)
-    right_content = ObjectProperty(defaultvalue=None, allownone=True)
+    left_content = ObjectProperty(None, allownone=True)
+    right_content = ObjectProperty(None, allownone=True)
 
     def __init__(self, *args, **kwargs) -> None:
         self._textfield = None

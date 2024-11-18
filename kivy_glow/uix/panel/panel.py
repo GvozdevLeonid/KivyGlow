@@ -35,21 +35,21 @@ class GlowPanel(GlowBoxLayout):
             Called on changed active tab
     '''
 
-    active_color = ColorProperty(defaultvalue=None, allownone=True)
+    active_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the active tab
 
     :attr:`active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    text_color = ColorProperty(defaultvalue=None, allownone=True)
+    text_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the tab text
 
     :attr:`text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_color = ColorProperty(defaultvalue=None, allownone=True)
+    icon_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the tab icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
@@ -71,27 +71,27 @@ class GlowPanel(GlowBoxLayout):
     :attr:`tabs` is an :class:`~kivy.properties.ListProperty`
     '''
 
-    tab_width = NumericProperty(defaultvalue=None, allownone=True)
+    tab_width = NumericProperty(None, allownone=True)
     '''Fixed width for each tab
 
     :attr:`tab_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    mode = OptionProperty(defaultvalue='badge', options=('badge', 'underline', 'text'))
+    mode = OptionProperty('badge', options=('badge', 'underline', 'text'))
     '''Various panel display options
 
     :attr:`tab_width` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `badge`.
     '''
 
-    _active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _active_color = ColorProperty((0, 0, 0, 0))
+    _text_color = ColorProperty((0, 0, 0, 0))
+    _icon_color = ColorProperty((0, 0, 0, 0))
 
-    _active_tab = ObjectProperty(defaultvalue=None, allownone=True)
-    _active_pos = ListProperty(defaultvalue=None, allownone=True)
-    _active_size = ListProperty(defaultvalue=None, allownone=True)
+    _active_tab = ObjectProperty(None, allownone=True)
+    _active_pos = ListProperty(None, allownone=True)
+    _active_size = ListProperty(None, allownone=True)
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))

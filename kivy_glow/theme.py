@@ -23,10 +23,10 @@ from kivy_glow.colors import (
 
 class ThemeManager(EventDispatcher):
     # Primary color
-    primary_palette = OptionProperty(defaultvalue='Indigo', options=available_palette)
-    primary_hue = OptionProperty(defaultvalue='500', options=available_hue)
-    primary_light_hue = OptionProperty(defaultvalue='300', options=available_hue)
-    primary_dark_hue = OptionProperty(defaultvalue='700', options=available_hue)
+    primary_palette = OptionProperty('Indigo', options=available_palette)
+    primary_hue = OptionProperty('500', options=available_hue)
+    primary_light_hue = OptionProperty('300', options=available_hue)
+    primary_dark_hue = OptionProperty('700', options=available_hue)
 
     _stub_color = (0, 0, 0, 0)
 
@@ -58,10 +58,10 @@ class ThemeManager(EventDispatcher):
     )
 
     # Accent color
-    accent_palette = OptionProperty(defaultvalue='Orange', options=available_palette)
-    accent_hue = OptionProperty(defaultvalue='500', options=available_hue)
-    accent_light_hue = OptionProperty(defaultvalue='300', options=available_hue)
-    accent_dark_hue = OptionProperty(defaultvalue='700', options=available_hue)
+    accent_palette = OptionProperty('Orange', options=available_palette)
+    accent_hue = OptionProperty('500', options=available_hue)
+    accent_light_hue = OptionProperty('300', options=available_hue)
+    accent_dark_hue = OptionProperty('700', options=available_hue)
 
     def _get_accent_color(self) -> tuple[float, float, float, float]:
         return get_color_from_hex(
@@ -94,9 +94,9 @@ class ThemeManager(EventDispatcher):
     background_palette = OptionProperty('Neutral', options=available_palette)
 
     # Theme
-    theme_style = OptionProperty(defaultvalue='Light', options=('Light', 'Dark'))
-    theme_style_switch_animation_duration = NumericProperty(defaultvalue=0.2)
-    theme_style_switch_animation = BooleanProperty(defaultvalue=False)
+    theme_style = OptionProperty('Light', options=('Light', 'Dark'))
+    theme_style_switch_animation_duration = NumericProperty(0.2)
+    theme_style_switch_animation = BooleanProperty(False)
 
     def _get_opposite_theme_style(self, theme_style: str) -> tuple[float, float, float, float]:
         if theme_style == 'Dark':

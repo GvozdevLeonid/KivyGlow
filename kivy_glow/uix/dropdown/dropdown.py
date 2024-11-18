@@ -41,63 +41,63 @@ class GlowDropDown(GlowButton):
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
 
-    direction = OptionProperty(defaultvalue='down', options=('down', 'up'))
+    direction = OptionProperty('down', options=('down', 'up'))
     '''Expansion direction
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
     '''
 
-    max_height = NumericProperty(defaultvalue=None, allownone=True)
+    max_height = NumericProperty(None, allownone=True)
     '''Maximum expansion height
 
     :attr:`max_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    opening_transition = StringProperty(defaultvalue='out_cubic')
+    opening_transition = StringProperty('out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(defaultvalue=.2)
+    opening_time = NumericProperty(.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty(defaultvalue='out_sine')
+    closing_transition = StringProperty('out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(defaultvalue=.2)
+    closing_time = NumericProperty(.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    item_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    item_text_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the item text
 
     :attr:`item_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    dropdown_bg_color = ColorProperty(defaultvalue=None, allownonw=True)
+    dropdown_bg_color = ColorProperty(None, allownonw=True)
     '''Dropdown bg color
 
     :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _item_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _item_text_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
@@ -191,92 +191,92 @@ class GlowSelectableDropDown(GlowButton):
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
 
-    selected_item = StringProperty(defaultvalue=None)
+    selected_item = StringProperty(None)
     '''Current selected item
 
     :attr:`active` is an :class:`~kivy.properties.StringProperty`
     '''
 
-    direction = OptionProperty(defaultvalue='down', options=('down', 'up'))
+    direction = OptionProperty('down', options=('down', 'up'))
     '''Expansion direction
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
     '''
 
-    max_height = NumericProperty(defaultvalue=None, allownone=True)
+    max_height = NumericProperty(None, allownone=True)
     '''Maximum expansion height
 
     :attr:`max_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    opening_transition = StringProperty(defaultvalue='out_cubic')
+    opening_transition = StringProperty('out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(defaultvalue=.2)
+    opening_time = NumericProperty(.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty(defaultvalue='out_sine')
+    closing_transition = StringProperty('out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(defaultvalue=.2)
+    closing_time = NumericProperty(.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    selected_item_icon = StringProperty(defaultvalue='check')
+    selected_item_icon = StringProperty('check')
     '''Icon for selected item
 
     :attr:`selected_item_icon` is an :class:`~kivy.properties.StringProperty`
     and default to `check`.
     '''
 
-    item_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    item_text_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the item text
 
     :attr:`item_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selected_item_text_color = ColorProperty(defaultvalue=None, allownone=True)
+    selected_item_text_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the selected item text
 
     :attr:`selected_item_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selected_item_icon_color = ColorProperty(defaultvalue=None, allownone=True)
+    selected_item_icon_color = ColorProperty(None, allownone=True)
     '''The color in (r, g, b, a) or string format of the selected item icon
 
     :attr:`selected_item_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    dropdown_bg_color = ColorProperty(defaultvalue=None, allownonw=True)
+    dropdown_bg_color = ColorProperty(None, allownonw=True)
     '''Dropdown bg color
 
     :attr:`dropdown_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _item_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _selected_item_icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
-    _selected_item_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _item_text_color = ColorProperty((0, 0, 0, 0))
+    _selected_item_icon_color = ColorProperty((0, 0, 0, 0))
+    _selected_item_text_color = ColorProperty((0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(item_text_color=self.setter('_item_text_color'))
