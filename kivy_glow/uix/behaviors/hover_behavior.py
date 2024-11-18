@@ -28,7 +28,7 @@ class HoverBehavior(EventDispatcher):
            Fired when the mouse exits the widget.
     '''
 
-    hover = BooleanProperty(False)
+    hover = BooleanProperty(defaultvalue=False)
     '''True, if the mouse cursor is within the borders of the widget.
 
     :attr:`hover` is an :class:`~kivy.properties.BooleanProperty`

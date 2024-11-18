@@ -1,4 +1,3 @@
-# ruff: noqa: PLR2004
 from ast import literal_eval
 from collections import OrderedDict
 from configparser import RawConfigParser as PythonConfigParser
@@ -19,7 +18,7 @@ except ImportError:
 
 class ConfigParser(PythonConfigParser):
 
-    def getdefault(self, section: str, option: str, defaultvalue: float | int | str | bool | list | tuple | dict, valuetype: str | None = None) -> float | int | str | bool | list | tuple | dict:  # noqa: FBT001
+    def getdefault(self, section: str, option: str, defaultvalue: float | int | str | bool | list | tuple | dict, valuetype: str | None = None) -> float | int | str | bool | list | tuple | dict:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value.
         '''
@@ -56,7 +55,7 @@ class ConfigParser(PythonConfigParser):
         '''
         return self.getdefault(section, option, defaultvalue, 'float')
 
-    def getdefaultboolean(self, section: str, option: str, defaultvalue: bool) -> bool:  # noqa: FBT001
+    def getdefaultboolean(self, section: str, option: str, defaultvalue: bool) -> bool:
         '''Get the value of an option in the specified section. If not found,
         it will return the default value. The value will always be
         returned as an boolean.
@@ -187,7 +186,7 @@ class ExtendedKivyConfigParser(ConfigParser):
             return False
         return True
 
-    def update_config(self, filename: str, overwrite: bool = False) -> None:  # noqa: FBT001, FBT002
+    def update_config(self, filename: str, overwrite: bool = False) -> None:
         pcp = ConfigParser()
         pcp.read(filename)
         confset = self.setall if overwrite else self.setdefaults

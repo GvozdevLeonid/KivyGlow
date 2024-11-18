@@ -24,69 +24,69 @@ class GlowNumberField(GlowTextField):
     For more information, see in the :class:`~kivy_glow.uix.textfield.GlowTextField` class documentation.
     '''
 
-    minimum = NumericProperty(1)
+    minimum = NumericProperty(defaultvalue=1)
     '''Minimum possible number
 
     :attr:`minimum` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `1`.
     '''
-    maximum = NumericProperty(100)
+    maximum = NumericProperty(defaultvalue=100)
     '''Maximum possible number
 
     :attr:`maximum` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `100`.
     '''
 
-    number_type = OptionProperty('int', options=('int', 'float'))
+    number_type = OptionProperty(defaultvalue='int', options=('int', 'float'))
     '''If you select a float number, you can change the  :attr:`decimals`
 
     :attr:`number_type` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `int`.
     '''
 
-    icon_up = StringProperty('chevron-up')
+    icon_up = StringProperty(defaultvalue='chevron-up')
     '''Icon for button up
 
     :attr:`icon_up` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-up`.
     '''
 
-    icon_down = StringProperty('chevron-down')
+    icon_down = StringProperty(defaultvalue='chevron-down')
     '''Icon for button down
 
     :attr:`icon_down` is an :class:`~kivy.properties.StringProperty`
     and defaults to `chevron-down`.
     '''
 
-    decimals = NumericProperty(2)
+    decimals = NumericProperty(defaultvalue=2)
     '''Number of symbols after comma
 
     :attr:`decimals` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `2`.
     '''
 
-    single_step = NumericProperty(1)
+    single_step = NumericProperty(defaultvalue=1)
     '''Step to change number when clicking buttons
 
     :attr:`single_step` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `1`.
     '''
 
-    button_icon_color = ColorProperty(None, allownonw=True)
+    button_icon_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button icon color
 
     :attr:`button_icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    button_border_color = ColorProperty(None, allownonw=True)
+    button_border_color = ColorProperty(defaultvalue=None, allownonw=True)
     '''Button border color
 
     :attr:`button_border_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _value = NumericProperty(1)
+    _value = NumericProperty(defaultvalue=1)
 
     def __init__(self, *args, **kwargs) -> None:
         self._format_string = '{}'

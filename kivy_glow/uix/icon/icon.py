@@ -33,7 +33,7 @@ class GlowIcon(GlowLabel):
     allow_selection = False
     '''Do not allow select the icon'''
 
-    icon = StringProperty('blank')
+    icon = StringProperty(defaultvalue='blank')
     '''Icon name.
 
     For variable icons use:
@@ -48,63 +48,63 @@ class GlowIcon(GlowLabel):
     and defaults to `blank`.
     '''
 
-    icon_size = NumericProperty('24dp')
+    icon_size = NumericProperty(defaultvalue='24dp')
     '''Icon size.
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    badge_content = StringProperty('')
+    badge_content = StringProperty(defaultvalue='')
     '''Icon badge content. Can be icon (only static icons) or text.
 
     :attr:`badge_content` is an :class:`~kivy.properties.StringProperty`
     and defaults to `empty`.
     '''
 
-    badge_font_name = StringProperty('MontserratLight')
+    badge_font_name = StringProperty(defaultvalue='MontserratLight')
     '''Icon badge font name.
 
     :attr:`badge_font_name` is an :class:`~kivy.properties.StringProperty`
     and defaults to `MontserratLight`.
     '''
 
-    badge_border_radius = VariableListProperty([0], length=4)
+    badge_border_radius = VariableListProperty(defaultvalue=[0], length=4)
     '''Badge canvas radius.
 
     :attr:`badge_border_radius` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(0, 0, 0, 0)`.
     '''
 
-    badge_border_color = ColorProperty(None, allownone=True)
+    badge_border_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the badge border
 
     :attr:`badge_border_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    badge_border_width = VariableListProperty([0], length=4)
+    badge_border_width = VariableListProperty(defaultvalue=[0], length=4)
     '''Badge border width.
 
     :attr:`badge_border_width` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(0, 0, 0, 0)`.
     '''
 
-    badge_bg_color = ColorProperty(None, allownone=True)
+    badge_bg_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the badge background
 
     :attr:`badge_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    badge_color = ColorProperty(None, allownone=True)
+    badge_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the badge content
 
     :attr:`badge_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    badge_padding = VariableListProperty(['3dp'], length=4)
+    badge_padding = VariableListProperty(defaultvalue=['3dp'], length=4)
     '''Badge padding.
 
     :attr:`badge_padding` is an :class:`~kivy.properties.VariableListProperty`

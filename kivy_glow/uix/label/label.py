@@ -63,15 +63,15 @@ class GlowLabelSelectCopy(Bubble):
     For more information, see in the :class:`~kivy.uix.bubble.Bubble` class documentation.
     '''
 
-    label = ObjectProperty(None)
+    label = ObjectProperty(defaultvalue=None)
     '''
         Holds a reference to the Label this Bubble belongs to.
     '''
-    but_copy = ObjectProperty(None)
+    but_copy = ObjectProperty(defaultvalue=None)
     '''
         Reference to the button copy.
     '''
-    but_selectall = ObjectProperty(None)
+    but_selectall = ObjectProperty(defaultvalue=None)
     '''
         Reference to the button select all.
     '''
@@ -147,28 +147,28 @@ class GlowLabel(DeclarativeBehavior,
     classes documentation.
     '''
 
-    color = ColorProperty(None, allownone=True)
+    color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the text
 
     :attr:`color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selection_color = ColorProperty(None, allownone=True)
+    selection_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the background color for highlight selected text.
 
     :attr:`selection_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    allow_selection = BooleanProperty(False)
+    allow_selection = BooleanProperty(defaultvalue=False)
     '''If selection is enabled
 
     :attr:`allow_selection` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    font_style = StringProperty('BodyM')
+    font_style = StringProperty(defaultvalue='BodyM')
     '''Font style (font, size, bold and/or italic, letter spacing, line height). Check out the available styles.
 
     :attr:`font_style` is an :class:`~kivy.properties.StringProperty`
@@ -176,7 +176,7 @@ class GlowLabel(DeclarativeBehavior,
     '''
 
     theme_color = OptionProperty(
-        'Primary',
+        defaultvalue='Primary',
         options=(
             'Primary',
             'Secondary',
@@ -193,23 +193,23 @@ class GlowLabel(DeclarativeBehavior,
     and defaults to `Primary`.
     '''
 
-    handle_image_left = StringProperty('atlas://data/images/defaulttheme/selector_left')
+    handle_image_left = StringProperty(defaultvalue='atlas://data/images/defaulttheme/selector_left')
     '''Image used to display the Left handle on the Label for selection.
 
     :attr:`handle_image_left` is an :class:`~kivy.properties.StringProperty`
     and defaults to `atlas://data/images/defaulttheme/selector_left`.
     '''
 
-    handle_image_right = StringProperty('atlas://data/images/defaulttheme/selector_right')
+    handle_image_right = StringProperty(defaultvalue='atlas://data/images/defaulttheme/selector_right')
     '''Image used to display the Right handle on the Label for selection.
 
     :attr:`handle_image_right` is an :class:`~kivy.properties.StringProperty`
     and defaults to `atlas://data/images/defaulttheme/selector_right`.
     '''
 
-    _selection_color = ColorProperty((1, 1, 1, 1))
-    _color = ColorProperty((1, 1, 1, 1))
-    _focus = BooleanProperty(False)
+    _selection_color = ColorProperty(defaultvalue=(1, 1, 1, 1))
+    _color = ColorProperty(defaultvalue=(1, 1, 1, 1))
+    _focus = BooleanProperty(defaultvalue=False)
     _font_properties = ('text', 'font_size', 'font_name', 'font_script_name',
                         'font_direction', 'bold', 'italic',
                         'underline', 'strikethrough', 'font_family', '_color',
@@ -876,7 +876,7 @@ class GlowLabel(DeclarativeBehavior,
         bubble = self._bubble
         if bubble is None:
             self._bubble = bubble = GlowLabelSelectCopy(label=self)
-            self.fbind('parent', self._show_select_copy, pos, win, True)  # noqa: FBT003
+            self.fbind('parent', self._show_select_copy, pos, win, True)
 
             def hide_(*args) -> None:
                 return self._hide_select_copy(win)

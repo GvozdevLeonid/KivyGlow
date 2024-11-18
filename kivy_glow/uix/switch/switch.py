@@ -33,67 +33,67 @@ class GlowSwitch(ToggleButtonBehavior,
                  GlowWidget,
                  ):
 
-    active = BooleanProperty(False)
+    active = BooleanProperty(defaultvalue=False)
     '''Switch state
 
     :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    icon_active = StringProperty('check-bold')
+    icon_active = StringProperty(defaultvalue='check-bold')
     '''active switch icon
 
     :attr:`icon_active` is an :class:`~kivy.properties.StringProperty`
     and defaults to `check-bold`.
     '''
 
-    icon_inactive = StringProperty('close-thick')
+    icon_inactive = StringProperty(defaultvalue='close-thick')
     '''inactive switch icon
 
     :attr:`icon_inactive` is an :class:`~kivy.properties.StringProperty`
     and defaults to `close-thick`.
     '''
 
-    active_color = ColorProperty(None, allownone=True)
+    active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the active switch
 
     :attr:`active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    inactive_color = ColorProperty(None, allownone=True)
+    inactive_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the inactive switch
 
     :attr:`inactive_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    thumb_color = ColorProperty(None, allownone=True)
+    thumb_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the switch thumb
 
     :attr:`thumb_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    thumb_size = NumericProperty('24dp')
+    thumb_size = NumericProperty(defaultvalue='24dp')
     ''' Thumb size
 
     :attr:`thumb_size` is an :class:`~kivy.properties.NumericProperty` and
     defaults to `dp(24)`.
     '''
 
-    mode = OptionProperty('normal-icon', options=('normal', 'short', 'normal-icon', 'short-icon'))
+    mode = OptionProperty(defaultvalue='normal-icon', options=('normal', 'short', 'normal-icon', 'short-icon'))
     '''Various switch display options
 
     :attr:`mode` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `normal-icon`.
     '''
 
-    _icon = StringProperty('blank')
-    _color = ColorProperty((0, 0, 0, 0))
-    _active_color = ColorProperty((0, 0, 0, 0))
-    _inactive_color = ColorProperty((0, 0, 0, 0))
-    _thumb_color = ColorProperty((0, 0, 0, 0))
+    _icon = StringProperty(defaultvalue='blank')
+    _color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _thumb_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(active_color=self.setter('_active_color'))

@@ -72,10 +72,10 @@ class GlowSplitterLayout(DeclarativeBehavior,
     The widget works like a boxlayout but allows you to resize child widgets using strip
     '''
 
-    orientation = OptionProperty('horizontal', options=('horizontal', 'vertical'))
-    padding = VariableListProperty((0, 0, 0, 0), length=4)
-    strip_size = NumericProperty('10dp')
-    toggle_distance = NumericProperty('40dp')
+    orientation = OptionProperty(defaultvalue='horizontal', options=('horizontal', 'vertical'))
+    padding = VariableListProperty(defaultvalue=[0, 0, 0, 0], length=4)
+    strip_size = NumericProperty(defaultvalue='10dp')
+    toggle_distance = NumericProperty(defaultvalue='40dp')
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

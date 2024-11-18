@@ -18,7 +18,7 @@ from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import (
     BooleanProperty,
-    ListProperty,
+    ColorProperty,
     NumericProperty,
     ObjectProperty,
     StringProperty,
@@ -49,15 +49,15 @@ Builder.load_string(
 )
 
 
-def lngX(lng: float | int) -> float:  # noqa: N802
+def lngX(lng: float | int) -> float:
     return lng / 360.0 + 0.5
 
 
-def latY(lat: float | int) -> float:  # noqa: N802
+def latY(lat: float | int) -> float:
     try:
-        if lat == 90:  # noqa: PLR2004
+        if lat == 90:
             return 0
-        if lat == -90:  # noqa: PLR2004
+        if lat == -90:
             return 1
         s = sin(lat * pi / 180.0)
         y = 0.5 - 0.25 * log((1 + s) / (1 - s)) / pi
@@ -66,11 +66,11 @@ def latY(lat: float | int) -> float:  # noqa: N802
         return .5
 
 
-def xLng(x: float | int) -> float:  # noqa: N802
+def xLng(x: float | int) -> float:
     return (x - 0.5) * 360
 
 
-def yLat(y: float | int) -> float:  # noqa: N802
+def yLat(y: float | int) -> float:
     y2 = (180 - y * 360) * pi / 180
     return 360 * atan(exp(y2)) / pi - 90
 
@@ -113,7 +113,7 @@ class KDBush:
     def _select(self, ids: list[int], coords: list[float | int], k: float | int, left: float | int, right: float | int, inc: float | int) -> None:
         swap_item = self._swap_item
         while right > left:
-            if (right - left) > 600:  # noqa: PLR2004
+            if (right - left) > 600:
                 n = float(right - left + 1)
                 m = k - left + 1
                 z = log(n)
@@ -246,7 +246,7 @@ class KDBush:
 
 
 class Cluster:
-    def __init__(self, x: float | int, y: float | int, num_points: int, id: int, props: Any) -> None:  # noqa: A002
+    def __init__(self, x: float | int, y: float | int, num_points: int, id: int, props: Any) -> None:
         self.x = x
         self.y = y
         self.num_points = num_points
@@ -380,10 +380,10 @@ class SuperCluster:
 
 
 class GlowClusterMapMarker(GlowMapMarker):
-    source = StringProperty('kivy_glow/images/map/cluster.png')
+    source = StringProperty(defaultvalue='kivy_glow/images/map/cluster.png')
     cluster = ObjectProperty()
     num_points = NumericProperty()
-    text_color = ListProperty((0.1, 0.1, 0.1, 1))
+    text_color = ColorProperty(defaultvalue=(0.1, 0.1, 0.1, 1))
 
     def on_cluster(self, instance: Self, cluster: Cluster) -> None:
         self.num_points = cluster.num_points
@@ -419,13 +419,13 @@ class GlowClusterMapMarker(GlowMapMarker):
 
 
 class GlowClusteredMarkerLayer(GlowMapLayer):
-    cluster_cls = ObjectProperty(GlowClusterMapMarker)
-    cluster_min_zoom = NumericProperty(0)
-    cluster_max_zoom = NumericProperty(16)
-    cluster_radius = NumericProperty('40dp')
-    cluster_extent = NumericProperty(512)
-    cluster_node_size = NumericProperty(64)
-    cluster_zoom_on_click = BooleanProperty(False)
+    cluster_cls = ObjectProperty(defaultvalue=GlowClusterMapMarker)
+    cluster_min_zoom = NumericProperty(defaultvalue=0)
+    cluster_max_zoom = NumericProperty(defaultvalue=16)
+    cluster_radius = NumericProperty(defaultvalue='40dp')
+    cluster_extent = NumericProperty(defaultvalue=512)
+    cluster_node_size = NumericProperty(defaultvalue=64)
+    cluster_zoom_on_click = BooleanProperty(defaultvalue=False)
 
     def __init__(self, *args, **kwargs) -> None:
         self.cluster = None

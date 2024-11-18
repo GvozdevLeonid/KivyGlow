@@ -109,23 +109,23 @@ class Tile(Rectangle):
 class GlowMapMarker(ButtonBehavior, GlowWidget, Image):
     '''A marker on a map, that must be used on a :class:`GlowMapMarker`'''
 
-    anchor_x = NumericProperty(0.5)
+    anchor_x = NumericProperty(defaultvalue=0.5)
     '''Anchor of the marker on the X axis. Defaults to 0.5, mean the anchor will
     be at the X center of the image.
     '''
 
-    anchor_y = NumericProperty(0)
+    anchor_y = NumericProperty(defaultvalue=0)
     '''Anchor of the marker on the Y axis. Defaults to 0, mean the anchor will
     be at the Y bottom of the image.
     '''
 
-    lat = NumericProperty(0)
+    lat = NumericProperty(defaultvalue=0)
     '''Latitude of the marker'''
 
-    lon = NumericProperty(0)
+    lon = NumericProperty(defaultvalue=0)
     '''Longitude of the marker'''
 
-    source = StringProperty('kivy_glow/images/map/marker.png')
+    source = StringProperty(defaultvalue='kivy_glow/images/map/marker.png')
     '''Source of the marker, defaults to our own marker.png'''
 
     _layer = None
@@ -144,8 +144,8 @@ class GlowMapMarker(ButtonBehavior, GlowWidget, Image):
 
 
 class GlowMapMarkerPopup(GlowMapMarker):
-    is_open = BooleanProperty(False)
-    placeholder = ObjectProperty(None)
+    is_open = BooleanProperty(defaultvalue=False)
+    placeholder = ObjectProperty(defaultvalue=None)
 
     def add_widget(self, widget: Widget) -> None:
         if not self.placeholder:
@@ -179,8 +179,8 @@ class GlowMapLayer(GlowWidget):
     moved.
     '''
 
-    viewport_x = NumericProperty(0)
-    viewport_y = NumericProperty(0)
+    viewport_x = NumericProperty(defaultvalue=0)
+    viewport_y = NumericProperty(defaultvalue=0)
 
     def reposition(self) -> None:
         '''Function called when :class:`MapView` is moved. You must recalculate
@@ -196,7 +196,7 @@ class GlowMapLayer(GlowWidget):
 class GlowMarkerMapLayer(GlowMapLayer):
     '''A map layer for :class:`GlowMapMarker`'''
 
-    order_marker_by_latitude = BooleanProperty(True)
+    order_marker_by_latitude = BooleanProperty(defaultvalue=True)
 
     def __init__(self, *args, **kwargs) -> None:
         self.markers = []
@@ -273,42 +273,42 @@ class GlowMap(GlowWidget):
     '''Latitude at the center of the widget
     '''
 
-    zoom = NumericProperty(0)
+    zoom = NumericProperty(defaultvalue=0)
     '''Zoom of the widget. Must be between :meth:`MapSource.get_min_zoom` and
     :meth:`MapSource.get_max_zoom`. Default to 0.
     '''
 
-    map_source = ObjectProperty(MapSource())
+    map_source = ObjectProperty(defaultvalue=MapSource())
     '''Provider of the map, default to a empty :class:`MapSource`.
     '''
 
-    double_tap_zoom = BooleanProperty(False)
+    double_tap_zoom = BooleanProperty(defaultvalue=False)
     '''If True, this will activate the double-tap to zoom.
     '''
 
-    pause_on_action = BooleanProperty(True)
+    pause_on_action = BooleanProperty(defaultvalue=True)
     '''Pause any map loading / tiles loading when an action is done.
     This allow better performance on mobile, but can be safely deactivated on
     desktop.
     '''
 
-    snap_to_zoom = BooleanProperty(True)
+    snap_to_zoom = BooleanProperty(defaultvalue=True)
     '''When the user initiate a zoom, it will snap to the closest zoom for
     better graphics. The map can be blur if the map is scaled between 2 zoom.
     Default to True, even if it doesn't fully working yet.
     '''
 
-    animation_duration = NumericProperty(100)
+    animation_duration = NumericProperty(defaultvalue=100)
     '''Duration to animate Tiles alpha from 0 to 1 when it's ready to show.
     Default to 100 as 100ms. Use 0 to deactivate.
     '''
 
-    delta_x = NumericProperty(0)
-    delta_y = NumericProperty(0)
-    background_color = ListProperty([181 / 255.0, 208 / 255.0, 208 / 255.0, 1])
-    cache_dir = StringProperty('map_cache')
-    _zoom = NumericProperty(0)
-    _pause = BooleanProperty(False)
+    delta_x = NumericProperty(defaultvalue=0)
+    delta_y = NumericProperty(defaultvalue=0)
+    background_color = ListProperty(defaultvalue=[181 / 255.0, 208 / 255.0, 208 / 255.0, 1])
+    cache_dir = StringProperty(defaultvalue='map_cache')
+    _zoom = NumericProperty(defaultvalue=0)
+    _pause = BooleanProperty(defaultvalue=False)
     _scale = 1.0
     _disabled_count = 0
 
@@ -366,7 +366,7 @@ class GlowMap(GlowWidget):
             coord = args[0]
             lat = coord.lat
             lon = coord.lon
-        elif len(args) == 2:  # noqa: PLR2004
+        elif len(args) == 2:
             lat, lon = args
         else:
             raise Exception('Invalid argument for center_on')
@@ -603,7 +603,7 @@ class GlowMap(GlowWidget):
 
     def _animate_scale(self, dt: float) -> bool:
         diff = self._scale_target / 3.0
-        if abs(diff) < 0.01:  # noqa: PLR2004
+        if abs(diff) < 0.01:
             diff = self._scale_target
             self._scale_target = 0
         else:
@@ -685,10 +685,10 @@ class GlowMap(GlowWidget):
         scatter = self._scatter
         scale = scatter.scale
 
-        if (scale - 2.0) > 0.01:  # noqa: PLR2004
+        if (scale - 2.0) > 0.01:
             zoom += 1
             scale /= 2.0
-        elif (scale - 1.0) < -0.01:  # noqa: PLR2004
+        elif (scale - 1.0) < -0.01:
             zoom -= 1
             scale *= 2.0
 

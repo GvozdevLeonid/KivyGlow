@@ -48,14 +48,14 @@ class GlowSlider(DeclarativeBehavior,
                  StyleBehavior,
                  Slider):
 
-    thumb_size = NumericProperty('16sp')
+    thumb_size = NumericProperty(defaultvalue='16sp')
     ''' Thumb size
 
     :attr:`thumb_size` is an :class:`~kivy.properties.NumericProperty` and
     defaults to `sp(16)`.
     '''
 
-    value_track = BooleanProperty(True)
+    value_track = BooleanProperty(defaultvalue=True)
     '''Decides if slider should draw the line indicating the
     space between :attr:`min_value` and :attr:`max_value` properties values.
 
@@ -63,35 +63,35 @@ class GlowSlider(DeclarativeBehavior,
     and defaults to `True`.
     '''
 
-    line_width = NumericProperty('4dp')
+    line_width = NumericProperty(defaultvalue='4dp')
     '''Slider line width
 
     :attr:`line_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(4)`.
     '''
 
-    active = BooleanProperty(False)
+    active = BooleanProperty(defaultvalue=False)
     '''
 
     :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    thumb_active_color = ColorProperty(None, allownone=True)
+    thumb_active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the thumb when it active
 
     :attr:`thumb_active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    thumb_inactive_color = ColorProperty(None, allownone=True)
+    thumb_inactive_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the thumb when it inactive
 
     :attr:`thumb_inactive_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    track_active_color = ColorProperty(None, allownone=True)
+    track_active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format that indicated range between
     :attr:`min_value` - :attr:`max_value` properties values.
 
@@ -99,7 +99,7 @@ class GlowSlider(DeclarativeBehavior,
     and defaults to `None`.
     '''
 
-    track_inactive_color = ColorProperty(None, allownone=True)
+    track_inactive_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format that indicated range between
      :attr:`min` - :attr:`min_value` and :attr:`max_value` - :attr:`max` properties values.
 
@@ -107,43 +107,43 @@ class GlowSlider(DeclarativeBehavior,
     and defaults to `None`.
     '''
 
-    hint = BooleanProperty(True)
+    hint = BooleanProperty(defaultvalue=True)
     '''If active, then show a tooltip showing the current value
 
     :attr:`hint` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     '''
 
-    hint_bg_color = ColorProperty(None, allownone=True)
+    hint_bg_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hint background color
 
     :attr:`hint_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hint_text_color = ColorProperty(None, allownone=True)
+    hint_text_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hint text color
 
     :attr:`hint_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hint_border_radius = VariableListProperty(['4dp'], length=4)
+    hint_border_radius = VariableListProperty(defaultvalue=['4dp'], length=4)
     '''Hint border radius
 
     :attr:`hint_border_radius` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(dp(4), dp(4), dp(4), dp(4))`.
     '''
 
-    _thumb_color = ColorProperty((0, 0, 0, 0))
-    _thumb_active_color = ColorProperty((0, 0, 0, 0))
-    _thumb_inactive_color = ColorProperty((0, 0, 0, 0))
-    _track_active_color = ColorProperty((0, 0, 0, 0))
-    _track_inactive_color = ColorProperty((0, 0, 0, 0))
-    _hint_bg_color = ColorProperty((0, 0, 0, 0))
-    _hint_text_color = ColorProperty((0, 0, 0, 0))
+    _thumb_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _thumb_active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _thumb_inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _track_active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _track_inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hint_bg_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hint_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
-    _hint_text = StringProperty(' ')
+    _hint_text = StringProperty(defaultvalue=' ')
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(thumb_active_color=self.setter('_thumb_active_color'))

@@ -80,7 +80,7 @@ class GlowDoubleSlider(GlowWidget):
     Check module documentation for more details.
     '''
 
-    padding = NumericProperty('16sp')
+    padding = NumericProperty(defaultvalue='16sp')
     '''Padding of the slider. The padding is used for graphical representation
     and interaction. It prevents the cursor from going out of the bounds of the
     slider bounding box.
@@ -93,28 +93,28 @@ class GlowDoubleSlider(GlowWidget):
     and defaults to `sp(16)`.
     '''
 
-    min_value = NumericProperty(0.)
+    min_value = NumericProperty(defaultvalue=0.)
     '''Current minimum value used for the slider.
 
     :attr:`min_value` is an :class:`~kivy.properties.NumericProperty` and defaults
     to `0.`
     '''
 
-    max_value = NumericProperty(100.)
+    max_value = NumericProperty(defaultvalue=100.)
     '''Current minimum value used for the slider.
 
     :attr:`min_value` is an :class:`~kivy.properties.NumericProperty` and defaults
     to `100.`
     '''
 
-    min = NumericProperty(0.)
+    min = NumericProperty(defaultvalue=0.)
     '''Minimum value allowed for :attr:`min_value` and :attr:`max_value`.
 
     :attr:`min` is an :class:`~kivy.properties.NumericProperty` and defaults to
     `0.`
     '''
 
-    max = NumericProperty(100.)
+    max = NumericProperty(defaultvalue=100.)
     '''Maximum value allowed for :attr:`min_value` and :attr:`max_value`.
 
     :attr:`max` is an :class:`~kivy.properties.NumericProperty` and defaults to
@@ -128,14 +128,14 @@ class GlowDoubleSlider(GlowWidget):
     (:attr:`min`, :attr:`max`) properties.
     '''
 
-    step = BoundedNumericProperty(0, min=0)
+    step = BoundedNumericProperty(defaultvalue=0, min=0)
     '''Step size of the slider.
 
     :attr:`step` is an :class:`~kivy.properties.NumericProperty` and defaults
     to `0`.
     '''
 
-    orientation = OptionProperty('horizontal', options=(
+    orientation = OptionProperty(defaultvalue='horizontal', options=(
         'vertical', 'horizontal'))
     '''
     Orientation of the slider.
@@ -144,14 +144,14 @@ class GlowDoubleSlider(GlowWidget):
     defaults to `'horizontal'`.
     '''
 
-    thumb_size = NumericProperty('16sp')
+    thumb_size = NumericProperty(defaultvalue='16sp')
     ''' Thumb size
 
     :attr:`thumb_size` is an :class:`~kivy.properties.NumericProperty` and
     defaults to `sp(16)`.
     '''
 
-    value_track = BooleanProperty(True)
+    value_track = BooleanProperty(defaultvalue=True)
     '''Decides if slider should draw the line indicating the
     space between :attr:`min_value` and :attr:`max_value` properties values.
 
@@ -159,35 +159,35 @@ class GlowDoubleSlider(GlowWidget):
     and defaults to `True`.
     '''
 
-    line_width = NumericProperty('4dp')
+    line_width = NumericProperty(defaultvalue='4dp')
     '''Slider line width
 
     :attr:`line_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `dp(4)`.
     '''
 
-    active = BooleanProperty(False)
+    active = BooleanProperty(defaultvalue=False)
     '''
 
     :attr:`active` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    thumb_active_color = ColorProperty(None, allownone=True)
+    thumb_active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the thumb when it active
 
     :attr:`thumb_active_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    thumb_inactive_color = ColorProperty(None, allownone=True)
+    thumb_inactive_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the thumb when it inactive
 
     :attr:`thumb_inactive_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    track_active_color = ColorProperty(None, allownone=True)
+    track_active_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format that indicated range between
     :attr:`min_value` - :attr:`max_value` properties values.
 
@@ -195,7 +195,7 @@ class GlowDoubleSlider(GlowWidget):
     and defaults to `None`.
     '''
 
-    track_inactive_color = ColorProperty(None, allownone=True)
+    track_inactive_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format that indicated range between
      :attr:`min` - :attr:`min_value` and :attr:`max_value` - :attr:`max` properties values.
 
@@ -203,54 +203,54 @@ class GlowDoubleSlider(GlowWidget):
     and defaults to `None`.
     '''
 
-    hint = BooleanProperty(True)
+    hint = BooleanProperty(defaultvalue=True)
     '''If active, then show a tooltip showing the current value
 
     :attr:`hint` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     '''
 
-    hint_bg_color = ColorProperty(None, allownone=True)
+    hint_bg_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hint background color
 
     :attr:`hint_bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hint_text_color = ColorProperty(None, allownone=True)
+    hint_text_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hint text color
 
     :attr:`hint_text_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    hint_border_radius = VariableListProperty(['4dp'], length=4)
+    hint_border_radius = VariableListProperty(defaultvalue=['4dp'], length=4)
     '''Hint border radius
 
     :attr:`hint_border_radius` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(dp(4), dp(4), dp(4), dp(4))`.
     '''
 
-    use_center = BooleanProperty(True)
+    use_center = BooleanProperty(defaultvalue=True)
     '''Whether to move two sliders at the same time.
 
     :attr:`use_center` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     '''
 
-    _thumb_color = ColorProperty((0, 0, 0, 0))
-    _thumb_active_color = ColorProperty((0, 0, 0, 0))
-    _thumb_inactive_color = ColorProperty((0, 0, 0, 0))
-    _track_active_color = ColorProperty((0, 0, 0, 0))
-    _track_inactive_color = ColorProperty((0, 0, 0, 0))
-    _hint_bg_color = ColorProperty((0, 0, 0, 0))
-    _hint_text_color = ColorProperty((0, 0, 0, 0))
+    _thumb_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _thumb_active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _thumb_inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _track_active_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _track_inactive_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hint_bg_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _hint_text_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
 
-    _min_hint_text = StringProperty(' ')
-    _max_hint_text = StringProperty(' ')
-    _current_thumb = StringProperty('')
-    _min_active = BooleanProperty(False)
-    _max_active = BooleanProperty(False)
+    _min_hint_text = StringProperty(defaultvalue=' ')
+    _max_hint_text = StringProperty(defaultvalue=' ')
+    _current_thumb = StringProperty(defaultvalue='')
+    _min_active = BooleanProperty(defaultvalue=False)
+    _max_active = BooleanProperty(defaultvalue=False)
 
     _last_center_pos = None
 

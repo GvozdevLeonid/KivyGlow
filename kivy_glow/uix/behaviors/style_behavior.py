@@ -159,77 +159,77 @@ class StyleBehavior:
     For more information, see in the :class:`~kivy_glow.uix.behaviors.StyleBehavior`
     '''
 
-    background_image = StringProperty(None, allownone=True)
+    background_image = StringProperty(defaultvalue=None, allownone=True)
     '''Widget background image
 
     :attr:`background_image` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    bg_color = ColorProperty(None, allownone=True)
+    bg_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the background
 
     :attr:`bg_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    border_radius = VariableListProperty([0], length=4)
+    border_radius = VariableListProperty(defaultvalue=[0], length=4)
     '''Canvas radius.
 
     :attr:`border_radius` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(0, 0, 0, 0)`.
     '''
 
-    border_color = ColorProperty(None, allownone=True)
+    border_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the border
 
     :attr:`border_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    border_width = VariableListProperty([0], length=4)
+    border_width = VariableListProperty(defaultvalue=[0], length=4)
     '''Border width.
 
     :attr:`border_width` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(0, 0, 0, 0)`.
     '''
 
-    rotate_angle = NumericProperty(0)
+    rotate_angle = NumericProperty(defaultvalue=0)
     '''Property for getting/setting the angle of the rotation.
 
     :attr:`rotate_angle` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `0`.
     '''
 
-    rotate_axis = ListProperty([0, 0, 1])
+    rotate_axis = ListProperty(defaultvalue=[0, 0, 1])
     '''Property for getting/setting the axis of the rotation.
 
     :attr:`rotate_axis` is an :class:`~kivy.properties.ListProperty`
     and defaults to `(0, 0, 1)`.
     '''
 
-    background_origin = ListProperty(None, allownone=True)
+    background_origin = ListProperty(defaultvalue=None, allownone=True)
     '''Property for getting/setting the origin of the widget.
 
     :attr:`background_origin` is an :class:`~kivy.properties.ListProperty`
     and defaults to `None`.
     '''
 
-    shadow = OptionProperty('off', options=('off', 'outside', 'inside'))
+    shadow = OptionProperty(defaultvalue='off', options=('off', 'outside', 'inside'))
     '''Shadow option (off, outside, inside)
 
     :attr:`shadow` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `off`.
     '''
 
-    shadow_color = ColorProperty(None, allownone=True)
+    shadow_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the shadow
 
     :attr:`shadow_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    shadow_offset = VariableListProperty([0], length=2)
+    shadow_offset = VariableListProperty(defaultvalue=[0], length=2)
     '''Specifies shadow offsets in (horizontal, vertical) format.
     Positive values for the offset indicate that the shadow should move to the right and/or top.
     The negative ones indicate that the shadow should move to the left and/or down.
@@ -239,25 +239,25 @@ class StyleBehavior:
     and defaults to `(0, 0)`.
     '''
 
-    shadow_blur_radius = NumericProperty(15)
+    shadow_blur_radius = NumericProperty(defaultvalue=15)
     '''Define the shadow blur radius. Controls shadow expansion and softness.
 
     :attr:`shadow_blur_radius` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `15`.
     '''
 
-    shadow_spread_radius = VariableListProperty([0], length=2)
+    shadow_spread_radius = VariableListProperty(defaultvalue=[0], length=2)
     '''Define the shrink/expansion of the shadow.
 
     :attr:`shadow_spread_radius` is an :class:`~kivy.properties.VariableListProperty`
     and defaults to `(0, 0)`.
     '''
 
-    _bg_color = ColorProperty((0, 0, 0, 0))
-    _border_color = ColorProperty((0, 0, 0, 0))
-    _shadow_color = ColorProperty((0, 0, 0, 0))
-    _border_radius = VariableListProperty([0], length=4)
-    _border_width = VariableListProperty([0.0001], length=4)
+    _bg_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _border_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _shadow_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _border_radius = VariableListProperty(defaultvalue=[0], length=4)
+    _border_width = VariableListProperty(defaultvalue=[0.0001], length=4)
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(border_color=self.setter('_border_color'))

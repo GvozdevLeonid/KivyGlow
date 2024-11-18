@@ -58,35 +58,35 @@ class GlowColorPicker(DeclarativeBehavior,
     classes documentation.
     '''
 
-    default_color = ColorProperty((1, 0, 0, 1))
+    default_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
     '''Initial selected color
 
     :attr:`default_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `(1, 0, 0, 1)`.
     '''
 
-    icon = StringProperty('blank')
+    icon = StringProperty(defaultvalue='blank')
     '''Colorpicker icon
 
     :attr:`icon` is an :class:`~kivy.properties.StringProperty`
     and defaults to `blank`.
     '''
 
-    icon_size = NumericProperty('64dp')
+    icon_size = NumericProperty(defaultvalue='64dp')
     '''Colorpicker icon size
 
     :attr:`icon_size` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `24dp`.
     '''
 
-    icon_color = ColorProperty(None, allownone=True)
+    icon_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the icon
 
     :attr:`icon_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    icon_position = OptionProperty('center', options=('left', 'center', 'right'))
+    icon_position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Icon position.
     The icon in a colorpicker can be located on the left, center right, above the title
 
@@ -94,49 +94,49 @@ class GlowColorPicker(DeclarativeBehavior,
     and defaults to `center`.
     '''
 
-    title = StringProperty(None, allownone=True)
+    title = StringProperty(defaultvalue=None, allownone=True)
     '''Title colorpicker text
 
     :attr:`title` is an :class:`~kivy.properties.StringProperty`
     and defaults to `None`.
     '''
 
-    title_halign = OptionProperty('center', options=('left', 'center', 'right'))
+    title_halign = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Title horizontal aligh.
 
     :attr:`title_haligh` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `center`.
     '''
 
-    margin = NumericProperty('48dp')
+    margin = NumericProperty(defaultvalue='48dp')
     """Colorpicker maegin from device width.
 
     :attr:`margin` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `48dp`.
     """
 
-    opening_transition = StringProperty('in_sine')
+    opening_transition = StringProperty(defaultvalue='in_sine')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
@@ -144,9 +144,9 @@ class GlowColorPicker(DeclarativeBehavior,
     '''
 
     _size_hint_y = 0
-    _icon_color = ColorProperty((0, 0, 0, 0))
-    _selected_color = ColorProperty((1, 0, 0, 1))
-    _gradient_color = ColorProperty((1, 0, 0, 1))
+    _icon_color = ColorProperty(defaultvalue=(0, 0, 0, 0))
+    _selected_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
+    _gradient_color = ColorProperty(defaultvalue=(1, 0, 0, 1))
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(icon_color=self.setter('_icon_color'))

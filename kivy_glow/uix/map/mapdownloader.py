@@ -91,7 +91,7 @@ class MapDownloader:
             api_key='{api_key}',
         )
         if tile.map_source.sub_domains is not None:
-            url = url.format(sub_domain=choice(tile.map_source.sub_domains), api_key='{api_key}')  # noqa: S311
+            url = url.format(sub_domain=choice(tile.map_source.sub_domains), api_key='{api_key}')
         if tile.map_source.api_key is not None:
             url = url.format(api_key=tile.map_source.api_key)
 

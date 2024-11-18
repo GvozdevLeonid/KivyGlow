@@ -35,18 +35,18 @@ class GlowTableLayout(DeclarativeBehavior,
                       StyleBehavior,
                       Layout):
 
-    col_default_width = NumericProperty(0)
-    row_default_height = NumericProperty(0)
+    col_default_width = NumericProperty(defaultvalue=0)
+    row_default_height = NumericProperty(defaultvalue=0)
 
-    col_force_default = BooleanProperty(False)
-    row_force_default = BooleanProperty(False)
+    col_force_default = BooleanProperty(defaultvalue=False)
+    row_force_default = BooleanProperty(defaultvalue=False)
 
-    minimum_width = NumericProperty(0)
-    minimum_height = NumericProperty(0)
+    minimum_width = NumericProperty(defaultvalue=0)
+    minimum_height = NumericProperty(defaultvalue=0)
     minimum_size = ReferenceListProperty(minimum_width, minimum_height)
 
-    spacing = VariableListProperty([0], length=2)
-    padding = VariableListProperty([0], length=4)
+    spacing = VariableListProperty(defaultvalue=[0], length=2)
+    padding = VariableListProperty(defaultvalue=[0], length=4)
 
     def __init__(self, *args, **kwargs) -> None:
         self._rows = 1

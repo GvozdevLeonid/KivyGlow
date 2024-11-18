@@ -24,4 +24,4 @@ _log_message = (
 Logger.info(_log_message)
 
 import kivy_glow.factory_registers
-import kivy_glow.fonts  # noqa: F401
+import kivy_glow.fonts  # noqa F401

@@ -65,77 +65,77 @@ class GlowDropDownContainer(GlowBoxLayout):
 
     :attr:`items` is an :class:`~kivy.properties.ListProperty`.
     '''
-    direction = OptionProperty('down', options=('down', 'up'))
+    direction = OptionProperty(defaultvalue='down', options=('down', 'up'))
     '''Expansion direction
 
     :attr:`direction` is an :class:`~kivy.properties.OptionProperty`
     and default to `down`.
     '''
 
-    position = OptionProperty('center', options=('left', 'center', 'right'))
+    position = OptionProperty(defaultvalue='center', options=('left', 'center', 'right'))
     '''Expansion position
 
     :attr:`position` is an :class:`~kivy.properties.OptionProperty`
     and default to `center`.
     '''
 
-    use_separator = BooleanProperty(True)
+    use_separator = BooleanProperty(defaultvalue=True)
     '''Whether to add a separator between elements
 
     :attr:`use_separator` is an :class:`~kivy.properties.BooleanProperty`.
     and default to `True`.
     '''
 
-    min_width = NumericProperty(None, allownone=True)
+    min_width = NumericProperty(defaultvalue=None, allownone=True)
     '''Mimimum expansion width
 
     :attr:`min_width` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    max_height = NumericProperty(None, allownone=True)
+    max_height = NumericProperty(defaultvalue=None, allownone=True)
     '''Maximum expansion height
 
     :attr:`max_height` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `None`.
     '''
 
-    auto_dismiss = BooleanProperty(True)
+    auto_dismiss = BooleanProperty(defaultvalue=True)
     '''Hide expandable panel when clicking outside of element (even if new element is not selected)
 
     :attr:`max_height` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `True`.
     '''
 
-    opening_transition = StringProperty('out_cubic')
+    opening_transition = StringProperty(defaultvalue='out_cubic')
     '''Transition for opening animation
 
     :attr:`opening_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_cubic`.
     '''
 
-    opening_time = NumericProperty(.2)
+    opening_time = NumericProperty(defaultvalue=.2)
     '''Diration for opening animation
 
     :attr:`opening_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''Transition for closing animation
 
     :attr:`closing_transition` is an :class:`~kivy.properties.StringProperty`
     and defaults to `out_sine`.
     '''
 
-    closing_time = NumericProperty(.2)
+    closing_time = NumericProperty(defaultvalue=.2)
     '''Duration for closing animation
 
     :attr:`closing_time` is an :class:`~kivy.properties.NumericProperty`
     and defaults to `.2`.
     '''
 
-    border_radius = VariableListProperty(['10dp'], length=4)
+    border_radius = VariableListProperty(defaultvalue=['10dp'], length=4)
     '''Canvas radius.
 
     :attr:`border_radius` is an :class:`~kivy.properties.VariableListProperty`

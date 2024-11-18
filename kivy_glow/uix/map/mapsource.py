@@ -8,11 +8,10 @@ from math import (
     pi,
     tan,
 )
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from kivy.metrics import dp
 
-from .map import Tile
 from .mapdownloader import MapDownloader
 
 
@@ -225,7 +224,7 @@ class MapSource:
         '''Return the maximum zoom of this source.'''
         return self.max_zoom
 
-    def fill_tile(self, tile: Tile) -> None:
+    def fill_tile(self, tile: Any) -> None:
         '''Add this tile to load within the downloader.'''
 
         if tile.state == 'done':

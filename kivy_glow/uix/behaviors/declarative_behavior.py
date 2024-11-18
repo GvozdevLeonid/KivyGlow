@@ -15,7 +15,7 @@ class DeclarativeBehavior:
     Allow  you to write Python code in a declarative style.
     '''
 
-    id = StringProperty(None, allownone=True)
+    id = StringProperty(defaultvalue=None, allownone=True)
     '''Widget id
 
     :attr:`id` is an :class:`~kivy.properties.StringProperty`

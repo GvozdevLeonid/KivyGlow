@@ -29,7 +29,7 @@ class StencilBehavior:
     Stencil behavior class.
     '''
 
-    radius = VariableListProperty([0], length=4)
+    radius = VariableListProperty(defaultvalue=[0], length=4)
     '''Canvas radius.
 
     :attr:`radius` is an :class:`~kivy.properties.VariableListProperty`

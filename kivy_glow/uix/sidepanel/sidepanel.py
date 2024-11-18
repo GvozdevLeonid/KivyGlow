@@ -57,36 +57,36 @@ class GlowSidePanelException(Exception):
 
 class GlowSidePanelButton(GlowButton):
 
-    right_text = StringProperty('')
+    right_text = StringProperty(defaultvalue='')
     '''Additional text located in the right corner
 
     :attr:`right_text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     '''
 
-    selected = BooleanProperty(False)
+    selected = BooleanProperty(defaultvalue=False)
     '''True if panel item selected
 
     :attr:`selected` is an :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     '''
 
-    hover_color = ColorProperty(None, allownone=True)
+    hover_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the hovered panel item
 
     :attr:`selected_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    selected_color = ColorProperty(None, allownone=True)
+    selected_color = ColorProperty(defaultvalue=None, allownone=True)
     '''The color in (r, g, b, a) or string format of the selected panel item
 
     :attr:`selected_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `None`.
     '''
 
-    _hover_color = ColorProperty(None, allownone=True)
-    _selected_color = ColorProperty(None, allownone=True)
+    _hover_color = ColorProperty(defaultvalue=None, allownone=True)
+    _selected_color = ColorProperty(defaultvalue=None, allownone=True)
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(hover_color=self.setter('_hover_color'))
@@ -272,28 +272,28 @@ class GlowSidePanelButton(GlowButton):
 
 
 class GlowSidePanel(GlowBoxLayout):
-    mode = OptionProperty('overlay', options=('overlay', 'embedded'))
+    mode = OptionProperty(defaultvalue='overlay', options=('overlay', 'embedded'))
     '''Sidepanel mode
 
     :attr:`mode` is a :class:`~kivy.properties.OptionProperty`
     and defaults to `overlay`.
     '''
 
-    anchor = OptionProperty('left', options=('left', 'right'))
+    anchor = OptionProperty(defaultvalue='left', options=('left', 'right'))
     '''Sidepanel anchor
 
     :attr:`anchor` is a :class:`~kivy.properties.OptionProperty`
     and defaults to `left`.
     '''
 
-    scrim_color = ColorProperty((0, 0, 0, .7))
+    scrim_color = ColorProperty(defaultvalue=(0, 0, 0, .7))
     '''The color in (r, g, b, a) or string format of the hovered scrim
 
     :attr:`scrim_color` is an :class:`~kivy.properties.ColorProperty`
     and defaults to `(0, 0, 0, .7)`.
     '''
 
-    close_on_click = BooleanProperty(True)
+    close_on_click = BooleanProperty(defaultvalue=True)
     '''Close when click on scrim or keyboard escape. It automatically sets to
     False for 'embedded' mode.
 
@@ -301,7 +301,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `True`.
     '''
 
-    state = OptionProperty('close', options=('close', 'open'))
+    state = OptionProperty(defaultvalue='close', options=('close', 'open'))
     '''Indicates if panel closed or opened. Sets after :attr:`status` change.
     Available options are: `'close'`, `'open'`.
 
@@ -310,7 +310,7 @@ class GlowSidePanel(GlowBoxLayout):
     '''
 
     status = OptionProperty(
-        'closed',
+        defaultvalue='closed',
         options=(
             'closed',
             'opening_with_swipe',
@@ -329,7 +329,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `'closed'`.
     '''
 
-    open_progress = NumericProperty(0.0)
+    open_progress = NumericProperty(defaultvalue=0.0)
     '''Percent of visible part of side panel. The percent is specified as a
     floating point number in the range 0-1. 0.0 if panel is closed and 1.0 if
     panel is opened.
@@ -338,7 +338,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `0.0`.
     '''
 
-    enable_swiping = BooleanProperty(True)
+    enable_swiping = BooleanProperty(defaultvalue=True)
     '''Allow to open or close navigation drawer with swipe. It automatically
     sets to False for 'embedded' mode.
 
@@ -346,7 +346,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `True`.
     '''
 
-    swipe_distance = NumericProperty(10)
+    swipe_distance = NumericProperty(defaultvalue=10)
     '''The distance of the swipe with which the movement of navigation drawer
     begins.
 
@@ -354,7 +354,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `10`.
     '''
 
-    swipe_edge_width = NumericProperty(20)
+    swipe_edge_width = NumericProperty(defaultvalue=20)
     '''The size of the area in px inside which should start swipe to drag
     navigation drawer.
 
@@ -362,7 +362,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `20`.
     '''
 
-    opening_transition = StringProperty('out_cubic')
+    opening_transition = StringProperty(defaultvalue='out_cubic')
     '''The name of the animation transition type to use when animating to
     the :attr:`state` `'open'`.
 
@@ -370,14 +370,14 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `'out_cubic'`.
     '''
 
-    opening_time = NumericProperty(0.2)
+    opening_time = NumericProperty(defaultvalue=0.2)
     '''The time taken for the panel to slide to the :attr:`state` `'open'`.
 
     :attr:`opening_time` is a :class:`~kivy.properties.NumericProperty`
     and defaults to `0.2`.
     '''
 
-    closing_transition = StringProperty('out_sine')
+    closing_transition = StringProperty(defaultvalue='out_sine')
     '''The name of the animation transition type to use when animating to
     the :attr:`state` 'close'.
 
@@ -385,7 +385,7 @@ class GlowSidePanel(GlowBoxLayout):
     and defaults to `'out_sine'`.
     '''
 
-    closing_time = NumericProperty(0.2)
+    closing_time = NumericProperty(defaultvalue=0.2)
     '''The time taken for the panel to slide to the :attr:`state` `'close'`.
 
     :attr:`closing_time` is a :class:`~kivy.properties.NumericProperty`
@@ -414,7 +414,7 @@ class GlowSidePanel(GlowBoxLayout):
     usage only.
     '''
 
-    scrim_alpha_transition = StringProperty('linear')
+    scrim_alpha_transition = StringProperty(defaultvalue='linear')
     '''The name of the animation transition type to use for changing
     :attr:`scrim_alpha`.
 
@@ -598,10 +598,10 @@ class GlowSidePanel(GlowBoxLayout):
 
 class GlowSidePanelLayout(GlowFloatLayout):
 
-    _scrim_color = ObjectProperty(None)
-    _scrim_rectangle = ObjectProperty(None)
-    _screen_manager = ObjectProperty(None)
-    _side_panel = ObjectProperty(None)
+    _scrim_color = ObjectProperty(defaultvalue=None)
+    _scrim_rectangle = ObjectProperty(defaultvalue=None)
+    _screen_manager = ObjectProperty(defaultvalue=None)
+    _side_panel = ObjectProperty(defaultvalue=None)
 
     def __init__(self, *args, **kwargs) -> None:
         self.bind(width=self.update_pos)
