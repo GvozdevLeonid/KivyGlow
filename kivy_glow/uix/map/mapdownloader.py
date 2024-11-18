@@ -10,6 +10,7 @@ from os.path import exists
 from random import choice
 from time import time
 from typing import (
+    Any,
     Callable,
     Self,
 )
@@ -17,8 +18,6 @@ from typing import (
 import requests
 from kivy.clock import Clock
 from kivy.logger import Logger
-
-from .map import Tile
 
 USER_AGENT = 'kivy-glow.map'
 
@@ -54,7 +53,7 @@ class MapDownloader:
         future = self.executor.submit(f, *args, **kwargs)
         self._futures.append(future)
 
-    def download_tile(self, tile: Tile) -> None:
+    def download_tile(self, tile: Any) -> None:
         Logger.debug(
             f'Downloader: queue(tile) zoom={tile.zoom} x={tile.tile_x} y={tile.tile_y}',
         )
@@ -72,7 +71,7 @@ class MapDownloader:
         response.raise_for_status()
         return callback, (url, response)
 
-    def _load_tile(self, tile: Tile) -> None:
+    def _load_tile(self, tile: Any) -> None:
         if tile.state == 'done':
             return None
 
