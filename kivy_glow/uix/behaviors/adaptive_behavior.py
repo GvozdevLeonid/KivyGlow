@@ -47,7 +47,6 @@ class AdaptiveBehavior(EventDispatcher):
             'md': 976,
             'lg': 1440,
             'xl': float('inf'),
-
         },
     )
     '''Possible breakpoints for adaptive behavior

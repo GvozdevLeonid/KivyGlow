@@ -85,7 +85,24 @@ class GlowTableLayout(DeclarativeBehavior,
         if not hasattr(widget, 'col') or col is not None:
             widget.col = col if col is not None else 0
 
+        widget.bind(
+            row=lambda _, __: self.do_layout(),
+            col=lambda _, __: self.do_layout(),
+            rowspan=lambda _, __: self.do_layout(),
+            colspan=lambda _, __: self.do_layout(),
+        )
+
         return super().add_widget(widget, index=index)
+
+    def remove_widget(self, widget: Widget) -> None:
+        widget.unbind(
+            row=lambda _, __: self.do_layout(),
+            col=lambda _, __: self.do_layout(),
+            rowspan=lambda _, __: self.do_layout(),
+            colspan=lambda _, __: self.do_layout(),
+        )
+
+        super().remove_widget(widget)
 
     def _calculate_grid_size(self) -> None:
         self._rows = 1
