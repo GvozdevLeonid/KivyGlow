@@ -116,16 +116,18 @@ class GlowIcon(GlowLabel):
 
     def _get_icon_font_name(self) -> str:
         if len(self.icon.split(':')) == 3:
-            _, icon_style, icon_weight = self.icon.split(':')
+            icon_name, icon_style, icon_weight = self.icon.split(':')
             if (
-                icon_style in self.allowed_icon_styles
+                icon_name in material_icons.keys()
+                and icon_style in self.allowed_icon_styles
                 and icon_weight in self.allowed_icon_weights
             ):
                 return f'MaterialIcons_{icon_style}_{icon_weight}'
         elif len(self.icon.split(':')) == 4:
-            _, icon_style, icon_weight, filled = self.icon.split(':')
+            icon_name, icon_style, icon_weight, filled = self.icon.split(':')
             if (
-                icon_style in self.allowed_icon_styles
+                icon_name in material_icons.keys()
+                and icon_style in self.allowed_icon_styles
                 and icon_weight in self.allowed_icon_weights
             ):
                 return f'MaterialIcons_{icon_style}_{icon_weight}_{filled}'
