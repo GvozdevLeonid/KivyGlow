@@ -17,6 +17,7 @@ from kivy.properties import (
     ObjectProperty,
     StringProperty,
 )
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 
@@ -138,6 +139,11 @@ class GlowSelectableListItem(GlowBoxLayout,
             self.list.dispatch('on_item_selected', self)
             return True
 
+        for child in self.children:
+            if child.collide_point(touch.x, touch.y) and issubclass(child.__class__, ButtonBehavior):
+                if child.on_touch_down(touch):
+                    return True
+
         self.list.dispatch('on_item_press', self)
         return True
 
@@ -230,6 +236,11 @@ class GlowListItem(GlowBoxLayout,
         if not self.collide_point(touch.x, touch.y):
             return False
 
+        for child in self.children:
+            if child.collide_point(touch.x, touch.y) and issubclass(child.__class__, ButtonBehavior):
+                if child.on_touch_down(touch):
+                    return True
+
         self.list.dispatch('on_item_press', self)
         return True
 
@@ -262,12 +273,12 @@ class GlowList(GlowBoxLayout):
     Example:
         .. code-block:: kv
         GlowList(
-            item_data=[('item_text', 'android') for i in range(10)],
+            list_data=[('item_text', 'android') for i in range(10)],
             item_properties=['text', 'icon'],
         )
         # equal
         GlowList(
-            item_data=[{'text': 'item_text', 'icon': 'android'} for i in range(10)],
+            list_data=[{'text': 'item_text', 'icon': 'android'} for i in range(10)],
         )
 
     :attr:`item_properties` is an :class:`~kivy.properties.ListProperty`
