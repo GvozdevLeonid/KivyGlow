@@ -227,6 +227,9 @@ class GlowFileManager(DeclarativeBehavior,
 
         return new_content
 
+    def _access_is_allowed(self, path: str) -> str:
+        return os.access(path, os.R_OK)
+
     def on_current_path(self, instance: Self, current_path: str) -> None:
         '''Update list view by current_path'''
 
@@ -251,7 +254,7 @@ class GlowFileManager(DeclarativeBehavior,
                                 continue
                             new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
                         else:
-                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder', 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder' if self._access_is_allowed(os.path.join(current_path, obj)) else 'folder-remove', 'display_name': obj, 'path': os.path.join(current_path, obj)})
 
                     elif self.selector in {'file', 'files'}:
                         if len(self.ext) and obj.split('.')[-1].lower() not in self.ext:
@@ -261,7 +264,7 @@ class GlowFileManager(DeclarativeBehavior,
                                 continue
                             new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': 'file-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
                         else:
-                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': extension_to_icon.get(obj.split('.')[-1].lower(), 'file-outline'), 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': extension_to_icon.get(obj.split('.')[-1].lower(), 'file-outline') if self._access_is_allowed(os.path.join(current_path, obj)) else 'file-remove-outline', 'display_name': obj, 'path': os.path.join(current_path, obj)})
             else:
                 disks = []
                 if platform == "win":
@@ -290,7 +293,11 @@ class GlowFileManager(DeclarativeBehavior,
                     return
 
                 for disk in disks:
-                    new_content.append({'is_file': False, 'icon': 'harddisk', 'display_name': disk, 'path': disk, 'checkbox_disabled': True})
+                    new_content.append({'is_file': False,
+                                        'icon': 'harddisk' if self._access_is_allowed(disk) else 'harddisk-remove',
+                                        'display_name': disk,
+                                        'path': disk,
+                                        'checkbox_disabled': True})
 
             self._content = self._sort(new_content)
 
