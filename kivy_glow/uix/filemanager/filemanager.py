@@ -237,62 +237,65 @@ class GlowFileManager(DeclarativeBehavior,
             self.ids.glow_filemanager_button_select.hidden = False
         else:
             self.ids.glow_filemanager_button_select.hidden = True
+        try:
+            if current_path:
+                for obj in os.listdir(current_path):
+                    if os.path.isdir(os.path.join(current_path, obj)):
+                        try:
+                            obj_in_folder = str(len(os.listdir(os.path.join(current_path, obj))))
+                        except Exception:
+                            obj_in_folder = ''
 
-        if current_path:
-            for obj in os.listdir(current_path):
-                if os.path.isdir(os.path.join(current_path, obj)):
-                    try:
-                        obj_in_folder = str(len(os.listdir(os.path.join(current_path, obj))))
-                    except Exception:
-                        obj_in_folder = ''
+                        if obj.startswith("."):
+                            if not self.show_hidden:
+                                continue
+                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                        else:
+                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder', 'display_name': obj, 'path': os.path.join(current_path, obj)})
 
-                    if obj.startswith("."):
-                        if not self.show_hidden:
+                    elif self.selector in {'file', 'files'}:
+                        if len(self.ext) and obj.split('.')[-1].lower() not in self.ext:
                             continue
-                        new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
-                    else:
-                        new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder', 'display_name': obj, 'path': os.path.join(current_path, obj)})
-
-                elif self.selector in {'file', 'files'}:
-                    if len(self.ext) and obj.split('.')[-1].lower() not in self.ext:
-                        continue
-                    if obj.startswith("."):
-                        if not self.show_hidden:
-                            continue
-                        new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': 'file-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
-                    else:
-                        new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': extension_to_icon.get(obj.split('.')[-1].lower(), 'file-outline'), 'display_name': obj, 'path': os.path.join(current_path, obj)})
-        else:
-            disks = []
-            if platform == "win":
-                disks = sorted(
-                    re.findall(
-                        r"[A-Z]+:.*$",
-                        os.popen('mountvol /').read(),
-                        re.MULTILINE,
-                    ),
-                )
-            elif platform in {'linux', 'android'}:
-                disks = sorted(
-                    re.findall(
-                        r"on\s(/.*)\stype",
-                        os.popen('mount').read(),
-                    ),
-                )
-            elif platform == "macosx":
-                disks = sorted(
-                    re.findall(
-                        r"on\s(/.*)\s\(",
-                        os.popen('mount').read(),
-                    ),
-                )
+                        if obj.startswith("."):
+                            if not self.show_hidden:
+                                continue
+                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': 'file-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                        else:
+                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': extension_to_icon.get(obj.split('.')[-1].lower(), 'file-outline'), 'display_name': obj, 'path': os.path.join(current_path, obj)})
             else:
-                return
+                disks = []
+                if platform == "win":
+                    disks = sorted(
+                        re.findall(
+                            r"[A-Z]+:.*$",
+                            os.popen('mountvol /').read(),
+                            re.MULTILINE,
+                        ),
+                    )
+                elif platform in {'linux', 'android'}:
+                    disks = sorted(
+                        re.findall(
+                            r"on\s(/.*)\stype",
+                            os.popen('mount').read(),
+                        ),
+                    )
+                elif platform == "macosx":
+                    disks = sorted(
+                        re.findall(
+                            r"on\s(/.*)\s\(",
+                            os.popen('mount').read(),
+                        ),
+                    )
+                else:
+                    return
 
-            for disk in disks:
-                new_content.append({'is_file': False, 'icon': 'harddisk', 'display_name': disk, 'path': disk, 'checkbox_disabled': True})
+                for disk in disks:
+                    new_content.append({'is_file': False, 'icon': 'harddisk', 'display_name': disk, 'path': disk, 'checkbox_disabled': True})
 
-        self._content = self._sort(new_content)
+            self._content = self._sort(new_content)
+
+        except Exception:
+            pass
 
     def on_filemanager_item_press(self, instance: GlowList, item_instance: GlowSelectableListItem) -> None:
         if item_instance.is_file:
