@@ -1,5 +1,6 @@
 __all__ = ('GlowFileManager', )
 
+import ctypes
 import os
 import re
 from typing import Self
@@ -227,8 +228,22 @@ class GlowFileManager(DeclarativeBehavior,
 
         return new_content
 
-    def _access_is_allowed(self, path: str) -> str:
+    def _access_is_allowed(self, path: str) -> bool:
         return os.access(path, os.R_OK)
+
+    def _is_hidden(self, path: str) -> bool:
+        name = os.path.basename(path)
+
+        if platform != 'win':
+            return name.startswith('.')
+
+        try:
+            attrs = ctypes.windll.kernel32.GetFileAttributesW(path)
+            if attrs == -1:
+                raise FileNotFoundError(f'File not found: {path}')
+            return bool(attrs & 0x02)
+        except Exception:
+            return False
 
     def on_current_path(self, instance: Self, current_path: str) -> None:
         '''Update list view by current_path'''
@@ -249,20 +264,20 @@ class GlowFileManager(DeclarativeBehavior,
                         except Exception:
                             obj_in_folder = ''
 
-                        if obj.startswith("."):
+                        if self._is_hidden(os.path.join(current_path, obj)):
                             if not self.show_hidden:
                                 continue
-                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                            new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder-hidden' if self._access_is_allowed(os.path.join(current_path, obj)) else 'folder-remove', 'display_name': obj, 'path': os.path.join(current_path, obj)})
                         else:
                             new_content.append({'is_file': False, 'checkbox_disabled': True, 'obj_in_folder': obj_in_folder, 'icon': 'folder' if self._access_is_allowed(os.path.join(current_path, obj)) else 'folder-remove', 'display_name': obj, 'path': os.path.join(current_path, obj)})
 
                     elif self.selector in {'file', 'files'}:
                         if len(self.ext) and obj.split('.')[-1].lower() not in self.ext:
                             continue
-                        if obj.startswith("."):
+                        if self._is_hidden(os.path.join(current_path, obj)):
                             if not self.show_hidden:
                                 continue
-                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': 'file-hidden', 'display_name': obj, 'path': os.path.join(current_path, obj)})
+                            new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': 'file-hidden' if self._access_is_allowed(os.path.join(current_path, obj)) else 'file-remove-outline', 'display_name': obj, 'path': os.path.join(current_path, obj)})
                         else:
                             new_content.append({'is_file': True, 'checkbox_disabled': False, 'obj_in_folder': '', 'icon': extension_to_icon.get(obj.split('.')[-1].lower(), 'file-outline') if self._access_is_allowed(os.path.join(current_path, obj)) else 'file-remove-outline', 'display_name': obj, 'path': os.path.join(current_path, obj)})
             else:
