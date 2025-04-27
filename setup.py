@@ -1,10 +1,9 @@
-from setuptools import find_packages, setup
-from kivy_glow import __version__
-from pathlib import Path
-import sys
 import os
+from pathlib import Path
 
-assert sys.version_info >= (3, 7, 0), 'KivyGlow requires Python 3.7+'
+from setuptools import find_packages, setup
+
+from kivy_glow import __version__
 
 
 def glob_paths(pattern):
