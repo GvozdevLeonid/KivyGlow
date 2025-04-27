@@ -109,8 +109,8 @@ class AdaptiveBehavior(EventDispatcher):
         self._size_hint = self.size_hint_x, self.size_hint_y
         self._size = self.width, self.height
 
-        self._update_breakpoint_trigger = Clock.create_trigger(self._update_breakpoint, -1)
-        self._hidden_trigger = Clock.create_trigger(self._on_hidden, -1)
+        self._update_breakpoint_trigger = Clock.create_trigger(self._update_breakpoint)
+        self._hidden_trigger = Clock.create_trigger(self._on_hidden)
 
         self._update_width_by_min_width_trigger = Clock.create_trigger(lambda _: setattr(self, 'width', max(self.minimum_width, dp(2))), -1)
         self._update_height_by_min_height_trigger = Clock.create_trigger(lambda _: setattr(self, 'height', max(self.minimum_height, dp(2))), -1)
