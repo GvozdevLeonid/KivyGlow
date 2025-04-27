@@ -118,7 +118,7 @@ class HoverBehavior(EventDispatcher):
             widget = widget.parent
 
         for widget in Window.children[0].walk():
-            if issubclass(widget, GlowSidePanel):
+            if issubclass(widget.__class__, GlowSidePanel):
                 if widget.state == 'close' and widget.mode == 'overlay':
                     return False
 
