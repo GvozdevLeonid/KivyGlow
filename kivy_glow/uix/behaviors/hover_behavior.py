@@ -14,6 +14,7 @@ from kivy.properties import (
 )
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
+from kivy_glow.uix.sidepanel import GlowSidePanel
 
 
 class HoverBehavior(EventDispatcher):
@@ -115,6 +116,12 @@ class HoverBehavior(EventDispatcher):
                     return False
 
             widget = widget.parent
+
+        for widget in Window.children[0].walk():
+            if issubclass(widget, GlowSidePanel):
+                if widget.state == 'close' and widget.mode == 'overlay':
+                    return False
+
         return True
 
     def on_disabled(self, instance: Self, disabled: bool) -> None:
