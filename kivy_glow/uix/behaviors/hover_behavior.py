@@ -2,6 +2,7 @@ __all__ = ('HoverBehavior', )
 
 from typing import Self
 
+from kivy.clock import Clock
 from kivy.core.window import (
     Window,
     WindowBase,
@@ -39,8 +40,11 @@ class HoverBehavior(EventDispatcher):
     '''Global current hovered widget.'''
 
     def __init__(self, *args, **kwargs) -> None:
+        self._last_motion_event = None
         self.register_event_type('on_enter')
         self.register_event_type('on_leave')
+
+        self._motion_event_trigger = Clock.create_trigger(self._process_window_motion)
 
         super().__init__(*args, **kwargs)
 
@@ -56,33 +60,41 @@ class HoverBehavior(EventDispatcher):
 
     def _on_window_motion(self, window: WindowBase, etype: str, motionevent: MotionEvent) -> bool:
         '''Fired at the Window motion event.'''
-        motionevent.scale_for_screen(window.width, window.height)
-        if 'hover' == motionevent.type_id:
-            if not self.disabled and self.get_root_window():
-                pos = self.to_widget(*motionevent.pos)
-                if self.collide_point(*pos):
-
-                    if self not in Window.children[0].walk():
-                        return False
-
-                    if not self._is_visible():
-                        return False
-
-                    if not self.hover:
-                        self.hover = True
-                        if HoverBehavior.hovered_widget is not None:
-                            HoverBehavior.hovered_widget.hover = False
-                            HoverBehavior.hovered_widget.dispatch('on_leave')
-
-                        HoverBehavior.hovered_widget = self
-                        self.dispatch('on_enter')
-
-                elif self.hover:
-                    HoverBehavior.hovered_widget = None
-                    self.hover = False
-                    self.dispatch('on_leave')
-
+        if motionevent.type_id == 'hover':
+            self._last_motion_event = (window, motionevent)
+            self._motion_event_trigger()
         return False
+
+    def _process_window_motion(self, *args) -> None:
+        if self._last_motion_event is None:
+            return
+
+        window, motionevent = self._last_motion_event
+        motionevent.scale_for_screen(window.width, window.height)
+
+        if not self.disabled and self.get_root_window():
+            pos = self.to_widget(*motionevent.pos)
+            if self.collide_point(*pos):
+
+                if self not in Window.children[0].walk():
+                    return
+
+                if not self._is_visible():
+                    return
+
+                if not self.hover:
+                    self.hover = True
+                    if HoverBehavior.hovered_widget is not None:
+                        HoverBehavior.hovered_widget.hover = False
+                        HoverBehavior.hovered_widget.dispatch('on_leave')
+
+                    HoverBehavior.hovered_widget = self
+                    self.dispatch('on_enter')
+
+            elif self.hover:
+                HoverBehavior.hovered_widget = None
+                self.hover = False
+                self.dispatch('on_leave')
 
     def _is_visible(self) -> bool:
         '''Check if the widget is visible within its ScrollView.'''

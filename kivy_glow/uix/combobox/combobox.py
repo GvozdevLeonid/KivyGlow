@@ -167,15 +167,6 @@ class GlowComboBox(GlowTextField):
 
         Clock.schedule_once(self.initialize_combobox, -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self.dropdown_container is not None:
-            if parent is None:
-                self.unbind(width=self.dropdown_container.setter('min_width'))
-            else:
-                self.bind(width=self.dropdown_container.setter('min_width'))
-
-        return super().on_parent(instance, parent)
-
     def on_enter(self) -> None:
         '''Fired at the Checkbox hover enter event.'''
         pass

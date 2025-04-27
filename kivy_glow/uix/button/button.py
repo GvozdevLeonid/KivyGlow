@@ -150,19 +150,6 @@ class GlowButton(HoverBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(lambda _: self.children[0].fbind('size', update), -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self.glow_icon is not None:
-            if parent is None:
-                self.unbind(icon_size=self.glow_icon.setter('font_size'),
-                            icon=self.glow_icon.setter('icon'),
-                            _icon_color=self.glow_icon.setter('color'))
-            else:
-                self.bind(icon_size=self.glow_icon.setter('font_size'),
-                          icon=self.glow_icon.setter('icon'),
-                          _icon_color=self.glow_icon.setter('color'))
-
-        return super().on_parent(instance, parent)
-
     def on_enter(self) -> None:
         '''Fired at the Button hover enter event.'''
         Window.set_system_cursor('hand')
@@ -225,6 +212,7 @@ class GlowButton(HoverBehavior,
     def on_touch_up(self, touch: MotionEvent) -> bool:
         '''Fired at the Button on_touch_up event.'''
         def update_colors() -> None:
+            self._animation.cancel(self)
             if not self.disabled:
                 if self.mode == 'filled':
                     self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color

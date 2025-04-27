@@ -103,17 +103,6 @@ class GlowPanel(GlowBoxLayout):
 
         Clock.schedule_once(self.set_default_colors, -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self._active_tab is not None:
-            if parent is None:
-                self._active_tab.unbind(pos=self._set_active_pos)
-                self._active_tab.unbind(size=self._set_active_size)
-            else:
-                self._active_tab.bind(pos=self._set_active_pos)
-                self._active_tab.bind(size=self._set_active_size)
-
-        return super().on_parent(instance, parent)
-
     def on_tabs(self, instance: Self, tabs: list[dict]) -> None:
         '''Fired when the :attr:`tabs` value changes.'''
         self.clear_widgets()

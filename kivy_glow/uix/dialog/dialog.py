@@ -233,12 +233,7 @@ class GlowDialog(DeclarativeBehavior,
     def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
             Window.unbind(on_resize=self._on_window_resize)
-
-            if self.adaptive_height_content and self.content is not None:
-                self.content.unbind(height=self.ids.glow_dialog_content_container.setter('height'))
         else:
-            if self.adaptive_height_content and self.content is not None:
-                self.content.bind(height=self.ids.glow_dialog_content_container.setter('height'))
             Window.bind(on_resize=self._on_window_resize)
 
         return super().on_parent(instance, parent)

@@ -109,15 +109,6 @@ class GlowDropDown(GlowButton):
 
         Clock.schedule_once(self.initialize_dropdown, -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self.dropdown_container is not None:
-            if parent is None:
-                self.unbind(width=self.dropdown_container.setter('min_width'))
-            else:
-                self.bind(width=self.dropdown_container.setter('min_width'))
-
-        return super().on_parent(instance, parent)
-
     def on_release(self) -> None:
         '''Fired at the DropDown on_release event.'''
         self._open()
@@ -287,15 +278,6 @@ class GlowSelectableDropDown(GlowButton):
         super().__init__(*args, **kwargs)
 
         Clock.schedule_once(self.initialize_selectable_dropdown, -1)
-
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self.dropdown_container is not None:
-            if parent is None:
-                self.unbind(width=self.dropdown_container.setter('min_width'))
-            else:
-                self.bind(width=self.dropdown_container.setter('min_width'))
-
-        return super().on_parent(instance, parent)
 
     def on_release(self) -> None:
         '''Fired at the DropDown on_release event.'''

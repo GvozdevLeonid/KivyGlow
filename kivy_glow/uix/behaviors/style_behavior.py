@@ -2,6 +2,7 @@ __all__ = ('StyleBehavior', )
 
 from typing import Self
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import (
     ColorProperty,
@@ -264,6 +265,8 @@ class StyleBehavior:
         self.bind(bg_color=self.setter('_bg_color'))
         self.bind(shadow_color=self.setter('_shadow_color'))
 
+        self._update_border_radius_trigger = Clock.create_trigger(lambda _: self.on_border_radius(self, self.border_radius))
+
         super().__init__(*args, **kwargs)
 
     def on_border_width(self, instance: Self, border_width: list) -> None:
@@ -272,11 +275,11 @@ class StyleBehavior:
 
     def on_width(self, instancw: Self, width: float | int) -> None:
         '''Fired when the :attr:`width` value changes.'''
-        self.on_border_radius(self, self.border_radius)
+        self._update_border_radius_trigger()
 
     def on_height(self, instance: Self, height: float | int) -> None:
         '''Fired when the :attr:`height` value changes.'''
-        self.on_border_radius(self, self.border_radius)
+        self._update_border_radius_trigger()
 
     def on_border_radius(self, instance: Self, border_radius: list) -> None:
         '''Fired when the :attr:`border_radius` value changes.'''

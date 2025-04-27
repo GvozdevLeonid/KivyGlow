@@ -112,6 +112,12 @@ class AdaptiveBehavior(EventDispatcher):
         self._update_breakpoint_trigger = Clock.create_trigger(self._update_breakpoint)
         self._hidden_trigger = Clock.create_trigger(self._on_hidden)
 
+        self._update_width_by_min_width_trigger = Clock.create_trigger(lambda _: setattr(self, 'width', max(self.minimum_width, dp(2))))
+        self._update_height_by_min_height_trigger = Clock.create_trigger(lambda _: setattr(self, 'height', max(self.minimum_height, dp(2))))
+
+        self._update_width_by_texture_size_trigger = Clock.create_trigger(lambda _: setattr(self, 'width', max(self.texture_size[0], dp(2))))
+        self._update_height_by_texture_size_trigger = Clock.create_trigger(lambda _: setattr(self, 'height', max(self.texture_size[1], dp(2))))
+
         super().__init__(*args, **kwargs)
 
         self._update_breakpoint_trigger()
@@ -143,22 +149,16 @@ class AdaptiveBehavior(EventDispatcher):
                 break
 
     def _update_width_by_min_width(self, *args) -> None:
-        if not len(self.children):
-            self.width = dp(2)
-        else:
-            self.width = max(self.minimum_width, dp(2))
+        self._update_width_by_min_width_trigger()
 
     def _update_height_by_min_height(self, *args) -> None:
-        if not len(self.children):
-            self.height = dp(2)
-        else:
-            self.height = max(self.minimum_height, dp(2))
+        self._update_height_by_min_height_trigger()
 
     def _update_width_by_texture_size(self, *args) -> None:
-        self.width = max(self.texture_size[0], dp(2))
+        self._update_width_by_texture_size_trigger()
 
     def _update_height_by_texture_size(self, *args) -> None:
-        self.height = max(self.texture_size[1], dp(2))
+        self._update_height_by_texture_size_trigger()
 
     def on_breakpoint(self, breakpoint: str) -> None:
         '''Fired when the :attr:`breakpoint` value changes.'''

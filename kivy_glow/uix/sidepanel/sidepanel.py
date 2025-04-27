@@ -99,19 +99,6 @@ class GlowSidePanelButton(GlowButton):
 
         Clock.schedule_once(self.initialize_sidepanelbutton, -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self.right_text_label is not None:
-            if parent is None:
-                self.unbind(right_text=self.right_text_label.setter('text'),
-                            _text_color=self.right_text_label.setter('color'),
-                            font_style=self.right_text_label.setter('font_style'))
-            else:
-                self.bind(right_text=self.right_text_label.setter('text'),
-                          _text_color=self.right_text_label.setter('color'),
-                          font_style=self.right_text_label.setter('font_style'))
-
-        return super().on_parent(instance, parent)
-
     def on_enter(self) -> None:
         '''Fired at the Button hover enter event.'''
         Window.set_system_cursor('hand')

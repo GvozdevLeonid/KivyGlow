@@ -156,17 +156,6 @@ class GlowTextField(HoverBehavior,
         Clock.schedule_once(self.set_default_colors, -1)
         Clock.schedule_once(self.initialize_textfield, -1)
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if self._textfield is not None:
-            if parent is None:
-                self._textfield.unbind(focus=self.setter('focus'),
-                                       text=self.setter('text'))
-            else:
-                self._textfield.bind(focus=self.setter('focus'),
-                                     text=self.setter('text'))
-
-        return super().on_parent(instance, parent)
-
     def _on_window_motion(self, window: WindowBase, etype: str, motionevent: MotionEvent) -> bool:
         '''Fired at the Window motion event.'''
         motionevent.scale_for_screen(window.width, window.height)

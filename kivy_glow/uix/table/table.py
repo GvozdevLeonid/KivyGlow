@@ -223,34 +223,6 @@ class GlowTable(GlowBoxLayout):
 
         self.orientation = 'vertical'
 
-    def on_parent(self, instance: Self, parent: Widget) -> None:
-        if parent is None:
-            if self._header is not None:
-                self._header.unbind(height=self.ids.glow_table_header.setter('height'),
-                                    minimum_width=self._header.setter('size_hint_min_x'))
-                self._header.unbind(minimum_width=self.ids.glow_table_layout.setter('size_hint_min_x'))
-                self.unbind(_header_color=self._header.setter('bg_color'))
-            if 'glow_table_view' in self.ids and 'glow_table_header' in self.ids:
-                self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
-            if self.paginator is not None:
-                self.paginator.unbind(on_page_changed=self._update_display_table_data)
-            if self.table_checkbox is not None:
-                self.table_checkbox.unbind(active=self._on_click_table_checkbox)
-        else:
-            if self._header is not None:
-                self._header.bind(height=self.ids.glow_table_header.setter('height'),
-                                  minimum_width=self._header.setter('size_hint_min_x'))
-                self._header.bind(minimum_width=self.ids.glow_table_layout.setter('size_hint_min_x'))
-                self.bind(_header_color=self._header.setter('bg_color'))
-            if 'glow_table_view' in self.ids and 'glow_table_header' in self.ids:
-                self.ids.glow_table_view.bind(scroll_x=self.ids.glow_table_header.setter('scroll_x'))
-            if self.paginator is not None:
-                self.paginator.bind(on_page_changed=self._update_display_table_data)
-            if self.table_checkbox is not None:
-                self.table_checkbox.bind(active=self._on_click_table_checkbox)
-
-        return super().on_parent(instance, parent)
-
     @property
     def selected_rows(self) -> list[int]:
         return [idx for idx, selected in self._selected_rows.items() if selected]
