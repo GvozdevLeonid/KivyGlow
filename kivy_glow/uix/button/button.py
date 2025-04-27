@@ -212,7 +212,7 @@ class GlowButton(HoverBehavior,
     def on_touch_up(self, touch: MotionEvent) -> bool:
         '''Fired at the Button on_touch_up event.'''
         def update_colors() -> None:
-            self._animation.cancel(self)
+            Animation.cancel_all(self)
             if not self.disabled:
                 if self.mode == 'filled':
                     self._border_color = self.border_color if self.border_color else self.theme_cls.primary_color
