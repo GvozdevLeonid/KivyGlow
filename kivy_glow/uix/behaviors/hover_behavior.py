@@ -14,7 +14,6 @@ from kivy.properties import (
 )
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
-from kivy_glow.uix.sidepanel import GlowSidePanel
 
 
 class HoverBehavior(EventDispatcher):
@@ -98,6 +97,7 @@ class HoverBehavior(EventDispatcher):
                 self.dispatch('on_leave')
 
     def _is_visible(self) -> bool:
+        from kivy_glow.uix.sidepanel import GlowSidePanel  # noqa: PLC0415
         '''Check if the widget is visible within its ScrollView.'''
         widget = self
         while widget is not None and not isinstance(widget, WindowBase):
