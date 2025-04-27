@@ -44,7 +44,7 @@ class HoverBehavior(EventDispatcher):
         self.register_event_type('on_enter')
         self.register_event_type('on_leave')
 
-        self._motion_event_trigger = Clock.create_trigger(self._process_window_motion)
+        self._motion_event_trigger = Clock.create_trigger(self._process_window_motion, -1)
 
         super().__init__(*args, **kwargs)
 

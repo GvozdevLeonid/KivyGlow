@@ -332,7 +332,7 @@ class GlowList(GlowBoxLayout):
         self.bind(even_item_color=self.setter('_even_item_color'))
         self.bind(hover_item_color=self.setter('_hover_item_color'))
 
-        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors())
+        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors(), -1)
         self.bind(_odd_item_color=lambda _, __: self._update_colors_trigger())
         self.bind(_even_item_color=lambda _, __: self._update_colors_trigger())
         self.bind(_hover_item_color=lambda _, __: self._update_colors_trigger())

@@ -112,12 +112,12 @@ class GlowSwitch(ToggleButtonBehavior,
         fbind('size', update)
 
     def update_thumb_pos(self, *args) -> None:
+        Animation.cancel_all(self)
+        Animation.cancel_all(self.ids.glow_switch_thumb)
         if self.active:
-            thumb_animation = Animation(x=self.right - self.thumb_size, d=0.3, t='out_bounce')
-            thumb_animation.start(self.ids.glow_switch_thumb)
+            self.ids.glow_switch_thumb.x = self.right - self.thumb_size
         else:
-            thumb_animation = Animation(x=self.x, d=0.3, t='out_bounce')
-            thumb_animation.start(self.ids.glow_switch_thumb)
+            self.ids.glow_switch_thumb.x = self.x
 
     def set_default_colors(self, *args) -> None:
 
@@ -182,8 +182,8 @@ class GlowSwitch(ToggleButtonBehavior,
             thumb_animation = Animation(x=self.right - self.thumb_size, d=0.3, t='out_bounce')
             thumb_animation.start(self.ids.glow_switch_thumb)
             if not self.disabled:
-                self_animation = Animation(_color=self._active_color, d=.2)
-                self_animation.start(self)
+                self._animation = Animation(_color=self._active_color, d=.2)
+                self._animation.start(self)
             else:
                 self._color = self._active_color
 
@@ -194,8 +194,8 @@ class GlowSwitch(ToggleButtonBehavior,
             thumb_animation = Animation(x=self.x, d=0.3, t='out_bounce')
             thumb_animation.start(self.ids.glow_switch_thumb)
             if not self.disabled:
-                self_animation = Animation(_color=self._inactive_color, d=.2)
-                self_animation.start(self)
+                self._animation = Animation(_color=self._inactive_color, d=.2)
+                self._animation.start(self)
             else:
                 self._color = self._inactive_color
 

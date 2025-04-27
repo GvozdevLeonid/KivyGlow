@@ -206,7 +206,7 @@ class GlowTable(GlowBoxLayout):
         self.bind(even_row_color=self.setter('_even_row_color'))
         self.bind(hover_row_color=self.setter('_hover_row_color'))
 
-        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors())
+        self._update_colors_trigger = Clock.create_trigger(lambda _: self.__update_colors(), -1)
         self.bind(_odd_row_color=lambda _, __: self._update_colors_trigger())
         self.bind(_even_row_color=lambda _, __: self._update_colors_trigger())
         self.bind(_hover_row_color=lambda _, __: self._update_colors_trigger())

@@ -265,7 +265,7 @@ class StyleBehavior:
         self.bind(bg_color=self.setter('_bg_color'))
         self.bind(shadow_color=self.setter('_shadow_color'))
 
-        self._update_border_radius_trigger = Clock.create_trigger(lambda _: self.on_border_radius(self, self.border_radius))
+        self._update_border_radius_trigger = Clock.create_trigger(lambda _: self.on_border_radius(self, self.border_radius), -1)
 
         super().__init__(*args, **kwargs)
 
