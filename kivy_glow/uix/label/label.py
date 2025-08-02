@@ -223,6 +223,19 @@ class GlowLabel(DeclarativeBehavior,
                         'base_direction', 'text_language',
                         'limit_render_to_text_bbox')
 
+    def on_parent(self, instance: Self, parent: Widget) -> None:
+        if parent is None and self.allow_selection:
+            Window.unbind(on_key_down=self._on_keyboard_down,
+                          on_touch_down=self._on_window_touch_down)
+        if parent and self.allow_selection:
+            Window.bind(on_key_down=self._on_keyboard_down,
+                          on_touch_down=self._on_window_touch_down)
+
+        if hasattr(super(), 'on_parent'):
+            return super().on_parent(instance, parent)
+
+        return None
+
     def __init__(self, *args, **kwargs) -> None:
         self.bind(color=self.setter('_color'))
         self.bind(selection_color=self.setter('_selection_color'))
