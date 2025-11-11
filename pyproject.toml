@@ -24,13 +24,16 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Human Machine Interfaces",
     "Topic :: Scientific/Engineering :: Visualization"
 ]
-dependencies = [
-    "kivy>=2.3.0",
-    "requests",
-    "pillow",
-]
-
 
 [project.urls]
 "Homepage" = "https://github.com/GvozdevLeonid/KivyGlow"
 "Bug Tracker" = "https://github.com/GvozdevLeonid/KivyGlow/issues"
+
+[build-system]
+dependencies = [
+    "kivy>=2.3.0",
+    "setuptools",
+    "requests",
+    "pillow",
+    "wheel",
+]
