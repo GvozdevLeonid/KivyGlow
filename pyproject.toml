@@ -30,7 +30,7 @@ classifiers = [
 "Bug Tracker" = "https://github.com/GvozdevLeonid/KivyGlow/issues"
 
 [build-system]
-dependencies = [
+requires = [
     "kivy>=2.3.0",
     "setuptools",
     "requests",
