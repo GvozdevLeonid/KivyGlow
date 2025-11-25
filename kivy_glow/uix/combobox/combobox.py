@@ -165,7 +165,7 @@ class GlowComboBox(GlowTextField):
 
         self.register_event_type('on_pre_open')
 
-        Clock.schedule_once(self.initialize_combobox, -1)
+        Clock.schedule_once(self.initialize_combobox)
 
     def on_enter(self) -> None:
         '''Fired at the Checkbox hover enter event.'''

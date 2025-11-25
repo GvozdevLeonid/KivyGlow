@@ -168,7 +168,7 @@ class GlowColorPicker(DeclarativeBehavior,
             self._size_hint_y = self.size_hint_y
 
         Clock.schedule_once(self.set_default_colors, -1)
-        Clock.schedule_once(self.initialize_colorpicker, -1)
+        Clock.schedule_once(self.initialize_colorpicker)
         self._update_selected_color()
 
     def open(self, *args, **kwargs) -> None:

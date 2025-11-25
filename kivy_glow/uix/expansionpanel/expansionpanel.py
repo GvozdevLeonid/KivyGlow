@@ -136,7 +136,7 @@ class GlowExpansionPanel(GlowTableLayout):
         self.adaptive_height = True
 
         Clock.schedule_once(self.set_default_colors, -1)
-        Clock.schedule_once(self.initialize_expansionpanel, -1)
+        Clock.schedule_once(self.initialize_expansionpanel)
 
     def on_open(self) -> None:
         '''Fired at the ExpansionPanel open event.'''

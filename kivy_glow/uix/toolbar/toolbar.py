@@ -100,7 +100,7 @@ class GlowToolBar(GlowBoxLayout):
         )
 
         Clock.schedule_once(self.set_default_colors, -1)
-        Clock.schedule_once(self.initialize_toolbar, -1)
+        Clock.schedule_once(self.initialize_toolbar)
 
     def _on_window_resize(self, window: WindowBase, width: int, height: int) -> None:
         '''Fired at the Window resize event.'''

@@ -277,7 +277,7 @@ class GlowSelectableDropDown(GlowButton):
 
         super().__init__(*args, **kwargs)
 
-        Clock.schedule_once(self.initialize_selectable_dropdown, -1)
+        Clock.schedule_once(self.initialize_selectable_dropdown)
 
     def on_release(self) -> None:
         '''Fired at the DropDown on_release event.'''

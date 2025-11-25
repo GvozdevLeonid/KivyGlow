@@ -157,6 +157,7 @@ class GlowDropDownContainer(GlowBoxLayout):
                                        opacity=0)
 
         self.scroll = GlowScrollView()
+        self.scroll.on_scroll_start = self.__on_scroll_start
 
         self.fbind('size', self._reposition)
 
@@ -170,9 +171,13 @@ class GlowDropDownContainer(GlowBoxLayout):
         self.register_event_type('on_open')
         self.register_event_type('on_dismiss')
         if 'do_scroll_x' not in kwargs:
-            self.do_scroll_x = False
+            self.scroll.do_scroll_x = False
 
         Clock.schedule_once(self.set_default_colors, -1)
+    
+    def __on_scroll_start(self, touch, check_children=True):
+        GlowScrollView.on_scroll_start(self.scroll, touch, True)
+        return True
 
     def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
