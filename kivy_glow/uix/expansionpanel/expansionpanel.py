@@ -160,6 +160,7 @@ class GlowExpansionPanel(GlowTableLayout):
     def dismiss(self) -> None:
         '''Close ExpansionPanel.'''
         if self.state == 'opened' and not self._anim_playing:
+
             self._anim_playing = True
             self.state = 'closed'
             self.button.icon = self.icon_closed
@@ -187,6 +188,7 @@ class GlowExpansionPanel(GlowTableLayout):
     def _fill_container(self, *args) -> None:
         '''Continue opening ExpansionPanel.'''
         self.container.add_widget(self.expandable_content)
+        self.expandable_content.bind(height=self.on_expandable_content_height)
 
         animation = Animation(
             opacity=1,
@@ -199,6 +201,7 @@ class GlowExpansionPanel(GlowTableLayout):
     def _clear_container(self, *args) -> None:
         '''Continue closing ExpansionPanel.'''
         self.container.remove_widget(self.expandable_content)
+        self.expandable_content.unbind(height=self.on_expandable_content_height)
         animation = Animation(
             height=0,
             d=self.closing_time / 2,
@@ -229,10 +232,14 @@ class GlowExpansionPanel(GlowTableLayout):
     def _continue_init_open(self, *args) -> None:
         '''Continue opining ExpansionPanel if :attr:`state` is `opened` on initialization.'''
         Window.remove_widget(self.expandable_content)
+        self.expandable_content.bind(height=self.on_expandable_content_height)
         self.container.height = self.expandable_content.height
         self.expandable_content.opacity = 1
         self.container.opacity = 1
         self.container.add_widget(self.expandable_content)
+    
+    def on_expandable_content_height(self, *args) -> None:
+        self.container.height = self.expandable_content.height
 
     def initialize_expansionpanel(self, *args) -> None:
         '''Initializing the ExpansionPanel.'''
