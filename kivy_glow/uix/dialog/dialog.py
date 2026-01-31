@@ -228,7 +228,7 @@ class GlowDialog(DeclarativeBehavior,
             self._size_hint_y = self.size_hint_y
 
         Clock.schedule_once(self.set_default_colors, -1)
-        Clock.schedule_once(self.initialize_dialog)
+        Clock.schedule_once(self.initialize_dialog, -1)
 
     def on_parent(self, instance: Self, parent: Widget) -> None:
         if parent is None:
