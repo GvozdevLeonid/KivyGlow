@@ -59,8 +59,8 @@
     padding: ('10dp', dp(10) + self.spacing + self._label.texture_size[1], '10dp', '10dp') if self.mode == 'inside' else ('10dp', )
     border_width: ('1dp', ) if self.border_style == 'full' else (0, 0, 0, '1dp')
     border_radius: ('5dp', ) if self.border_style == 'full' else (0, )
-    height: self.minimum_height
     orientation: 'horizontal'
+    adaptive_height: True
     size_hint_y: None
     spacing: dp(5)
 
