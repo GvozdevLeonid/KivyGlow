@@ -106,8 +106,11 @@ class AdaptiveBehavior(EventDispatcher):
         self.register_event_type('on_breakpoint')
         self.breakpoint = 'unknown'
 
-        self._size_hint = self.size_hint_x, self.size_hint_y
-        self._size = self.width, self.height
+        self._size_hint_x = self.size_hint_x
+        self._size_hint_y = self.size_hint_y
+
+        self._width = self.width
+        self._height = self.height
 
         self._update_breakpoint_trigger = Clock.create_trigger(self._update_breakpoint)
         self._hidden_trigger = Clock.create_trigger(self._on_hidden)
@@ -167,6 +170,10 @@ class AdaptiveBehavior(EventDispatcher):
     def on_adaptive_height(self, instance: Self, adaptive_height: bool) -> None:
         '''Fired when the :attr:`adaptive_height` value changes.'''
         if self.hidden:
+            if adaptive_height:
+                self._size_hint_y = None
+            else:
+                self._size_hint_y = 1
             return
 
         if adaptive_height:
@@ -187,6 +194,10 @@ class AdaptiveBehavior(EventDispatcher):
     def on_adaptive_width(self, instance: Self, adaptive_width: bool) -> None:
         '''Fired when the :attr:`adaptive_width` value changes.'''
         if self.hidden:
+            if adaptive_width:
+                self._size_hint_x = None
+            else:
+                self._size_hint_x = 1
             return
 
         if adaptive_width:
@@ -209,6 +220,12 @@ class AdaptiveBehavior(EventDispatcher):
     def on_adaptive_size(self, instance: Self, adaptive_size: bool) -> None:
         '''Fired when the :attr:`adaptive_size` value changes.'''
         if self.hidden:
+            if adaptive_size:
+                self._size_hint_x = None
+                self._size_hint_y = None
+            else:
+                self._size_hint_x = 1
+                self._size_hint_y = 1
             return
 
         if adaptive_size:
@@ -241,8 +258,10 @@ class AdaptiveBehavior(EventDispatcher):
     def _on_hidden(self, *args) -> None:
         if self.hidden:
 
-            self._size_hint = (self.size_hint_x, self.size_hint_y)
-            self._size = (self.width, self.height)
+            self._size_hint_x = self.size_hint_x
+            self._size_hint_y = self.size_hint_y
+            self._width = self.width
+            self._height = self.height
 
             try:
                 if issubclass(self.__class__, Label):
@@ -258,8 +277,8 @@ class AdaptiveBehavior(EventDispatcher):
             self.size = (dp(2), dp(2))
             self.opacity = 0
         else:
-            self.size_hint = self._size_hint
-            self.size = self._size
+            self.size_hint = (self._size_hint_x, self._size_hint_y)
+            self.size = (self._width, self._height)
 
             if self.adaptive_width:
                 self.on_adaptive_width(self, self.adaptive_width)
