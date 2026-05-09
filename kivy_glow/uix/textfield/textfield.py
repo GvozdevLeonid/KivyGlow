@@ -230,7 +230,7 @@ class GlowTextField(HoverBehavior,
         if self.right_content is not None:
             self.right_content.pos_hint = {'center_y': 0.5}
             self.right_content.hidden = self.hidden
-            Clock.schedule_once(lambda _: self.safe_add_widget(), -1)
+            Clock.schedule_once(lambda _: safe_add_widget(), -1)
             self.bind(hidden=self.right_content.setter('hidden'))
 
     def set_default_colors(self, *args) -> None:
