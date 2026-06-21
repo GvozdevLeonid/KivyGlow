@@ -162,8 +162,6 @@ class GlowNumberField(GlowTextField):
         elif self.number_type == 'float':
             self._format_string = f'{{:.{decimals}f}}'
 
-        self._set_value(self._value)
-
     def on_number_type(self, instance: Self, number_type: str) -> None:
         '''Fired when the :attr:`number_type` value changes.'''
         if number_type == 'int':
@@ -171,8 +169,6 @@ class GlowNumberField(GlowTextField):
 
         elif number_type == 'float':
             self._format_string = f'{{:.{self.decimals}f}}'
-
-        self._set_value(self._value)
 
     def on_text(self, instance: Self, text: str) -> None:
         '''Fired when the :attr:`text` value changes.'''
